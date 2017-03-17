@@ -507,8 +507,8 @@ bool _ex_check_cmd(char *payload, char *fmt, wise_comm_cmd_t comm) {
 
 void _ex_on_message_recv(const char* topic, const void* payload, const int payloadlen, void *pUserData)
 {
-	char devID[36] = {0};
-	char tenantID[36] = {0};
+	char devID[DEF_DEVID_LENGTH] = {0};
+	char tenantID[DEF_DEVID_LENGTH] = {0};
 	core_contex_t* pHandle = NULL;
 	
 	if(!pUserData)
