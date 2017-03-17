@@ -1,0 +1,12 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: Advantech logging library
+Description: Logging library
+URL: 
+Version: 0
+Requires:
+Libs: -ladvLog
+Cflags:

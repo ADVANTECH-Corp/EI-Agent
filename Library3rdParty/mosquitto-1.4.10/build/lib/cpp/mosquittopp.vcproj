@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding = "UTF-8"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="9.00"
+	Name="mosquittopp"
+	ProjectGUID="{D5133D8A-E5AA-33B0-AE9C-287E851EC91F}"
+	Keyword="Win32Proj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\Debug"
+			IntermediateDirectory="mosquittopp.dir\Debug"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="D:\Workspace\mosquitto-1.4.10\lib;D:\Workspace\mosquitto-1.4.10\lib\cpp;"
+				AssemblerListingLocation="Debug/"
+				BasicRuntimeChecks="3"
+				CompileAs="2"
+				DebugInformationFormat="3"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="0"
+				Optimization="0"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="true"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;CMAKE;VERSION=\&quot;1.4.10\&quot;;&quot;TIMESTAMP=\&quot;2016/10/21 週五 14:18:54.16\&quot;&quot;;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WITH_TLS;WITH_TLS_PSK;WITH_EC;CMAKE_INTDIR=\&quot;Debug\&quot;;mosquittopp_EXPORTS"
+				ObjectFile="$(IntDir)\"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="D:\Workspace\mosquitto-1.4.10\lib;D:\Workspace\mosquitto-1.4.10\lib\cpp;"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;CMAKE;VERSION=\&quot;1.4.10\&quot;;&quot;TIMESTAMP=\&quot;2016/10/21 週五 14:18:54.16\&quot;&quot;;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WITH_TLS;WITH_TLS_PSK;WITH_EC;CMAKE_INTDIR=\&quot;Debug\&quot;;mosquittopp_EXPORTS"/>
+			<Tool
+				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="D:\Workspace\mosquitto-1.4.10\lib;D:\Workspace\mosquitto-1.4.10\lib\cpp;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="1"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCManifestTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkLibraryDependencies="false"
+				AdditionalOptions=" /machine:X86 /debug"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib ..\Debug\mosquitto.lib D:\Workspace\SA3.2_new\trunk\Agent\CAgentIoT\Library3rdParty\openssl-1.0.1h.win32\bin\ssleay32.dll D:\Workspace\SA3.2_new\trunk\Agent\CAgentIoT\Library3rdParty\openssl-1.0.1h.win32\bin\libeay32.dll C:\pthreads\Pre-built.2\lib\x86\pthreadVC2.lib ws2_32.lib "
+				OutputFile="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\Debug\mosquittopp.dll"
+				Version="1.4"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\\$(ConfigurationName),..\"
+				ProgramDatabaseFile="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\Debug\mosquittopp.pdb"
+				GenerateDebugInformation="true"
+				ImportLibrary="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\Debug\mosquittopp.lib"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\Release"
+			IntermediateDirectory="mosquittopp.dir\Release"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="D:\Workspace\mosquitto-1.4.10\lib;D:\Workspace\mosquitto-1.4.10\lib\cpp;"
+				AssemblerListingLocation="Release/"
+				CompileAs="2"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="2"
+				Optimization="2"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="true"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;CMAKE;VERSION=\&quot;1.4.10\&quot;;&quot;TIMESTAMP=\&quot;2016/10/21 週五 14:18:54.16\&quot;&quot;;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WITH_TLS;WITH_TLS_PSK;WITH_EC;CMAKE_INTDIR=\&quot;Release\&quot;;mosquittopp_EXPORTS"
+				ObjectFile="$(IntDir)\"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="D:\Workspace\mosquitto-1.4.10\lib;D:\Workspace\mosquitto-1.4.10\lib\cpp;"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;CMAKE;VERSION=\&quot;1.4.10\&quot;;&quot;TIMESTAMP=\&quot;2016/10/21 週五 14:18:54.16\&quot;&quot;;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WITH_TLS;WITH_TLS_PSK;WITH_EC;CMAKE_INTDIR=\&quot;Release\&quot;;mosquittopp_EXPORTS"/>
+			<Tool
+				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="D:\Workspace\mosquitto-1.4.10\lib;D:\Workspace\mosquitto-1.4.10\lib\cpp;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="1"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCManifestTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkLibraryDependencies="false"
+				AdditionalOptions=" /machine:X86"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib ..\Release\mosquitto.lib D:\Workspace\SA3.2_new\trunk\Agent\CAgentIoT\Library3rdParty\openssl-1.0.1h.win32\bin\ssleay32.dll D:\Workspace\SA3.2_new\trunk\Agent\CAgentIoT\Library3rdParty\openssl-1.0.1h.win32\bin\libeay32.dll C:\pthreads\Pre-built.2\lib\x86\pthreadVC2.lib ws2_32.lib "
+				OutputFile="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\Release\mosquittopp.dll"
+				Version="1.4"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\\$(ConfigurationName),..\"
+				ProgramDatabaseFile="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\Release\mosquittopp.pdb"
+				ImportLibrary="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\Release\mosquittopp.lib"/>
+		</Configuration>
+		<Configuration
+			Name="MinSizeRel|Win32"
+			OutputDirectory="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\MinSizeRel"
+			IntermediateDirectory="mosquittopp.dir\MinSizeRel"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="D:\Workspace\mosquitto-1.4.10\lib;D:\Workspace\mosquitto-1.4.10\lib\cpp;"
+				AssemblerListingLocation="MinSizeRel/"
+				CompileAs="2"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="1"
+				Optimization="1"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="true"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;CMAKE;VERSION=\&quot;1.4.10\&quot;;&quot;TIMESTAMP=\&quot;2016/10/21 週五 14:18:54.16\&quot;&quot;;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WITH_TLS;WITH_TLS_PSK;WITH_EC;CMAKE_INTDIR=\&quot;MinSizeRel\&quot;;mosquittopp_EXPORTS"
+				ObjectFile="$(IntDir)\"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="D:\Workspace\mosquitto-1.4.10\lib;D:\Workspace\mosquitto-1.4.10\lib\cpp;"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;CMAKE;VERSION=\&quot;1.4.10\&quot;;&quot;TIMESTAMP=\&quot;2016/10/21 週五 14:18:54.16\&quot;&quot;;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WITH_TLS;WITH_TLS_PSK;WITH_EC;CMAKE_INTDIR=\&quot;MinSizeRel\&quot;;mosquittopp_EXPORTS"/>
+			<Tool
+				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="D:\Workspace\mosquitto-1.4.10\lib;D:\Workspace\mosquitto-1.4.10\lib\cpp;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="1"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCManifestTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkLibraryDependencies="false"
+				AdditionalOptions=" /machine:X86"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib ..\MinSizeRel\mosquitto.lib D:\Workspace\SA3.2_new\trunk\Agent\CAgentIoT\Library3rdParty\openssl-1.0.1h.win32\bin\ssleay32.dll D:\Workspace\SA3.2_new\trunk\Agent\CAgentIoT\Library3rdParty\openssl-1.0.1h.win32\bin\libeay32.dll C:\pthreads\Pre-built.2\lib\x86\pthreadVC2.lib ws2_32.lib "
+				OutputFile="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\MinSizeRel\mosquittopp.dll"
+				Version="1.4"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\\$(ConfigurationName),..\"
+				ProgramDatabaseFile="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\MinSizeRel\mosquittopp.pdb"
+				ImportLibrary="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\MinSizeRel\mosquittopp.lib"/>
+		</Configuration>
+		<Configuration
+			Name="RelWithDebInfo|Win32"
+			OutputDirectory="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\RelWithDebInfo"
+			IntermediateDirectory="mosquittopp.dir\RelWithDebInfo"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="D:\Workspace\mosquitto-1.4.10\lib;D:\Workspace\mosquitto-1.4.10\lib\cpp;"
+				AssemblerListingLocation="RelWithDebInfo/"
+				CompileAs="2"
+				DebugInformationFormat="3"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="1"
+				Optimization="2"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="true"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;CMAKE;VERSION=\&quot;1.4.10\&quot;;&quot;TIMESTAMP=\&quot;2016/10/21 週五 14:18:54.16\&quot;&quot;;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WITH_TLS;WITH_TLS_PSK;WITH_EC;CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;;mosquittopp_EXPORTS"
+				ObjectFile="$(IntDir)\"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="D:\Workspace\mosquitto-1.4.10\lib;D:\Workspace\mosquitto-1.4.10\lib\cpp;"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;CMAKE;VERSION=\&quot;1.4.10\&quot;;&quot;TIMESTAMP=\&quot;2016/10/21 週五 14:18:54.16\&quot;&quot;;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WITH_TLS;WITH_TLS_PSK;WITH_EC;CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;;mosquittopp_EXPORTS"/>
+			<Tool
+				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="D:\Workspace\mosquitto-1.4.10\lib;D:\Workspace\mosquitto-1.4.10\lib\cpp;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="1"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCManifestTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkLibraryDependencies="false"
+				AdditionalOptions=" /machine:X86 /debug"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib ..\RelWithDebInfo\mosquitto.lib D:\Workspace\SA3.2_new\trunk\Agent\CAgentIoT\Library3rdParty\openssl-1.0.1h.win32\bin\ssleay32.dll D:\Workspace\SA3.2_new\trunk\Agent\CAgentIoT\Library3rdParty\openssl-1.0.1h.win32\bin\libeay32.dll C:\pthreads\Pre-built.2\lib\x86\pthreadVC2.lib ws2_32.lib "
+				OutputFile="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\RelWithDebInfo\mosquittopp.dll"
+				Version="1.4"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\\$(ConfigurationName),..\"
+				ProgramDatabaseFile="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\RelWithDebInfo\mosquittopp.pdb"
+				GenerateDebugInformation="true"
+				ImportLibrary="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\RelWithDebInfo\mosquittopp.lib"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+			<File
+				RelativePath="D:\Workspace\mosquitto-1.4.10\lib\cpp\CMakeLists.txt">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule D:/Workspace/mosquitto-1.4.10/lib/cpp/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files (x86)\CMake\bin\cmake.exe&quot; -HD:/Workspace/mosquitto-1.4.10 -BD:/Workspace/mosquitto-1.4.10/build --check-stamp-file D:\Workspace\mosquitto-1.4.10\build\lib\cpp\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto :VCReportError"
+					AdditionalDependencies="D:\Workspace\mosquitto-1.4.10\lib\cpp\CMakeLists.txt;D:\Workspace\mosquitto-1.4.10\lib\cpp\CMakeLists.txt;"
+					Outputs="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule D:/Workspace/mosquitto-1.4.10/lib/cpp/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files (x86)\CMake\bin\cmake.exe&quot; -HD:/Workspace/mosquitto-1.4.10 -BD:/Workspace/mosquitto-1.4.10/build --check-stamp-file D:\Workspace\mosquitto-1.4.10\build\lib\cpp\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto :VCReportError"
+					AdditionalDependencies="D:\Workspace\mosquitto-1.4.10\lib\cpp\CMakeLists.txt;D:\Workspace\mosquitto-1.4.10\lib\cpp\CMakeLists.txt;"
+					Outputs="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule D:/Workspace/mosquitto-1.4.10/lib/cpp/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files (x86)\CMake\bin\cmake.exe&quot; -HD:/Workspace/mosquitto-1.4.10 -BD:/Workspace/mosquitto-1.4.10/build --check-stamp-file D:\Workspace\mosquitto-1.4.10\build\lib\cpp\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto :VCReportError"
+					AdditionalDependencies="D:\Workspace\mosquitto-1.4.10\lib\cpp\CMakeLists.txt;D:\Workspace\mosquitto-1.4.10\lib\cpp\CMakeLists.txt;"
+					Outputs="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule D:/Workspace/mosquitto-1.4.10/lib/cpp/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files (x86)\CMake\bin\cmake.exe&quot; -HD:/Workspace/mosquitto-1.4.10 -BD:/Workspace/mosquitto-1.4.10/build --check-stamp-file D:\Workspace\mosquitto-1.4.10\build\lib\cpp\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto :VCReportError"
+					AdditionalDependencies="D:\Workspace\mosquitto-1.4.10\lib\cpp\CMakeLists.txt;D:\Workspace\mosquitto-1.4.10\lib\cpp\CMakeLists.txt;"
+					Outputs="D:\Workspace\mosquitto-1.4.10\build\lib\cpp\CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+			</File>
+		<Filter
+			Name="Source Files"
+			Filter="">
+			<File
+				RelativePath="D:\Workspace\mosquitto-1.4.10\lib\cpp\mosquittopp.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="">
+			<File
+				RelativePath="D:\Workspace\mosquitto-1.4.10\lib\cpp\mosquittopp.h">
+			</File>
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

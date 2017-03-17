@@ -1,0 +1,8 @@
+D:/Workspace/mosquitto-1.4.10/build/client/CMakeFiles/mosquitto_sub.dir
+D:/Workspace/mosquitto-1.4.10/build/lib/CMakeFiles/libmosquitto.dir
+D:/Workspace/mosquitto-1.4.10/build/src/CMakeFiles/mosquitto_passwd.dir
+D:/Workspace/mosquitto-1.4.10/build/lib/cpp/CMakeFiles/mosquittopp.dir
+D:/Workspace/mosquitto-1.4.10/build/src/CMakeFiles/mosquitto.dir
+D:/Workspace/mosquitto-1.4.10/build/CMakeFiles/ALL_BUILD.dir
+D:/Workspace/mosquitto-1.4.10/build/client/CMakeFiles/mosquitto_pub.dir
+D:/Workspace/mosquitto-1.4.10/build/CMakeFiles/ZERO_CHECK.dir
