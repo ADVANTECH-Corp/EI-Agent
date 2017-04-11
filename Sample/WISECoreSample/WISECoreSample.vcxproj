@@ -55,7 +55,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library\WISECore;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\WISECore;$(SolutionDir)Include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\HandlerKernel;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -74,7 +74,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library\WISECore;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\WISECore;$(SolutionDir)Include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\HandlerKernel;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -94,8 +94,14 @@
     <ClCompile Include="WISECoreSample.c" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Library\HandlerKernel\HandlerKernel.vcxproj">
+      <Project>{636f4f8f-194f-439d-ad32-7b23ff7fa7e9}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Library\Log\Log.vcxproj">
       <Project>{d807f1c9-38ad-44d1-8543-d2fb7808717e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Library\MessageGenerator\MessageGenerator.vcxproj">
+      <Project>{d2993f27-f4c3-4261-8362-ca96297446d0}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Library\WISECore\WISECore.vcxproj">
       <Project>{ba2b04d2-cbf7-42f5-a1e8-982fdc93e35d}</Project>

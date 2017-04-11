@@ -19,13 +19,13 @@
 #include "IPSOParser.h"
 #include "IoTMessageGenerate.h"
 #include "WISEPlatform.h"
-#include "wisepaas_02_def.h"
 
-#define DEF_ACTION_RESPONSE_JSON	"{\"commCmd\":%d,\"handlerName\":\"%s\",\"content\":%s}"
+#define DEF_OSINFO_JSON "{\"content\":{\"cagentVersion\":\"%s\",\"cagentType\":\"%s\",\"osVersion\":\"%s\",\"biosVersion\":\"%s\",\"platformName\":\"%s\",\"processorName\":\"%s\",\"osArch\":\"%s\",\"totalPhysMemKB\":%d,\"macs\":\"%s\",\"IP\":\"%s\"},\"commCmd\":116,\"agentID\":\"%s\",\"handlerName\":\"general\",\"sendTS\":{\"$date\":%lld}}"
 
 char g_strClientID[37] = "00000001-0000-0000-0000-305A3A77B1CC";
 char g_strTenantID[37] = "general";
 char g_strHostName[11] = "TestClient";
+char g_strProductTag[37] = "RMM";
 
 MSG_CLASSIFY_T* g_pCapability = NULL;
 void* g_pHandler = NULL;
@@ -35,6 +35,7 @@ void* g_pHandler = NULL;
 _CrtMemState memStateStart, memStateEnd, memStateDiff;
 #endif
 //---------------------------------------------------------------------------------
+void SubscribeRMMTopic();
 
 void* threadconnect(void* args)
 {
@@ -44,6 +45,7 @@ void* threadconnect(void* args)
 
 	printf("CB_Connected \n");
 
+	SubscribeRMMTopic();
 	while(true)
 	{
 		core_heartbeat_send();
@@ -206,7 +208,7 @@ void on_msgrecv(const char* topic, const void *pkt, const long pktlength, void* 
 				int len = 0;
 				sprintf( repMsg, "{\"errorRep\":\"Unknown cmd!\"}" );
 				len= strlen( "{\"errorRep\":\"Unknown cmd!\"}" ) ;
-				sprintf(topic, DEF_AGENTACT_TOPIC, g_strTenantID, g_strClientID);
+				sprintf(topic, DEF_AGENTACT_TOPIC, g_strTenantID, g_strProductTag, g_strClientID);
 				core_publish(topic, repMsg, len, 0, 0);
 			}
 			break;
@@ -237,10 +239,11 @@ void on_server_reconnect(const char* tenantid, const char* devid, void* userdata
 	/*TODO: resend whole capability*/
 }
 
+bool SendOSInfo();
+
 void* threadgetcapab(void* args)
 {
-	core_platform_register();
-
+	SendOSInfo();
 
 	if(g_pHandler)
 	{
@@ -285,9 +288,37 @@ void on_heartbeatrate_query(const char* sessionid,const char* tenantid,const cha
 	core_heartbeatratequery_response(60,sessionid, tenantid, devid);
 }
 
+#ifdef WIN32
+#include "sys/time.h"
+int gettimeofday(struct timeval *tv, struct timezone *tz)
+{
+    time_t clock;
+    struct tm tm;
+    SYSTEMTIME wtm;
+ 
+    GetLocalTime(&wtm);
+    tm.tm_year     = wtm.wYear - 1900;
+    tm.tm_mon     = wtm.wMonth - 1;
+    tm.tm_mday     = wtm.wDay;
+    tm.tm_hour     = wtm.wHour;
+    tm.tm_min     = wtm.wMinute;
+    tm.tm_sec     = wtm.wSecond;
+    tm. tm_isdst    = -1;
+    clock = mktime(&tm);
+    tv->tv_sec = (long)clock;
+    tv->tv_usec = wtm.wMilliseconds * 1000;
+ 
+    return (0);
+}
+#endif
+
 long long get_timetick(void* userdata)
 {
-	return (long long) time((time_t *) NULL);
+	long long tick = 0;
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	tick = (long long)tv.tv_sec*1000 + (long long)tv.tv_usec/1000;
+	return tick;
 }
 
 void on_heartbeatrate_update(const int heartbeatrate, const char* sessionid, const char* tenantid, const char* devid, void* userdata)
@@ -311,9 +342,9 @@ AGENT_SEND_STATUS send_cbf(HANDLE const handler, int enum_act, void const * cons
 	
 	length =  strlen(DEF_ACTION_RESPONSE_JSON) + requestLen + 12 + strlen(pHandler->Name);
 	buff = calloc(1,length);
-	snprintf(buff, length, DEF_ACTION_RESPONSE_JSON, enum_act, pHandler->Name, (char*)requestData);
+	snprintf(buff, length, DEF_ACTION_RESPONSE_JSON, enum_act, pHandler->Name, (char*)requestData, get_timetick(NULL));
 
-	sprintf(topic, DEF_AGENTACT_TOPIC, pHandler->agentInfo->tenantId, pHandler->agentInfo->devId);
+	sprintf(topic, DEF_AGENTACT_TOPIC, pHandler->agentInfo->tenantId, g_strProductTag, pHandler->agentInfo->devId);
 
 	bResult = core_publish(topic, buff, strlen(buff), 0, 0);
 
@@ -338,7 +369,7 @@ AGENT_SEND_STATUS send_capability_cbf( HANDLE const handler, void const * const 
 	{
 		char topic[128] = {0};
 		char* buff = IoT_PrintFullCapability(root, pHandler->agentInfo->devId);
-		sprintf(topic, DEF_AGENTACT_TOPIC, pHandler->agentInfo->tenantId, pHandler->agentInfo->devId);
+		sprintf(topic, DEF_AGENTACT_TOPIC, pHandler->agentInfo->tenantId, g_strProductTag, pHandler->agentInfo->devId);
 		if(core_publish(topic, buff, strlen(buff), 0, 0))
 			return cagent_success;
 		else
@@ -362,7 +393,7 @@ AGENT_SEND_STATUS send_autoreport_cbf( HANDLE const handler, void const * const 
 	pHandler = (HANDLER_INFO_EX*)handler;
 	length =  strlen(DEF_ACTION_RESPONSE_JSON) + requestLen + 12 + strlen(pHandler->Name);
 	buff = calloc(1,length);
-	snprintf(buff, length, DEF_ACTION_RESPONSE_JSON, 2055, "general", (char*)requestData);
+	snprintf(buff, length, DEF_ACTION_RESPONSE_JSON, 2055, "general", (char*)requestData, get_timetick(NULL));
 	sprintf(topic, DEF_AGENTREPORT_TOPIC, pHandler->agentInfo->tenantId, pHandler->agentInfo->devId);
 
 	bResult = core_publish(topic, buff, strlen(buff), 0, 0);
@@ -386,8 +417,8 @@ AGENT_SEND_STATUS  send_event_cbf( HANDLE const handler, HANDLER_NOTIFY_SEVERITY
 	pHandler = (HANDLER_INFO_EX*)handler;
 	length =  strlen(DEF_ACTION_RESPONSE_JSON) + requestLen + 12 + strlen(pHandler->Name);
 	buff = calloc(1,length);
-	snprintf(buff, length, DEF_ACTION_RESPONSE_JSON, 2059, pHandler->Name, (char*)requestData);
-	sprintf(topic, DEF_EVENTNOTIFY_TOPIC, pHandler->agentInfo->devId);
+	snprintf(buff, length, DEF_ACTION_RESPONSE_JSON, 2059, pHandler->Name, (char*)requestData, get_timetick(NULL));
+	sprintf(topic, DEF_EVENTNOTIFY_TOPIC, pHandler->agentInfo->tenantId, g_strProductTag, pHandler->agentInfo->devId);
 
 	bResult = core_publish(topic, buff, strlen(buff), 0, 0);
 
@@ -444,6 +475,14 @@ void ReleaseSampleHandler(void* phandler)
 	HandlerKernelEx_Uninitialize(phandler);
 }
 
+void SubscribeRMMTopic()
+{
+	char topic[256] = {0};
+	sprintf(topic, DEF_CALLBACKREQ_TOPIC, g_strTenantID, g_strProductTag, g_strClientID);
+
+	core_subscribe(topic, 0);
+}
+
 void CreateAgentInfo(cagent_agent_info_body_t* agentinfo)
 {
 	if(agentinfo!= NULL)
@@ -483,7 +522,6 @@ void UpdateData(char* path, MSG_CLASSIFY_T* root)
 
 void* threadaccessdata(void* args)
 {
-	
 	while(true)
 	{
 		HandlerKernelEx_LockCapability(g_pHandler);
@@ -512,6 +550,39 @@ void StopAccessData(pthread_t thread)
 	}
 }
 
+bool SendOSInfo()
+{
+	long long tick = 0;
+	char strPayloadBuff[2048] = {0};
+	char localip[16] = {0};
+	char strTopicBuff[256] = {0};
+	tick = get_timetick(NULL);
+
+	
+	core_address_get(localip);
+
+	snprintf(strPayloadBuff, sizeof(strPayloadBuff), DEF_OSINFO_JSON, "4.0.0",
+												 "IPC",
+												 "Windows 8",
+												 "V1.2",
+												 "SOM-111",
+												 "Intel(R) Atom(TM) CPU D525   @ 1.8077GHz",
+												 "X86",
+												 2048,
+												 "305A3A77B1DA",
+												 localip,
+												 g_strClientID,
+												 tick);
+
+#ifdef _WISEPAAS_02_DEF_H_
+	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, g_strTenantID, g_strProductTag, g_strClientID);
+#else
+	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, pHandle->strClientID);
+#endif
+	
+	return core_publish(strTopicBuff, strPayloadBuff, strlen(strPayloadBuff), 0, 0);
+}
+
 int main(int argc, char *argv[])
 {
 	//char strServerIP[64] = "dev-wisepaas.eastasia.cloudapp.azure.com";
@@ -531,7 +602,7 @@ int main(int argc, char *argv[])
 	
 	threaddataaccess = StartAccessData();
 
-	if(!core_initialize(g_strTenantID, g_strClientID, g_strHostName, agentinfo.mac, NULL))
+	if(!core_initialize(g_strTenantID, g_strClientID, g_strHostName, agentinfo.mac, &agentinfo))
 	{
 		printf("Unable to initialize AgentCore.\n");
 		goto EXIT;
@@ -550,13 +621,9 @@ int main(int argc, char *argv[])
 
 	core_heartbeat_callback_set(on_heartbeatrate_query, on_heartbeatrate_update);
 
-	core_tag_set("RMM");
+	core_tag_set(g_strProductTag);
 
 	core_product_info_set(agentinfo.sn, NULL, agentinfo.version, agentinfo.type, agentinfo.product, agentinfo.manufacture);
-
-	core_os_info_set("Windows 7", "X86", 20480, "305A3A77B1DA");
-
-	core_platform_info_set("V1.13", "SOM-5890", "Intel(R) Atom(TM) CPU D525   @ 1.80GHz");
 
 	if(SSLMode == 1)
 		core_tls_set( "server.crt", NULL, "ca.crt", "ca.key", "05155853");
