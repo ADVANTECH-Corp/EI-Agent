@@ -40,7 +40,8 @@ typedef struct{
    bool enable;
    int replyID;
    bool bModified;
-   unsigned int sendTime;
+   long long nextTime;
+   long long timeout;
 }handler_context_t;
 
 typedef void (*on_threshold_triggered)(threshold_event_type type, char* sensorname, double value, MSG_ATTRIBUTE_T* attr, void *pRev);
@@ -88,7 +89,6 @@ bool HandlerKernelEx_CheckToExitThread(handler_kernel_t* pHandlerKernel)
 long long HandlerKernelEx_GetTimeTick()
 {
 	long long tick = 0;
-	struct timespec time;
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	tick = (long long)tv.tv_sec*1000 + (long long)tv.tv_usec/1000;
@@ -98,10 +98,9 @@ long long HandlerKernelEx_GetTimeTick()
 void* HandlerKernelEx_MonitorThread(void *args)
 {
 	handler_kernel_t* pHandlerKernel = NULL;
-	int count = 0, interval=1000;
-	int mInterval = 100;
-	int sendTime = 0;
-	unsigned int prevTime = 0;
+	int interval=1000;
+	long long curTime = 0;
+
 	if(args == NULL)
 	{
 		pthread_exit(0);
@@ -113,19 +112,22 @@ void* HandlerKernelEx_MonitorThread(void *args)
 	while(true)
 	{
 		unsigned int diffTime = 0;
-		
 		HANDLER_NOTIFY_SEVERITY severity = Severity_Debug;
 		bool bAutoReport = false, bLiveReport = false, bInternal = false, bChkThreshold = false;
+		
+		curTime = HandlerKernelEx_GetTimeTick();
+
 		if(HandlerKernelEx_CheckToExitThread(pHandlerKernel))
 		{
 			break;
 		}
 
 		pthread_mutex_lock(&pHandlerKernel->AutoReportContex.mux);
-		diffTime = HandlerKernelEx_GetTimeTick();
 		if(pHandlerKernel->AutoReportContex.enable)
 		{
-			if(difftime(diffTime, pHandlerKernel->AutoReportContex.sendTime) >= pHandlerKernel->AutoReportContex.intervalMS)
+			if(pHandlerKernel->AutoReportContex.nextTime == 0)
+				pHandlerKernel->AutoReportContex.nextTime = curTime;
+			if(pHandlerKernel->AutoReportContex.nextTime <= curTime)
 				bAutoReport = true;
 		}
 		pthread_mutex_unlock(&pHandlerKernel->AutoReportContex.mux);
@@ -143,7 +145,7 @@ void* HandlerKernelEx_MonitorThread(void *args)
 				if(pHandlerKernel->HandlerInfo.sendreportcbf && buff)
 					pHandlerKernel->HandlerInfo.sendreportcbf(/*Handler Info*/&pHandlerKernel->HandlerInfo, /*message data*/buff, /*message length*/strlen(buff), /*preserved*/NULL, /*preserved*/NULL);
 				free(buff);
-				pHandlerKernel->AutoReportContex.sendTime = HandlerKernelEx_GetTimeTick();
+				pHandlerKernel->AutoReportContex.nextTime += pHandlerKernel->AutoReportContex.intervalMS;
 			}
 		}
 
@@ -153,25 +155,23 @@ void* HandlerKernelEx_MonitorThread(void *args)
 		}
 
 		pthread_mutex_lock(&pHandlerKernel->LiveReportContex.mux);
-		diffTime = HandlerKernelEx_GetTimeTick();
 		if(pHandlerKernel->LiveReportContex.enable)
 		{
-			if(difftime(diffTime, pHandlerKernel->LiveReportContex.sendTime) >= pHandlerKernel->LiveReportContex.intervalMS)
+			if(pHandlerKernel->LiveReportContex.nextTime == 0)
+				pHandlerKernel->LiveReportContex.nextTime = curTime;
+			if(pHandlerKernel->LiveReportContex.timeout == 0)
+				pHandlerKernel->LiveReportContex.timeout = curTime + pHandlerKernel->LiveReportContex.timeoutMS;
+
+			if(pHandlerKernel->LiveReportContex.nextTime <= curTime)
 			{
-				if(prevTime == 0)
-					prevTime = diffTime;
-				if(pHandlerKernel->LiveReportContex.timeoutMS < difftime(diffTime, prevTime))
+				if(pHandlerKernel->LiveReportContex.timeout <= curTime)
 				{
 					pHandlerKernel->LiveReportContex.timeoutMS = 0;
+					pHandlerKernel->LiveReportContex.timeout = 0;
+					pHandlerKernel->LiveReportContex.nextTime = 0;
 					pHandlerKernel->LiveReportContex.enable = false;
-					prevTime = 0;
 				}
 				else
-					pHandlerKernel->LiveReportContex.timeoutMS -= difftime(diffTime, prevTime);
-
-				prevTime = diffTime;
-
-				if(pHandlerKernel->LiveReportContex.timeoutMS > 0)
 					bLiveReport = true;
 			}
 		}
@@ -190,7 +190,7 @@ void* HandlerKernelEx_MonitorThread(void *args)
 				if(pHandlerKernel->HandlerInfo.sendcbf  && buff)
 					pHandlerKernel->HandlerInfo.sendcbf(/*Handler Info*/&pHandlerKernel->HandlerInfo, pHandlerKernel->LiveReportContex.replyID, /*message data*/buff, /*message length*/strlen(buff), /*preserved*/NULL, /*preserved*/NULL);
 				free(buff);
-				pHandlerKernel->LiveReportContex.sendTime = HandlerKernelEx_GetTimeTick();
+				pHandlerKernel->LiveReportContex.nextTime += pHandlerKernel->LiveReportContex.intervalMS;
 			}
 		}
 
@@ -200,10 +200,11 @@ void* HandlerKernelEx_MonitorThread(void *args)
 		}
 
 		pthread_mutex_lock(&pHandlerKernel->InternelReportContex.mux);
-		diffTime = HandlerKernelEx_GetTimeTick();
 		if(pHandlerKernel->InternelReportContex.enable)
 		{
-			if(difftime(diffTime, pHandlerKernel->InternelReportContex.sendTime) >= pHandlerKernel->InternelReportContex.intervalMS)
+			if(pHandlerKernel->InternelReportContex.nextTime == 0)
+				pHandlerKernel->InternelReportContex.nextTime = curTime;
+			if(pHandlerKernel->InternelReportContex.nextTime <= curTime)
 				if(pHandlerKernel->InternelReportContex.bModified)
 					bInternal = true;
 		}
@@ -219,7 +220,7 @@ void* HandlerKernelEx_MonitorThread(void *args)
 				if(pHandlerKernel->HandlerInfo.internelreportcbf  && buff)
 					pHandlerKernel->HandlerInfo.internelreportcbf(/*Handler Info*/&pHandlerKernel->HandlerInfo, /*message data*/buff, /*message length*/strlen(buff), /*preserved*/NULL, /*preserved*/NULL);
 				free(buff);
-				pHandlerKernel->InternelReportContex.sendTime = HandlerKernelEx_GetTimeTick();
+				pHandlerKernel->InternelReportContex.nextTime += pHandlerKernel->InternelReportContex.intervalMS;
 			}
 		}
 
@@ -229,10 +230,11 @@ void* HandlerKernelEx_MonitorThread(void *args)
 		}
 
 		pthread_mutex_lock(&pHandlerKernel->ThresholdChkContex.mux);
-		diffTime = HandlerKernelEx_GetTimeTick();
 		if(pHandlerKernel->ThresholdChkContex.enable)
 		{
-			if(difftime(diffTime, pHandlerKernel->ThresholdChkContex.sendTime) >= pHandlerKernel->ThresholdChkContex.intervalMS)
+			if(pHandlerKernel->ThresholdChkContex.nextTime == 0)
+				pHandlerKernel->ThresholdChkContex.nextTime = curTime;
+			if(pHandlerKernel->ThresholdChkContex.nextTime <= curTime)
 				bChkThreshold = true;
 		}
 		pthread_mutex_unlock(&pHandlerKernel->ThresholdChkContex.mux);
@@ -274,7 +276,7 @@ void* HandlerKernelEx_MonitorThread(void *args)
 				if(pHandlerKernel->HandlerInfo.sendeventcbf && buff)
 					pHandlerKernel->HandlerInfo.sendeventcbf(/*Handler Info*/&pHandlerKernel->HandlerInfo, severity, /*message data*/buff, /*message length*/strlen(buff), /*preserved*/NULL, /*preserved*/NULL);
 				free(buff);
-				pHandlerKernel->ThresholdChkContex.sendTime = HandlerKernelEx_GetTimeTick();
+				pHandlerKernel->ThresholdChkContex.nextTime += pHandlerKernel->ThresholdChkContex.intervalMS;
 			}
 		}
 
@@ -282,7 +284,7 @@ void* HandlerKernelEx_MonitorThread(void *args)
 		{
 			break;
 		}
-		usleep(mInterval*1000);
+		usleep(interval*1000);
 	}
 
 	pthread_exit(0);
@@ -971,6 +973,7 @@ int HANDLERKERNEL_API HandlerKernelEx_AutoReportStart(void* pHandle, char *pInQu
 	pHandlerKernel->AutoReportContex.enable = true;
 	if(pHandlerKernel->AutoReportContex.reqItems)
 		free(pHandlerKernel->AutoReportContex.reqItems);
+	pHandlerKernel->AutoReportContex.reqItems = NULL;
 	if(reqItems)
 	{
 		pHandlerKernel->AutoReportContex.reqItems = (char*)calloc(1, strlen(reqItems)+1);
@@ -1044,6 +1047,7 @@ int HANDLERKERNEL_API HandlerKernelEx_SetAutoReportFilter(void* pHandle, char *p
 	
 	if(pHandlerKernel->AutoReportContex.reqItems)
 		free(pHandlerKernel->AutoReportContex.reqItems);
+	pHandlerKernel->AutoReportContex.reqItems = NULL;
 	if(reqItems)
 	{
 		pHandlerKernel->AutoReportContex.reqItems = (char*)calloc(1, strlen(reqItems)+1);
@@ -1136,6 +1140,7 @@ int HANDLERKERNEL_API HandlerKernelEx_LiveReportStart(void* pHandle, int replyID
 
 	if(pHandlerKernel->LiveReportContex.reqItems)
 		free(pHandlerKernel->LiveReportContex.reqItems);
+		pHandlerKernel->LiveReportContex.reqItems = NULL;
 	if(reqItems)
 	{
 		pHandlerKernel->LiveReportContex.reqItems = (char*)calloc(1, strlen(reqItems)+1);
