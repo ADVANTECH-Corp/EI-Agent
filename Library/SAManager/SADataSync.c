@@ -1,5 +1,6 @@
 #include "SADataSync.h"
 #include "util_path.h"
+#include "util_libloader.h"
 #include <stdio.h>
 
 #ifdef WIN32

@@ -28,7 +28,6 @@ typedef void (SAMGRLOADER_API *SAMANAGER_SETPBUBLISHCB)(PUBLISHCBFN func);
 typedef void (SAMGRLOADER_API *SAMANAGER_SETSUBSCRIBECB)(SUBSCRIBECBFN func);
 typedef void (SAMGRLOADER_API *SAMANAGER_SETCONNECTSERVERCB)(CONNECTSERVERCBFN func);
 typedef void (SAMGRLOADER_API *SAMANAGER_SETDISCONNECTCB)(DISCONNECTCBFN func);
-typedef void (SAMGRLOADER_API *SAMANAGER_SETOSINFOSENDCB)(SENDOSINFOCBFN func);
 typedef void (SAMGRLOADER_API *SAMANAGER_INTERNALSUBSCRIBE)();
 typedef void (SAMGRLOADER_API *SAMANAGER_UPDATECONNECTSTATE)(int status);
 
@@ -41,7 +40,6 @@ typedef struct SAMANAGER_INTERFACE
 	SAMANAGER_SETSUBSCRIBECB			SAManager_SetSubscribeCB_API;
 	SAMANAGER_SETCONNECTSERVERCB		SAManager_SetConnectServerCB_API;
 	SAMANAGER_SETDISCONNECTCB			SAManager_SetDisconnectCB_API;
-	SAMANAGER_SETOSINFOSENDCB			SAManager_SetOSInfoSendCB_API;
 	SAMANAGER_INTERNALSUBSCRIBE			SAManager_InternalSubscribe_API;
 	SAMANAGER_UPDATECONNECTSTATE		SAManager_UpdateConnectState_API;
 	LOGHANDLE							logHandle;
@@ -56,8 +54,6 @@ void smloader_init(susiaccess_agent_conf_body_t * config, susiaccess_agent_profi
 void smloader_uninit();
 
 void smloader_callback_set(PUBLISHCBFN fn_publish, SUBSCRIBECBFN fn_subscribe, CONNECTSERVERCBFN fn_connserver, DISCONNECTCBFN fn_disconnect);
-
-void smloader_osinfo_send_set(SENDOSINFOCBFN fn_sendosinfo);
 
 void smloader_connect_status_update(int status);
 

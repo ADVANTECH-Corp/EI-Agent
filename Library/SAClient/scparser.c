@@ -8,11 +8,13 @@
 #include "util_string.h"
 #include "sys/time.h"
 
+#define BASICINFO_BODY_STRUCT	"susiCommData"
 #define BASICINFO_HANDLERNAME	"handlerName"
 #define BASICINFO_CMDTYPE		"commCmd"
 #define BASICINFO_AGENTID		"agentID"
 #define BASICINFO_TIMESTAMP		"sendTS"
-
+#define BASICINFO_CONTENT		"content"
+/*
 #define AGENTINFO_DEVID			"devID"
 #define AGENTINFO_HOSTNAME		"hostname"
 #define AGENTINFO_SN			"sn"
@@ -39,7 +41,7 @@
 
 #define AGNET_INFO_CMD				1 
 #define glb_get_init_info_rep		116
-
+*/
 #ifdef WIN32
 	#if _MSC_VER < 1900
 struct timespec {
@@ -119,109 +121,14 @@ void scparser_free(PJSON ptr)
 	cJSON_Delete(pAgentInfo);
 }
 
-PJSON scparser_agentinfo_create(susiaccess_agent_profile_body_t const * pProfile, int status)
-{
-	/*
-{"commCmd":1,"requestID":21,"devID":"00004437E646AC6D","hostname":"WIN-A0F7V3LOTLL","sn":"00004437E646AC6D","version":"1.0.0","account":"admin","passwd":"admin","status":1}
-	*/
-   cJSON *pAgentInfo = NULL;
-
-   if(!pProfile) return NULL;
-   pAgentInfo = cJSON_CreateObject();
-   cJSON_AddStringToObject(pAgentInfo, AGENTINFO_DEVID, pProfile->devId);
-   cJSON_AddStringToObject(pAgentInfo, AGENTINFO_HOSTNAME, pProfile->hostname);
-   cJSON_AddStringToObject(pAgentInfo, AGENTINFO_SN, pProfile->sn);
-   cJSON_AddStringToObject(pAgentInfo, AGENTINFO_MAC, pProfile->mac);
-   cJSON_AddStringToObject(pAgentInfo, AGENTINFO_VERSION, pProfile->version);
-   cJSON_AddStringToObject(pAgentInfo, AGENTINFO_TYPE, pProfile->type);
-   cJSON_AddStringToObject(pAgentInfo, AGENTINFO_PRODUCT, pProfile->product);
-   cJSON_AddStringToObject(pAgentInfo, AGENTINFO_MANUFACTURE, pProfile->manufacture);
-   cJSON_AddStringToObject(pAgentInfo, AGENTINFO_USERNAME, pProfile->account);
-   cJSON_AddStringToObject(pAgentInfo, AGENTINFO_PASSWORD, pProfile->passwd);
-   cJSON_AddNumberToObject(pAgentInfo, AGENTINFO_STATUS, status);
-
-   return pAgentInfo;
-}
-
-char* scparser_agentinfo_print(susiaccess_agent_profile_body_t const * pProfile, int status)
-{
-	PJSON AgentInfoJSON = NULL;
-	PJSON BaseInfoJSON = NULL;
-	char* pAgentInfoPayload;
-	susiaccess_packet_body_t packet;
-
-	BaseInfoJSON = scparser_agentinfo_create(pProfile, status);
-	memset(&packet, 0, sizeof(susiaccess_packet_body_t));
-	strcpy(packet.devId, pProfile->devId);
-	strcpy(packet.handlerName, "general");
-	packet.cmd = AGNET_INFO_CMD;
-	packet.content = scparser_unformatted_print(BaseInfoJSON);
-	scparser_free(BaseInfoJSON);
-	
-	AgentInfoJSON = scparser_packet_create(&packet);
-	pAgentInfoPayload = scparser_unformatted_print(AgentInfoJSON);
-	scparser_free(AgentInfoJSON);
-	free(packet.content);
-	return pAgentInfoPayload;
-}
-
-PJSON scparser_osinfo_create(susiaccess_agent_profile_body_t const * pProfile)
-{
-/*
-{"osInfo":{"cagentVersion":"1.0.0","osVersion":"Windows 7 Service Pack 1","biosVersion":"","platformName":"","processorName":"","osArch":"X64","totalPhysMemKB":8244060,"macs":"84:8F:69:CB:12:96;C4:17:FE:DB:F4:F5;00:50:56:C0:00:01;00:50:56:C0:00:08","IP":"172.22.12.24"}}
-*/
-	cJSON *OSInfoHead = NULL;
-  	cJSON * pOSInfoItem = NULL;
-
-	if(!pProfile) return OSInfoHead;
-
-	pOSInfoItem = cJSON_CreateObject();
-
-	cJSON_AddStringToObject(pOSInfoItem, GLOBAL_AGENT_VERSION, pProfile->version);
-	cJSON_AddStringToObject(pOSInfoItem, GLOBAL_AGENT_TYPE, pProfile->type);
-	cJSON_AddStringToObject(pOSInfoItem, GLOBAL_OS_VERSION, pProfile->osversion);
-	cJSON_AddStringToObject(pOSInfoItem, GLOBAL_BIOS_VERSION, pProfile->biosversion);
-	cJSON_AddStringToObject(pOSInfoItem, GLOBAL_PLATFORM_NAME, pProfile->platformname);
-	cJSON_AddStringToObject(pOSInfoItem, GLOBAL_PROCESSOR_NAME, pProfile->processorname);
-	cJSON_AddStringToObject(pOSInfoItem, GLOBAL_OS_ARCH, pProfile->osarchitect);
-	cJSON_AddNumberToObject(pOSInfoItem, GLOBAL_SYS_TOTAL_PHYS_MEM, pProfile->totalmemsize);
-	cJSON_AddStringToObject(pOSInfoItem, GLOBAL_SYS_MACS, pProfile->maclist);
-	cJSON_AddStringToObject(pOSInfoItem, GLOBAL_SYS_IP, pProfile->localip);
-
-	OSInfoHead = cJSON_CreateObject();
-	cJSON_AddItemToObject(OSInfoHead, GLOBAL_OS_INFO, pOSInfoItem);
-
-	return OSInfoHead;
-}
-
-char* scparser_osinfo_print(susiaccess_agent_profile_body_t const * pProfile)
-{
-	PJSON AgentInfoJSON = NULL;
-	PJSON OSInfoJSON = NULL;
-	char* pAgentInfoPayload;
-	susiaccess_packet_body_t packet;
-
-	OSInfoJSON = scparser_osinfo_create(pProfile);
-	memset(&packet, 0, sizeof(susiaccess_packet_body_t));
-	strcpy(packet.devId, pProfile->devId);
-	strcpy(packet.handlerName, "general");
-	packet.cmd = glb_get_init_info_rep;
-	packet.content = scparser_unformatted_print(OSInfoJSON);
-	scparser_free(OSInfoJSON);
-
-	AgentInfoJSON = scparser_packet_create(&packet);
-	pAgentInfoPayload = scparser_unformatted_print(AgentInfoJSON);
-	scparser_free(AgentInfoJSON);
-	free(packet.content);
-	return pAgentInfoPayload;
-}
-
 PJSON scparser_packet_create(susiaccess_packet_body_t const * pPacket)
 {
 	/*
 {"commCmd":271,"requestID":103, XXX}
 	*/
    cJSON* root = NULL;
+   cJSON* content = NULL;
+   cJSON* pReqInfoHead = NULL;
    cJSON* datetime = NULL;
    long long tick = 0;
 
@@ -229,30 +136,43 @@ PJSON scparser_packet_create(susiaccess_packet_body_t const * pPacket)
    if(pPacket->content)
    {
 	   char* strContent = scparser_ansitoutf8(pPacket->content);
-	   root = cJSON_Parse(strContent);
+	   content = cJSON_Parse(strContent);
 	   free(strContent);
 	   strContent = NULL;
    }
    if(pPacket->type == pkt_type_custom)
-	   return root;
+	   return content;
 
-   if(!root)
+   if(!content)
+	   content = cJSON_CreateObject();
+   
+   if(pPacket->type == pkt_type_susiaccess)
+   {
 	   root = cJSON_CreateObject();
+	   cJSON_AddItemToObject(root, BASICINFO_BODY_STRUCT, content);
+	   pReqInfoHead = content;
+   }
+   else
+   {
+	   root = cJSON_CreateObject();
+	   cJSON_AddItemToObject(root, BASICINFO_CONTENT, content);
+	   pReqInfoHead = root;
+   }
 
-   cJSON_AddNumberToObject(root, BASICINFO_CMDTYPE, pPacket->cmd);
+   cJSON_AddNumberToObject(pReqInfoHead, BASICINFO_CMDTYPE, pPacket->cmd);
 
-   cJSON_AddStringToObject(root, BASICINFO_AGENTID, pPacket->devId);
-   cJSON_AddStringToObject(root, BASICINFO_HANDLERNAME, pPacket->handlerName);
+   cJSON_AddStringToObject(pReqInfoHead, BASICINFO_AGENTID, pPacket->devId);
+   cJSON_AddStringToObject(pReqInfoHead, BASICINFO_HANDLERNAME, pPacket->handlerName);
 
    {
-		struct timespec time;
 		struct timeval tv;
 		gettimeofday(&tv, NULL);
 		tick = (long long)tv.tv_sec*1000 + (long long)tv.tv_usec/1000;
    }
    datetime = cJSON_CreateObject();
-   cJSON_AddItemToObject(root, "sendTS", datetime);
+   cJSON_AddItemToObject(pReqInfoHead, "sendTS", datetime);
    cJSON_AddNumberToObject(datetime, "$date", tick);
+
    return root;
 }
 
@@ -272,18 +192,19 @@ char* scparser_packet_print(susiaccess_packet_body_t const * pPacket)
 
 int scparser_message_parse(const void* data, int datalen, susiaccess_packet_body_t * pkt)
 {
-	/*{"commCmd":251,"catalogID":4,"requestID":10}*/
+	/*{"susiCommData":{"commCmd":251,"catalogID":4,"requestID":10}}*/
 	//char* strInput = NULL;
 	cJSON* root = NULL;
+	cJSON* body = NULL;
 	cJSON* target = NULL;
 	cJSON* content = NULL;
-
+	bool bRMMSupport = true;
 	if(!data) return false;
 
 	if(!pkt) return false;
 
 	memset(pkt, 0 , sizeof(susiaccess_packet_body_t));
-
+	pkt->type = pkt_type_custom;
 	//strInput = scparser_utf8toansi(data);
 
 	//root = cJSON_Parse(strInput);
@@ -293,24 +214,36 @@ int scparser_message_parse(const void* data, int datalen, susiaccess_packet_body
 	//strInput = NULL;
 	
 	if(!root) return false;
-	pkt->type = pkt_type_custom;
-	target = root->child;
+
+	body = cJSON_GetObjectItem(root, BASICINFO_BODY_STRUCT);
+	if(!body)
+	{
+		bRMMSupport = false;
+		body = root;
+	}
+
+	target = body->child;
 	while (target)
 	{
 		if(!strcmp(target->string, BASICINFO_CMDTYPE))
 		{
-			pkt->type = pkt_type_susiaccess;
+			pkt->type = bRMMSupport?pkt_type_susiaccess:pkt_type_wisepaas;
 			pkt->cmd = target->valueint;
 		}
 		else if(!strcmp(target->string, BASICINFO_AGENTID))
 		{
-			pkt->type = pkt_type_susiaccess;
+			pkt->type = bRMMSupport?pkt_type_susiaccess:pkt_type_wisepaas;
 			strncpy(pkt->devId, target->valuestring, sizeof(pkt->devId));
 		}
 		else if(!strcmp(target->string, BASICINFO_HANDLERNAME))
 		{
-			pkt->type = pkt_type_susiaccess;
+			pkt->type = bRMMSupport?pkt_type_susiaccess:pkt_type_wisepaas;
 			strncpy(pkt->handlerName, target->valuestring, sizeof(pkt->handlerName));
+		}
+		else if(!strcmp(target->string, BASICINFO_CONTENT))
+		{
+			pkt->type = pkt_type_wisepaas;
+			content = cJSON_Duplicate(target,true);
 		}
 		else
 		{

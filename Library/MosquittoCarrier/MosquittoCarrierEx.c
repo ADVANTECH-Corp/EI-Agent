@@ -203,7 +203,10 @@ void* thread_reconnect(void* args)
 	struct mosquitto *mosq = NULL;
 	int sleep_time = 30;
 	if(args == NULL)
-		return;
+	{
+		pthread_exit(0);
+		return 0;
+	}
 	mosq = (struct mosquitto*)args;
 	srand(time(NULL));
 	sleep_time += (10 - (rand() % 20));

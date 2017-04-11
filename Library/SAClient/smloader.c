@@ -26,7 +26,6 @@ void smloader_function_load(SAManager_Interface * SAManager)
 		SAManager->SAManager_SetSubscribeCB_API = (SAMANAGER_SETSUBSCRIBECB)dlsym(SAManager->Handler, "SAManager_SetSubscribeCB");
 		SAManager->SAManager_SetConnectServerCB_API = (SAMANAGER_SETCONNECTSERVERCB)dlsym(SAManager->Handler, "SAManager_SetConnectServerCB");
 		SAManager->SAManager_SetDisconnectCB_API = (SAMANAGER_SETDISCONNECTCB)dlsym(SAManager->Handler, "SAManager_SetDisconnectCB");
-		SAManager->SAManager_SetOSInfoSendCB_API = (SAMANAGER_SETOSINFOSENDCB)dlsym(SAManager->Handler, "SAManager_SetOSInfoSendCB");
 		SAManager->SAManager_InternalSubscribe_API = (SAMANAGER_INTERNALSUBSCRIBE)dlsym(SAManager->Handler, "SAManager_InternalSubscribe");
 		SAManager->SAManager_UpdateConnectState_API = (SAMANAGER_UPDATECONNECTSTATE)dlsym(SAManager->Handler, "SAManager_UpdateConnectState");
 	}
@@ -130,9 +129,6 @@ void smloader_uninit()
 		if(g_SAManager->SAManager_SetDisconnectCB_API)
 			g_SAManager->SAManager_SetDisconnectCB_API(NULL);
 
-		if(g_SAManager->SAManager_SetOSInfoSendCB_API)
-			g_SAManager->SAManager_SetOSInfoSendCB_API(NULL);
-
 		smloader_release(g_SAManager);
 		free(g_SAManager);
 		g_SAManager = NULL;
@@ -154,15 +150,6 @@ void smloader_callback_set(PUBLISHCBFN fn_publish, SUBSCRIBECBFN fn_subscribe, C
 
 	if(g_SAManager->SAManager_SetDisconnectCB_API)
 		g_SAManager->SAManager_SetDisconnectCB_API(fn_disconnect);
-}
-
-void smloader_osinfo_send_set(SENDOSINFOCBFN fn_sendosinfo)
-{
-	if(!g_SAManager)
-		return;
-
-	if(g_SAManager->SAManager_SetOSInfoSendCB_API)
-		g_SAManager->SAManager_SetOSInfoSendCB_API(fn_sendosinfo);
 }
 
 void smloader_connect_status_update(int status)

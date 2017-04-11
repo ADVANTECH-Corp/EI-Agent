@@ -7,6 +7,7 @@
 #include <sys/time.h>
 #include "cJSON.h"
 
+#define BASICINFO_BODY_STRUCT			"susiCommData"
 #define BASICINFO_HANDLERNAME			"handlerName"
 #define BASICINFO_CMDTYPE				"commCmd"
 #define BASICINFO_AGENTID				"agentID"
@@ -34,15 +35,6 @@
 #define GLOBAL_SYS_MACS					"macs"
 #define GLOBAL_SYS_IP					"IP"
 
-#ifdef WIN32
-	#if _MSC_VER < 1900
-struct timespec {
-	time_t   tv_sec;        /* seconds */
-	long     tv_nsec;       /* nanoseconds */
-};
-	#endif // WIN_IOT
-#endif
-
 char *pkg_parser_print(PJSON item)
 {
 	if(item == NULL)
@@ -63,36 +55,46 @@ void pkg_parser_free(PJSON ptr)
 	cJSON_Delete(pAgentInfo);
 }
 
-PJSON pkg_parser_packet_create(susiaccess_packet_body_t const * pPacket)
+PJSON pkg_parser_packet_create(bool bRMMSupport, susiaccess_packet_body_t const * pPacket)
 {
 	/*
 {"commCmd":271,"requestID":103, XXX}
 	*/
+   cJSON *pReqInfoHead = NULL;
    cJSON* root = NULL;
    cJSON* datetime = NULL;
    long long tick = 0;
 
    if(!pPacket) return NULL;
    if(pPacket->content)
-	   root = cJSON_Parse(pPacket->content);
+	   pReqInfoHead = cJSON_Parse(pPacket->content);
    else
-	   root = cJSON_CreateObject();
+	   pReqInfoHead = cJSON_CreateObject();
 
-   if(!root) return NULL;
-   cJSON_AddNumberToObject(root, BASICINFO_CMDTYPE, pPacket->cmd);
-   cJSON_AddStringToObject(root, BASICINFO_AGENTID, pPacket->devId);
-   cJSON_AddStringToObject(root, BASICINFO_HANDLERNAME, pPacket->handlerName);
+   if(!pReqInfoHead) return NULL;
+
+   cJSON_AddNumberToObject(pReqInfoHead, BASICINFO_CMDTYPE, pPacket->cmd);
+   cJSON_AddStringToObject(pReqInfoHead, BASICINFO_AGENTID, pPacket->devId);
+   cJSON_AddStringToObject(pReqInfoHead, BASICINFO_HANDLERNAME, pPacket->handlerName);
    //cJSON_AddNumberToObject(root, BASICINFO_CATALOG, pPacket->catalogID);
 
    {
-		struct timespec time;
 		struct timeval tv;
 		gettimeofday(&tv, NULL);
 		tick = (long long)tv.tv_sec*1000 + (long long)tv.tv_usec/1000;
    }
    datetime = cJSON_CreateObject();
-   cJSON_AddItemToObject(root, "sendTS", datetime);
+   cJSON_AddItemToObject(pReqInfoHead, "sendTS", datetime);
    cJSON_AddNumberToObject(datetime, "$date", tick);
+
+   if(bRMMSupport)
+   {
+	   root = cJSON_CreateObject();
+	   cJSON_AddItemToObject(root, BASICINFO_BODY_STRUCT, pReqInfoHead);
+   }
+   else
+	   root = pReqInfoHead;
+
    return root;
 }
 
@@ -102,7 +104,19 @@ char* pkg_parser_packet_print(susiaccess_packet_body_t * pkt)
 	PJSON ReqInfoJSON = NULL;
 	if(!pkt)
 		return pReqInfoPayload;
-	ReqInfoJSON = pkg_parser_packet_create(pkt);
+	ReqInfoJSON = pkg_parser_packet_create(false, pkt);
+	pReqInfoPayload = pkg_parser_print_unformatted(ReqInfoJSON);
+	pkg_parser_free(ReqInfoJSON);
+	return pReqInfoPayload;
+}
+
+char* pkg_parser_internel_packet_print(susiaccess_packet_body_t * pkt)
+{
+	char* pReqInfoPayload = NULL;
+	PJSON ReqInfoJSON = NULL;
+	if(!pkt)
+		return pReqInfoPayload;
+	ReqInfoJSON = pkg_parser_packet_create(true, pkt);
 	pReqInfoPayload = pkg_parser_print_unformatted(ReqInfoJSON);
 	pkg_parser_free(ReqInfoJSON);
 	return pReqInfoPayload;
@@ -116,25 +130,41 @@ int pkg_parser_recv_message_parse(void* data, int datalen, susiaccess_packet_bod
 	cJSON* body = NULL;
 	cJSON* target = NULL;
 	cJSON* content = NULL;
-
+	bool bRMMSupport = true;
 	if(!data) return false;
 
 	if(!pkt) return false;
 
 	memset(pkt, 0 , sizeof(susiaccess_packet_body_t));
-
+	pkt->type = pkt_type_custom;
 	root = cJSON_Parse(data);
 	if(!root) return false;
 
-	target = root->child;
+	body = cJSON_GetObjectItem(root, BASICINFO_BODY_STRUCT);
+	if(!body)
+	{
+		bRMMSupport = false;
+		body = root;
+	}
+
+	target = body->child;
 	while (target)
 	{
 		if(!strcmp(target->string, BASICINFO_CMDTYPE))
+		{
 			pkt->cmd = target->valueint;
+			pkt->type = bRMMSupport?pkt_type_susiaccess:pkt_type_susiaccess;
+		}
 		else if(!strcmp(target->string, BASICINFO_AGENTID))
+		{
+			pkt->type = bRMMSupport?pkt_type_susiaccess:pkt_type_susiaccess;
 			strcpy(pkt->devId, target->valuestring);
+		}
 		else if(!strcmp(target->string, BASICINFO_HANDLERNAME))
+		{
+			pkt->type = bRMMSupport?pkt_type_susiaccess:pkt_type_susiaccess;
 			strcpy(pkt->handlerName, target->valuestring);
+		}
 		else
 		{
 			if(!content)

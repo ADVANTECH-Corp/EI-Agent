@@ -22,8 +22,8 @@
 typedef bool (SADATASYNC_API *DATASYNC_INITIALIZE)(char * pWorkdir,Handler_List_t *pLoaderList,void* pLogHandle);
 typedef void (SADATASYNC_API *DATASYNC_UNINITIALIZE)();
 typedef void (SADATASYNC_API *DATASYNC_SETFUNCCB)(PUBLISHCB g_publishCB);
-typedef void (SADATASYNC_API *DATASYNC_INSERT_CAP)(void* const handle,char *cap,char *captopic);
-typedef void (SADATASYNC_API *DATASYNC_INSERT_REP)(void* const handle,char *rep,char *reptopic);
+typedef void (SADATASYNC_API *DATASYNC_INSERT_CAP)(void* const handle,char *cap,char *captopic, int result);
+typedef void (SADATASYNC_API *DATASYNC_INSERT_REP)(void* const handle,char *rep,char *reptopic, int result);
 typedef void (SADATASYNC_API *DATASYNC_SET_LOSTTIME)(unsigned long long losttime);
 typedef void (SADATASYNC_API *DATASYNC_SET_RECONTIME)(unsigned long long recontime);
 

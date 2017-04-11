@@ -89,7 +89,7 @@ bool SACONFIG_API profile_load(char const * configFile, susiaccess_agent_profile
 	{
 		if(strlen(mac)>0)
 		{
-			sprintf(profile->devId, "0000%s", mac);
+			sprintf(profile->devId, "00000001-0000-0000-0000-%s", mac);
 			xml_SetItemValue(doc,DEV_ID_KEY, profile->devId);
 			bModify = true;
 		}
@@ -98,6 +98,12 @@ bool SACONFIG_API profile_load(char const * configFile, susiaccess_agent_profile
 	if(!xml_GetItemValue(doc, USER_TENANT_KEY, profile->tenantId, sizeof(profile->tenantId)))
 	{
 		memset(profile->tenantId, 0, sizeof(profile->tenantId));
+	}
+	if(strlen(profile->tenantId)<=0)
+	{
+		strncpy(profile->tenantId, "00000001-0000-0000-0000-000ADVANTECH", strlen("00000001-0000-0000-0000-000ADVANTECH"));
+		xml_SetItemValue(doc,USER_TENANT_KEY, profile->tenantId);
+		bModify = true;
 	}
 
 	if(!xml_GetItemValue(doc, DEV_SN_KEY, profile->sn, sizeof(profile->sn)))
@@ -279,7 +285,7 @@ bool SACONFIG_API profile_create(char const * configFile, susiaccess_agent_profi
 		if(!xml_SetItemValue(doc,DEV_ID_KEY, profile->devId))
 			goto CREATE_EXIT;
 
-		memset(profile->tenantId, 0, sizeof(profile->tenantId));
+		strncpy(profile->tenantId, "00000001-0000-0000-0000-000ADVANTECH", strlen("00000001-0000-0000-0000-000ADVANTECH")+1);
 		if(!xml_SetItemValue(doc, USER_TENANT_KEY, profile->tenantId))
 			goto CREATE_EXIT;
 

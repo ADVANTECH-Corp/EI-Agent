@@ -255,7 +255,6 @@ void HANDLERLOADER_API Loader_SetFuncCB(Callback_Functions_t* funcs)
 			pHandler->connectservercbf = funcs->connectservercbf;
 			pHandler->disconnectcbf = funcs->disconnectcbf;
 			pHandler->renamecbf = funcs->renamecbf;
-			pHandler->sendosinfocbf = funcs->sendosinfocbf;
 			pHandler->addvirtualhandlercbf = funcs->addvirtualhandlercbf;
 			pHandler->internelreportcbf = funcs->internelreportcbf;
 		}

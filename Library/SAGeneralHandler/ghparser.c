@@ -5,6 +5,7 @@
 
 #include "util_path.h"
 
+#define AGENTINFO_BODY_STRUCT	"susiCommData"
 #define AGENTINFO_CMDTYPE		"commCmd"
 #define AGENTINFO_AUTOREPORT	"autoReport"
 #define AGENTINFO_REPORTDATALEN	"reportDataLength"
@@ -43,7 +44,13 @@ bool ParseUpdateCMD(void* data, int datalen, download_params_t *pDownloadParams)
 	root = cJSON_Parse(data);
 	if(!root) return false;
 
-	pDownloadParamsItem = cJSON_GetObjectItem(root, GBL_UPDATE_PARMAS);
+	body = cJSON_GetObjectItem(root, AGENTINFO_BODY_STRUCT);
+	if(!body)
+	{
+		body = root;
+	}
+
+	pDownloadParamsItem = cJSON_GetObjectItem(body, GBL_UPDATE_PARMAS);
 	if(pDownloadParams && pDownloadParamsItem)
 	{
 		pSubItem = cJSON_GetObjectItem(pDownloadParamsItem, GBL_UPDATE_USERNAME);
@@ -79,7 +86,7 @@ bool ParseUpdateCMD(void* data, int datalen, download_params_t *pDownloadParams)
 
 bool ParseReceivedCMD(void* data, int datalen, int * cmdID, char* pSessionID)
 {
-	/*{"commCmd":251,"catalogID":4,"requestID":10, "sessionID":"XXX"}*/
+	/*{"susiCommData":{"commCmd":251,"catalogID":4,"requestID":10, "sessionID":"XXX"}}*/
 
 	cJSON* root = NULL;
 	cJSON* body = NULL;
@@ -91,13 +98,19 @@ bool ParseReceivedCMD(void* data, int datalen, int * cmdID, char* pSessionID)
 	root = cJSON_Parse(data);
 	if(!root) return false;
 
-	target = cJSON_GetObjectItem(root, AGENTINFO_CMDTYPE);
+	body = cJSON_GetObjectItem(root, AGENTINFO_BODY_STRUCT);
+	if(!body)
+	{
+		body = root;
+	}
+
+	target = cJSON_GetObjectItem(body, AGENTINFO_CMDTYPE);
 	if(target)
 	{
 		*cmdID = target->valueint;
 	}
 
-	target = cJSON_GetObjectItem(root, AGENTINFO_SESSION_ID);
+	target = cJSON_GetObjectItem(body, AGENTINFO_SESSION_ID);
 	if(target)
 	{
 		if(pSessionID)
@@ -110,7 +123,7 @@ bool ParseReceivedCMD(void* data, int datalen, int * cmdID, char* pSessionID)
 
 bool ParseRenameCMD(void* data, int datalen, char* pNewName)
 {
-	/*{"devName":"pc-test1","commCmd":113,"requestID":1001,"agentID":"","handlerName":"","sendTS":1434447015}*/
+	/*{"susiCommData":{"devName":"pc-test1","commCmd":113,"requestID":1001,"agentID":"","handlerName":"","sendTS":1434447015}}*/
 	cJSON * root = NULL, *body = NULL, *pSubItem = NULL; 
 	bool bRet = false;
 	if(!data) return false;
@@ -120,7 +133,13 @@ bool ParseRenameCMD(void* data, int datalen, char* pNewName)
 	root = cJSON_Parse(data);
 	if(!root) return false;
 
-	pSubItem = cJSON_GetObjectItem(root, GBL_RENAME_DEVNAME);
+	body = cJSON_GetObjectItem(root, AGENTINFO_BODY_STRUCT);
+	if(!body)
+	{
+		body = root;
+	}
+
+	pSubItem = cJSON_GetObjectItem(body, GBL_RENAME_DEVNAME);
 	if(pSubItem)
 	{
 		strcpy(pNewName, pSubItem->valuestring);
@@ -132,8 +151,8 @@ bool ParseRenameCMD(void* data, int datalen, char* pNewName)
 
 int ParseServerCtrl(void* data, int datalen, char* workdir, GENERAL_CTRL_MSG *pMessage)
 {
-	/*{"commCmd":125,"handlerName":"general","catalogID":4,"response":{"statuscode":0,"msg":"Server losyconnection"}}*/
-	cJSON *root = NULL, *body = NULL, *pSubItem = NULL, *pTarget = NULL; 
+	/*{"susiCommData":{"commCmd":125,"handlerName":"general","catalogID":4,"response":{"statuscode":0,"msg":"Server losyconnection"}}}*/
+	cJSON *root = NULL, *body = NULL, *pSubItem = NULL, *pTarget = NULL, *pServer = NULL,*pServerIPList = NULL; 
 	bool bRet = false;
 	if(!data) return false;
 	if(datalen<=0) return false;
@@ -142,10 +161,15 @@ int ParseServerCtrl(void* data, int datalen, char* workdir, GENERAL_CTRL_MSG *pM
 	root = cJSON_Parse(data);
 	if(!root) return false;
 
-	pSubItem = cJSON_GetObjectItem(root, GBL_SERVER_RESPONSE);
+	body = cJSON_GetObjectItem(root, AGENTINFO_BODY_STRUCT);
+	if(!body)
+	{
+		body = root;
+	}
+
+	pSubItem = cJSON_GetObjectItem(body, GBL_SERVER_RESPONSE);
 	if(pSubItem)
 	{
-		cJSON *pServer = NULL, *pServerIPList = NULL;
 		pTarget = cJSON_GetObjectItem(pSubItem, GBL_SERVER_STATUSCODE);
 		if(pTarget)
 		{
@@ -192,6 +216,9 @@ int ParseServerCtrl(void* data, int datalen, char* workdir, GENERAL_CTRL_MSG *pM
 		pServerIPList = cJSON_GetObjectItem(pSubItem, GBL_SERVER_SERVER_IP_LIST);
 		if(pServerIPList)
 		{
+			cJSON * subItem = NULL;
+			cJSON * valItem = NULL;
+			int i = 0;
 			FILE *fp = NULL;
 			int nCount = cJSON_GetArraySize(pServerIPList);
 			char filepath[MAX_PATH] = {0};

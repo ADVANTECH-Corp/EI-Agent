@@ -18,6 +18,7 @@ typedef int (GHLOADER_API *GENERAL_INITIALIZE)(HANDLER_INFO *pluginfo);
 typedef void (GHLOADER_API *GENERAL_UNINITIALIZE)(void);
 typedef void (GHLOADER_API *GENERAL_HANDLERECV)( char * const topic, void* const data, const size_t datalen, void *pRev1, void* pRev2 );
 typedef void (GHLOADER_API *GENERAL_SETSENDCB)(HandlerSendCbf  sendcbf);
+typedef void (GHLOADER_API *GENERAL_SETPROFILE)(susiaccess_agent_profile_body_t* pProfile);
 typedef void (GHLOADER_API *GENERAL_SETPLUGINHANDLERS)(Handler_List_t *pLoaderList);
 typedef void (GHLOADER_API *GENERAL_ONSTATUSCHANGE)(HANDLER_INFO *pluginfo);
 typedef void (GHLOADER_API *GENERAL_START)(void);
@@ -30,6 +31,7 @@ typedef struct SAGENERAL_INTERFACE
 	GENERAL_UNINITIALIZE		General_Uninitialize_API;
 	GENERAL_HANDLERECV			General_HandleRecv_API;
 	GENERAL_SETSENDCB			General_SetSendCB_API;
+	GENERAL_SETPROFILE			General_SetProfile_API;
 	GENERAL_SETPLUGINHANDLERS	General_SetPluginHandlers_API;
 	GENERAL_ONSTATUSCHANGE		General_OnStatusChanges_API;
 	GENERAL_START				General_Start_API;
@@ -46,7 +48,7 @@ bool ghloader_load(const char* path, SAGeneral_Interface * SAGeneral);
 bool ghloader_release(SAGeneral_Interface * SAGeneral);
 char* ghloader_get_error();
 
-SAGeneral_Interface* ghloader_initialize(char const * pWorkdir, susiaccess_agent_conf_body_t const * pConfig, Handler_List_t *pLoaderList, Handler_Loader_Interface* pHandlerInfo, void* pLogHandle);
+SAGeneral_Interface* ghloader_initialize(char const * pWorkdir, susiaccess_agent_conf_body_t const * pConfig, susiaccess_agent_profile_body_t const * pProfile, Handler_List_t *pLoaderList, Handler_Loader_Interface* pHandlerInfo, void* pLogHandle);
 void ghloader_uninitialize(SAGeneral_Interface * pSAGeneral);
 
 #ifdef __cplusplus

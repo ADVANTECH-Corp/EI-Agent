@@ -7,7 +7,6 @@ LIBRARY	"SAManager"
 		SAManager_SetSubscribeCB
 		SAManager_SetConnectServerCB
 		SAManager_SetDisconnectCB
-		SAManager_SetOSInfoSendCB
 		SAManager_InternalSubscribe
 		SAManager_UpdateConnectState
 

@@ -19,6 +19,7 @@
 #include "util_process.h"
 #include "ghparser.h"
 #include "agentupdater.h"
+#include "DeviceMessageGenerate.h"
 
 static Handler_info_ex  g_PluginInfo;
 static HandlerSendCbf  g_sendcbf = NULL;						// Client Send information (in JSON format) to Cloud Server	
@@ -29,7 +30,6 @@ static HandlerConnectServerCbf g_connectservercbf = NULL;
 static HandlerDisconnectCbf g_disconnectcbf = NULL;	
 static HandlerSendCapabilityCbf g_sendcapabilitycbf = NULL;	
 static HandlerRenameCbf g_renamecbf = NULL;
-static HandlerSendOSInfoCbf g_sendosinfocbf;
 
 LOGHANDLE g_SAGeneralLogHandle = NULL;
 
@@ -41,6 +41,7 @@ const int genreral_RequestID = cagent_request_general;
 const int genreral_ActionID = cagent_action_general;
 
 Handler_List_t *g_pPL_List = NULL;
+susiaccess_agent_profile_body_t* g_pProfile = NULL;
 //int g_redundantServerNum = 0;
 //int g_connectedFailedCnt = 0;
 
@@ -126,6 +127,26 @@ bool  GeneralSend(int cmd, char const * msg, int len, void *pRev1, void* pRev2)
 	return bRet;
 }
 
+
+bool SendOSInfo()
+{
+	long long tick = 0;
+	char strPayloadBuff[2048] = {0};
+	char localip[16] = {0};
+
+	if(g_pProfile == NULL)
+		return false;
+
+	tick = DEV_GetTimeTick();
+
+	if(!DEV_CreateOSInfo(g_pProfile, tick, strPayloadBuff, sizeof(strPayloadBuff)))
+		return false;
+
+	if(g_sendcbf)
+		g_sendcbf(&g_PluginInfo, 116/*OS Info CMD ID*/, strPayloadBuff, strlen(strPayloadBuff), NULL,NULL);
+
+}
+
 static void* thread_agent_get_capability(void *args)
 {
 	Handler_Loader_Interface *pInterfaceTmp = NULL;
@@ -137,8 +158,7 @@ static void* thread_agent_get_capability(void *args)
 		return 0;
 	}
 
-	if(g_sendosinfocbf)
-		g_sendosinfocbf();
+	SendOSInfo();
 
 	pInterfaceTmp = pLoaderList->items;
 	while(pInterfaceTmp)
@@ -344,7 +364,6 @@ int SAGENERAL_API General_Initialize(HANDLER_INFO *pluginfo)
 	g_connectservercbf = g_PluginInfo.connectservercbf = tmpinfo->connectservercbf;	
 	g_disconnectcbf = g_PluginInfo.disconnectcbf = tmpinfo->disconnectcbf;
 	g_renamecbf = g_PluginInfo.renamecbf = tmpinfo->renamecbf;
-	g_sendosinfocbf = g_PluginInfo.sendosinfocbf = tmpinfo->sendosinfocbf;
 	
 	util_path_combine(g_ConfigPath, tmpinfo->WorkDir, DEF_CONFIG_FILE_NAME);
 	
@@ -360,6 +379,7 @@ void SAGENERAL_API General_Uninitialize()
 		g_GetCapabilityThreadHandle = 0;
 	}*/
 	//StopAutoReport(g_pPL_List, NULL);
+	g_pProfile = NULL;
 	g_sendcbf = NULL;
 	g_SAGeneralLogHandle = NULL;
 
@@ -394,6 +414,13 @@ void SAGENERAL_API General_HandleRecv( char * const topic, void* const data, con
 				pthread_t getCapabilityThreadHandle = 0;
 				if(pthread_create(&getCapabilityThreadHandle, NULL, thread_agent_get_capability, g_pPL_List)==0)
 					pthread_detach(getCapabilityThreadHandle);
+
+				if(strlen(cSessionID)>0)
+					snprintf(cResponse, sizeof(cResponse), "{\"result\":\"%s\",\"sessionID\":\"%s\"}", "SUCCESS", cSessionID);
+				else
+					snprintf(cResponse, sizeof(cResponse), "{\"result\":\"%s\"}", "SUCCESS");
+
+				respID = general_info_spec_rep;
 			}
 		}
 		break;
@@ -438,8 +465,7 @@ void SAGENERAL_API General_HandleRecv( char * const topic, void* const data, con
 		break;
 	case glb_get_init_info_rep:
 		{
-			if(g_sendosinfocbf)
-				g_sendosinfocbf();
+			SendOSInfo();
 		}
 		break;
 	case glb_update_cagent_stop_req:
@@ -513,6 +539,11 @@ void SAGENERAL_API General_HandleRecv( char * const topic, void* const data, con
 
 	if(respID>0 && strlen(cResponse)>0)
 		GeneralSend(respID, cResponse, strlen(cResponse), NULL, NULL);
+}
+
+void SAGENERAL_API General_SetProfile(susiaccess_agent_profile_body_t *pProfile)
+{
+	g_pProfile = pProfile;
 }
 
 void SAGENERAL_API General_SetPluginHandlers(Handler_List_t *pLoaderList)

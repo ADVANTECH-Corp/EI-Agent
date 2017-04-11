@@ -19,14 +19,6 @@ char *scparser_unformatted_print(PJSON item);
 
 void scparser_free(PJSON ptr);
 
-PJSON scparser_agentinfo_create(susiaccess_agent_profile_body_t const * pProfile, int status);
-
-char* scparser_agentinfo_print(susiaccess_agent_profile_body_t const * pProfile, int status);
-
-PJSON scparser_osinfo_create(susiaccess_agent_profile_body_t const * pProfile);
-
-char* scparser_osinfo_print(susiaccess_agent_profile_body_t const * pProfile);
-
 PJSON scparser_packet_create(susiaccess_packet_body_t const * pPacket);
 
 char* scparser_packet_print(susiaccess_packet_body_t const * pPacket);

@@ -36,6 +36,7 @@ extern "C" {
 int SAGENERAL_API General_Initialize(HANDLER_INFO *pluginfo);
 void SAGENERAL_API General_Uninitialize();
 void SAGENERAL_API General_HandleRecv( char * const topic, void* const data, const size_t datalen, void *pRev1, void* pRev2 );
+void SAGENERAL_API General_SetProfile(susiaccess_agent_profile_body_t *pProfile);
 void SAGENERAL_API General_SetPluginHandlers(Handler_List_t *pLoaderList);
 void SAGENERAL_API General_OnStatusChange( HANDLER_INFO *pluginfo );
 void SAGENERAL_API General_Start();

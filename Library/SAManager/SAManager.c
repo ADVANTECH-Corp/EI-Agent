@@ -16,6 +16,7 @@
 #include "reloader.h"
 #include "SADataSync.h"
 #include "wisepaas_02_def.h"
+#include "sys/time.h"
 
 #define general_info_spec_rep			2052
 #define general_info_upload_rep			2055
@@ -31,7 +32,6 @@ PUBLISHCB g_publishCB = NULL;
 SUBSCRIBECB g_subscribeCB = NULL;
 CONNECTSERVERCB g_connectserverCB = NULL;
 DISCONNECTCB g_disconnectCB = NULL;
-SENDOSINFOCB g_sendosinfoCB = NULL;
 int g_iConnStatus = 1;
 LOGHANDLE g_samanagerlogger = NULL;
 
@@ -135,6 +135,7 @@ susiaccess_packet_body_t*  SAManager_WrapReqPacket(Handler_info const * plugin, 
 
 	packet = malloc(sizeof(susiaccess_packet_body_t));
 	memset(packet, 0, sizeof(susiaccess_packet_body_t));
+	packet->type = pkt_type_wisepaas;
 
 #if 0
 	if(requestData)
@@ -203,7 +204,7 @@ AGENT_SEND_STATUS SAManager_SendMessage( HANDLE const handle, int enum_act,
 		SAManagerLog(g_samanagerlogger, Warning, "Request Packet is empty!");
 		return result;
 	}
-	sprintf(topicStr, DEF_AGENTACT_TOPIC, plugin->agentInfo->tenantId, plugin->agentInfo->devId);
+	sprintf(topicStr, DEF_AGENTACT_TOPIC, plugin->agentInfo->tenantId, DEF_PRODUCT_NAME, plugin->agentInfo->devId);
 	if(g_publishCB)
 	{
 		if(g_publishCB(topicStr, 0, 0, packet) == 0)
@@ -268,7 +269,6 @@ susiaccess_packet_body_t * SAManager_WrapAutoReportPacket(Handler_info const * p
 	cJSON* oproot = NULL;
 	cJSON* node = NULL;
 	cJSON* root = NULL;
-	cJSON* pfinfoNode = NULL;
 	char* buff = NULL;
 	char* data = NULL;
 	int length = 0;
@@ -286,7 +286,6 @@ susiaccess_packet_body_t * SAManager_WrapAutoReportPacket(Handler_info const * p
 		return packet;
 
 	root = cJSON_CreateObject();
-	pfinfoNode = cJSON_CreateObject();
 	//node = cJSON_Parse((const char *)requestData);
 	node = cJSON_Parse((const char *)data);
 	free(data);
@@ -295,17 +294,15 @@ susiaccess_packet_body_t * SAManager_WrapAutoReportPacket(Handler_info const * p
 	{
 		cJSON* chNode = node->child;
 		if(chNode)
-			cJSON_AddItemToObject(pfinfoNode, chNode->string, cJSON_Duplicate(chNode, true));	
+			cJSON_AddItemToObject(root, chNode->string, cJSON_Duplicate(chNode, true));	
 	}
 	cJSON_Delete(node);
-	cJSON_AddItemToObject(root, "data", pfinfoNode);
 
 	oproot = cJSON_CreateObject();
 	if(oproot)
 	{
 		long long tick = 0;
 		{
-			struct timespec time;
 			struct timeval tv;
 			gettimeofday(&tv, NULL);
 			tick = (long long)tv.tv_sec*1000 + (long long)tv.tv_usec/1000;
@@ -316,9 +313,9 @@ susiaccess_packet_body_t * SAManager_WrapAutoReportPacket(Handler_info const * p
 	{		
 		if(root->child)
 		{
-			if(root->child->child)
+			if(root->child)
 			{
-				cJSON_AddItemToObject(root->child->child,"opTS", cJSON_Duplicate(oproot, 1));
+				cJSON_AddItemToObject(root->child,"opTS", cJSON_Duplicate(oproot, 1));
 			}
 		}	
 	}
@@ -329,6 +326,7 @@ susiaccess_packet_body_t * SAManager_WrapAutoReportPacket(Handler_info const * p
 	
 	packet = malloc(sizeof(susiaccess_packet_body_t));
 	memset(packet, 0, sizeof(susiaccess_packet_body_t));
+	packet->type = pkt_type_wisepaas;
 	packet->content = (char*)malloc(length+1);
 	memset(packet->content, 0, length+1);
 	memcpy(packet->content, buff, length);
@@ -371,9 +369,6 @@ AGENT_SEND_STATUS SAManager_SendAutoReport( HANDLE const handle,
 
 	sprintf(topicStr, DEF_AGENTREPORT_TOPIC, plugin->agentInfo->tenantId, plugin->agentInfo->devId);
 
-	if(g_SADataSync)
-		if(g_SADataSync->DataSync_Insert_Rep_API)
-			g_SADataSync->DataSync_Insert_Rep_API(handle,packet->content,topicStr);
 
 	if(g_publishCB)
 	{
@@ -386,6 +381,10 @@ AGENT_SEND_STATUS SAManager_SendAutoReport( HANDLE const handle,
 		result = cagent_callback_null;
 
 	reloader_data_recv(g_RuleEngine, handle, requestData, requestLen);
+
+	if(g_SADataSync)
+		if(g_SADataSync->DataSync_Insert_Rep_API)
+			g_SADataSync->DataSync_Insert_Rep_API(handle,packet->content,topicStr, result);
 
 	if(packet->content)
 		free(packet->content);
@@ -416,7 +415,6 @@ susiaccess_packet_body_t * SAManager_WrapCapabilityPacket(Handler_info const * p
 	cJSON* oproot = NULL;
 	cJSON* node = NULL;
 	cJSON* root = NULL;
-	cJSON* pfinfoNode = NULL;
 	char* buff = NULL;
 	char* data = NULL;
 	int length = 0;
@@ -434,25 +432,21 @@ susiaccess_packet_body_t * SAManager_WrapCapabilityPacket(Handler_info const * p
 		return packet;
 
 	root = cJSON_CreateObject();
-	pfinfoNode = cJSON_CreateObject();
-	//node = cJSON_Parse((const char *)requestData);
 	node = cJSON_Parse((const char *)data);
 	free(data);
 	if(node)
 	{
 		cJSON* chNode = node->child;
 		if(chNode)
-			cJSON_AddItemToObject(pfinfoNode, chNode->string, cJSON_Duplicate(chNode, true));	
+			cJSON_AddItemToObject(root, chNode->string, cJSON_Duplicate(chNode, true));	
 	}
 	cJSON_Delete(node);
-	cJSON_AddItemToObject(root, "infoSpec", pfinfoNode);
 
 	oproot = cJSON_CreateObject();
 	if(oproot)
 	{
 		long long tick = 0;
 		{
-			struct timespec time;
 			struct timeval tv;
 			gettimeofday(&tv, NULL);
 			tick = (long long)tv.tv_sec*1000 + (long long)tv.tv_usec/1000;
@@ -462,8 +456,7 @@ susiaccess_packet_body_t * SAManager_WrapCapabilityPacket(Handler_info const * p
 	if(root)
 	{
 		if(root->child)
-			if(root->child->child)
-				cJSON_AddItemToObject(root->child->child,"opTS",oproot);
+			cJSON_AddItemToObject(root->child,"opTS",oproot);
 	}
 	buff = cJSON_PrintUnformatted(root);
 	cJSON_Delete(root);
@@ -471,6 +464,7 @@ susiaccess_packet_body_t * SAManager_WrapCapabilityPacket(Handler_info const * p
 
 	packet = malloc(sizeof(susiaccess_packet_body_t));
 	memset(packet, 0, sizeof(susiaccess_packet_body_t));
+	packet->type = pkt_type_wisepaas;
 	packet->content = (char*)malloc(length+1);
 	memset(packet->content, 0, length+1);
 	memcpy(packet->content, buff, length);
@@ -512,11 +506,7 @@ AGENT_SEND_STATUS SAManager_SendCapability( HANDLE const handle,
 		SAManagerLog(g_samanagerlogger, Warning, "Request Packet is empty!");
 		return result;
 	}
-	sprintf(topicStr, DEF_AGENTACT_TOPIC, plugin->agentInfo->tenantId, plugin->agentInfo->devId);
-
-	if(g_SADataSync)
-		if(g_SADataSync->DataSync_Insert_Cap_API)
-			g_SADataSync->DataSync_Insert_Cap_API(handle,packet->content,topicStr);
+	sprintf(topicStr, DEF_AGENTACT_TOPIC, plugin->agentInfo->tenantId, DEF_PRODUCT_NAME, plugin->agentInfo->devId);
 
 	if(g_publishCB)
 	{
@@ -527,6 +517,9 @@ AGENT_SEND_STATUS SAManager_SendCapability( HANDLE const handle,
 	}
 	else
 		result = cagent_callback_null;
+	if(g_SADataSync)
+		if(g_SADataSync->DataSync_Insert_Cap_API)
+			g_SADataSync->DataSync_Insert_Cap_API(handle,packet->content,topicStr, result);
 
 	if(packet->content)
 		free(packet->content);
@@ -585,6 +578,7 @@ susiaccess_packet_body_t * SAManager_WrapEventNotifyPacket(Handler_info const * 
 
 	packet = malloc(sizeof(susiaccess_packet_body_t));
 	memset(packet, 0, sizeof(susiaccess_packet_body_t));
+	packet->type = pkt_type_wisepaas;
 	packet->content = (char*)malloc(length+1);
 	memset(packet->content, 0, length+1);
 	memcpy(packet->content, buff, length);
@@ -624,7 +618,7 @@ AGENT_SEND_STATUS SAManager_SendEventNotify( HANDLE const handle, HANDLER_NOTIFY
 		SAManagerLog(g_samanagerlogger, Warning, "Request Packet is empty!");
 		return result;
 	}
-	sprintf(topicStr, DEF_EVENTNOTIFY_TOPIC, plugin->agentInfo->devId);
+	sprintf(topicStr, DEF_EVENTNOTIFY_TOPIC, plugin->agentInfo->tenantId, DEF_PRODUCT_NAME, plugin->agentInfo->devId);
 	if(g_publishCB)
 	{
 		if(g_publishCB(topicStr, 0, 0, packet) == true)
@@ -730,15 +724,7 @@ AGENT_SEND_STATUS SAManager_Rename(char const * name)
 	return cagent_success;
 }
 
-AGENT_SEND_STATUS SAManager_SendOSInfo()
-{
-	bool bRet = false;
-	if(g_sendosinfoCB)
-		bRet = g_sendosinfoCB();
-	return bRet?cagent_success:cagent_send_data_error;
-}
-
-AGENT_SEND_STATUS SAManager_AddVirtualHandler(char *VirName, char *HandlerName)
+void SAManager_AddVirtualHandler(char *VirName, char *HandlerName)
 {
 	hlloader_load_virtualhandler(g_pSALoader, &g_handlerList,VirName,HandlerName);
 }
@@ -832,7 +818,6 @@ void SAMANAGER_API SAManager_Initialize(susiaccess_agent_conf_body_t * config, s
 		functions.connectservercbf = SAManager_ConnectServer;
 		functions.disconnectcbf = SAManager_Disconnect;
 		functions.renamecbf = SAManager_Rename;
-		functions.sendosinfocbf = SAManager_SendOSInfo;
 		functions.addvirtualhandlercbf = SAManager_AddVirtualHandler;
 		functions.internelreportcbf = SAManager_InternelReport;
 		hlloader_cbfunc_set(g_pSALoader, &functions);
@@ -847,7 +832,7 @@ void SAMANAGER_API SAManager_Initialize(susiaccess_agent_conf_body_t * config, s
 
 			hlloader_basic_handlerinfo_get(g_pSALoader, &GlobalPlugin);
 
-			g_SAGeneral = ghloader_initialize(workdir, config, &g_handlerList, &GlobalPlugin, loghandle);
+			g_SAGeneral = ghloader_initialize(workdir, config, profile, &g_handlerList, &GlobalPlugin, loghandle);
 
 			if(g_SAGeneral)
 			{
@@ -960,18 +945,13 @@ void SAMANAGER_API SAManager_SetDisconnectCB(DISCONNECTCB func)
 	g_disconnectCB = func;
 }
 
-void SAMANAGER_API SAManager_SetOSInfoSendCB(SENDOSINFOCB func)
-{
-	g_sendosinfoCB = func;
-}
-
 void SAMANAGER_API SAManager_InternalSubscribe()
 {
 	/* Add Topic Callback*/
 	char topicStr[128] = {0};
 	if(!g_pProfile)
 		return;
-	sprintf(topicStr, DEF_CALLBACKREQ_TOPIC, g_pProfile->tenantId, g_pProfile->devId);
+	sprintf(topicStr, DEF_CALLBACKREQ_TOPIC, g_pProfile->tenantId, DEF_PRODUCT_NAME, g_pProfile->devId);
 	if(g_subscribeCB)
 		g_subscribeCB(topicStr, 0, SAManager_RecvInternalCommandReq);
 

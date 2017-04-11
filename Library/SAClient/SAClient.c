@@ -60,18 +60,50 @@ bool DES_BASE64Decode(char * srcBuf,char **destBuf)
 	return bRet;
 }
 
+void saclient_get_devid(const char* topic, char* devid)
+{
+	char *start = NULL, *end = NULL;
+	int pos = 4;
+	if(topic == NULL) return;
+	if(devid == NULL) return;
+	start = strstr(topic, "/wisepaas/"); //verify support topic start with "/wisepaas/"
+	if(start)
+	{
+		while(pos >0)
+		{
+			start = strstr(start, "/")+1;
+			if(start == 0)
+				return;
+			pos--;
+		}
+		end = strstr(start, "/");
+		if(end)
+			strncpy(devid, start, end-start);
+	}
+	else
+	{
+		start = strstr(topic, "/cagent/admin/");
+		if(start)
+		{
+			start += strlen("/cagent/admin/");
+			end = strstr(start, "/");
+			if(end)
+				strncpy(devid, start, end-start);
+		}
+	}
+}
+
 void* threadheartbeat(void* args)
 {
 	int interval=1000;
 	int iHeartbeat = g_iHeartbeatRate;
 
+	core_address_get(g_profile->localip);
+
 	smloader_internal_subscribe(g_profile);
-	
+
 	core_device_register();
 	SAClientLog(g_coreloghandle, Debug, "Send Agent Info");
-
-	core_platform_register();
-	SAClientLog(g_coreloghandle, Debug, "Send OS Info");
 
 	smloader_connect_status_update(AGENT_STATUS_ONLINE);
 
@@ -215,6 +247,13 @@ void  saclient_on_recv(const char* topic, const void *pkt, const long pktlength,
 
 		scparser_message_parse(pkt, pktlength, &packet);
 
+		if(strlen(packet.devId) == 0)
+		{
+			char devid[37]={0};
+			saclient_get_devid(topic, devid);
+			strcpy(packet.devId, devid);
+		}
+
 		if(target->callback_func)
 			target->callback_func(topic, &packet, NULL, NULL);
 
@@ -225,7 +264,6 @@ void  saclient_on_recv(const char* topic, const void *pkt, const long pktlength,
 long long saclient_get_timetick(void* userdata)
 {
 	long long tick = 0;
-	struct timespec time;
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	tick = (long long)tv.tv_sec*1000 + (long long)tv.tv_usec/1000;
@@ -390,13 +428,9 @@ int SACLIENT_API saclient_initialize(susiaccess_agent_conf_body_t * config, susi
 
 		core_heartbeat_callback_set(saclient_on_heartbeatrate_query, saclient_on_heartbeatrate_update);
 
-		core_tag_set("RMM");
+		core_tag_set(DEF_PRODUCT_NAME);
 
 		core_product_info_set(profile->sn, profile->parentID, profile->version, profile->type, profile->product, profile->manufacture);
-
-		core_os_info_set(profile->osversion, profile->osarchitect, profile->totalmemsize, profile->maclist);
-
-		core_platform_info_set(profile->biosversion, profile->platformname, profile->processorname);
 
 		//core_local_ip_set(NULL);
 
@@ -420,7 +454,6 @@ int SACLIENT_API saclient_initialize(susiaccess_agent_conf_body_t * config, susi
 	/*Load SAManager*/
 	smloader_init(g_config, g_profile, g_coreloghandle);
 	smloader_callback_set(saclient_publish, saclient_subscribe, saclient_server_connect_ssl, saclient_disconnect);
-	smloader_osinfo_send_set(core_platform_register);
 	
 	return iRet;
 }
@@ -547,14 +580,9 @@ int SACLIENT_API saclient_reinitialize(susiaccess_agent_conf_body_t * config, su
 
 		core_time_tick_callback_set(saclient_get_timetick);
 
-		core_tag_set("RMM");
+		core_tag_set(DEF_PRODUCT_NAME);
 
 		core_product_info_set(g_profile->sn, g_profile->parentID, g_profile->version, g_profile->type, g_profile->product, g_profile->manufacture);
-
-		core_os_info_set(g_profile->osversion, g_profile->osarchitect, g_profile->totalmemsize, g_profile->maclist);
-
-		core_platform_info_set(g_profile->biosversion, g_profile->platformname, g_profile->processorname);
-
 	}
 	else
 		return iRet;

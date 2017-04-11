@@ -21,6 +21,7 @@ void ghloader_function_load(SAGeneral_Interface * SAGeneral)
 		SAGeneral->General_Uninitialize_API = (GENERAL_UNINITIALIZE)util_dlsym(SAGeneral->Handler, "General_Uninitialize");
 		SAGeneral->General_HandleRecv_API = (GENERAL_HANDLERECV)util_dlsym(SAGeneral->Handler, "General_HandleRecv");
 		SAGeneral->General_SetSendCB_API = (GENERAL_SETSENDCB)util_dlsym(SAGeneral->Handler, "General_SetSendCB");
+		SAGeneral->General_SetProfile_API = (GENERAL_SETPROFILE)util_dlsym(SAGeneral->Handler, "General_SetProfile");
 		SAGeneral->General_SetPluginHandlers_API = (GENERAL_SETPLUGINHANDLERS)util_dlsym(SAGeneral->Handler, "General_SetPluginHandlers");
 		SAGeneral->General_OnStatusChanges_API = (GENERAL_ONSTATUSCHANGE)util_dlsym(SAGeneral->Handler, "General_OnStatusChange");
 		SAGeneral->General_Start_API = (GENERAL_START)util_dlsym(SAGeneral->Handler, "General_Start");
@@ -71,7 +72,7 @@ char* ghloader_get_error()
 	return error;
 }
 
-SAGeneral_Interface* ghloader_initialize(char const * pWorkdir, susiaccess_agent_conf_body_t const * pConfig, Handler_List_t *pHandlerList, Handler_Loader_Interface* pHandlerInfo, void* pLogHandle)
+SAGeneral_Interface* ghloader_initialize(char const * pWorkdir, susiaccess_agent_conf_body_t const * pConfig, susiaccess_agent_profile_body_t const * pProfile, Handler_List_t *pHandlerList, Handler_Loader_Interface* pHandlerInfo, void* pLogHandle)
 {
 	SAGeneral_Interface * pSAGeneral = NULL;
 
@@ -117,6 +118,9 @@ SAGeneral_Interface* ghloader_initialize(char const * pWorkdir, susiaccess_agent
 
 			if(pSAGeneral->General_OnStatusChanges_API)
 				pHandlerInfo->Handler_OnStatusChange_API = (HANDLER_ONSTATUSCAHNGE)pSAGeneral->General_OnStatusChanges_API;
+
+			if(pSAGeneral->General_SetProfile_API)
+				pSAGeneral->General_SetProfile_API(pProfile);
 
 			if(pSAGeneral->General_SetPluginHandlers_API)
 				pSAGeneral->General_SetPluginHandlers_API(pHandlerList);

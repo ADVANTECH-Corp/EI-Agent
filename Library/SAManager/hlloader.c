@@ -141,7 +141,7 @@ void hlloader_handler_recv(SALoader_Interface* pSALoader, Handler_List_t *pHandl
 	if(!pSALoader)
 		return;
 
-	pReqInfoPayload = pkg_parser_packet_print(pkt);
+	pReqInfoPayload = pkg_parser_internel_packet_print(pkt);
 
 	if(pSALoader->Loader_FindHandler_API)
 	{
