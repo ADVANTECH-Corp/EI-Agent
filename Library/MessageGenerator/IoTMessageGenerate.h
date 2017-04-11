@@ -12,6 +12,7 @@ typedef enum{
 #ifdef __cplusplus
 extern "C" {
 #endif
+	long long IoT_GetTimeTick();
 
 	MSG_CLASSIFY_T* IoT_CreateRoot(char* handlerName);
 	MSG_CLASSIFY_T* IoT_AddGroup(MSG_CLASSIFY_T* pNode, char* groupName);

@@ -94,6 +94,7 @@ typedef struct msg_class{
 #ifdef __cplusplus
 extern "C" {
 #endif
+	long long MSG_GetTimeTick();
 
 	MSG_CLASSIFY_T* MSG_CreateRoot();
 	MSG_CLASSIFY_T* MSG_CreateRootEx(AttributeChangedCbf onchanged, void* pRev1);

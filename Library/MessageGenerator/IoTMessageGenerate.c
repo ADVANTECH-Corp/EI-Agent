@@ -3,26 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <sys/time.h>
 #include "cJSON.h"
-
-#ifdef WIN32
-	#if _MSC_VER < 1900
-struct timespec {
-	time_t   tv_sec;        /* seconds */
-	long     tv_nsec;       /* nanoseconds */
-};
-	#endif // WIN_IOT
-#endif
 
 long long IoT_GetTimeTick()
 {
-	long long tick = 0;
-	struct timespec time;
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-	tick = (long long)tv.tv_sec*1000 + (long long)tv.tv_usec/1000;
-	return tick;
+	return MSG_GetTimeTick();
 }
 
 #pragma region Add_Resource
@@ -322,19 +307,18 @@ char *IoT_PrintFullCapability(MSG_CLASSIFY_T* pRoot, char *agentID)
 	if(pRoot == NULL || agentID == NULL)
 		return NULL;
 	data = MSG_PrintUnformatted(pRoot);
-	root = cJSON_Parse(data);
+	target = cJSON_Parse(data);
 	free(data);
-	if(!root) return NULL;
+	if(!target) return NULL;
 	
-	target =  cJSON_Duplicate(root, 1);
-
 	root = cJSON_CreateObject();
 	cJSON_AddItemToObject(root, "content", target);
 	cJSON_AddNumberToObject(root, "commCmd", 2052);
 	cJSON_AddStringToObject(root, "agentID", agentID);
 	cJSON_AddStringToObject(root, "handlerName", "general");
 	
-	
+	tick = IoT_GetTimeTick();
+
 	datetime = cJSON_CreateObject();
 	cJSON_AddItemToObject(root, "sendTS", datetime);
 	cJSON_AddNumberToObject(datetime, "$date", tick);

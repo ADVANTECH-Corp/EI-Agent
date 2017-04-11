@@ -5,6 +5,17 @@
 #include "cJSON.h"
 #include "WISEPlatform.h"
 #include <math.h>
+#include <time.h>
+#include <sys/time.h>
+
+long long MSG_GetTimeTick()
+{
+	long long tick = 0;
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	tick = (long long)tv.tv_sec*1000 + (long long)tv.tv_usec/1000;
+	return tick;
+}
 
 #pragma region Add_Resource
 MSG_CLASSIFY_T* MSG_CreateRoot()

@@ -3,9 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <sys/time.h>
 #include "util_string.h"
-#include "wisepaas_02_def.h"
 #include "cJSON.h"
 #include "WISEPlatform.h"
 
@@ -50,14 +48,6 @@
 
 #define TAG_MESSAGE_CONTAIN				"content"
 
-#ifdef WIN32
-	#if _MSC_VER < 1900
-struct timespec {
-	time_t   tv_sec;        /* seconds */
-	long     tv_nsec;       /* nanoseconds */
-};
-	#endif // WIN_IOT
-#endif
 #pragma region Add_Resource
 
 char *DEV_UTF8toAnsi(const char* str)
@@ -106,6 +96,11 @@ char * DEV_AnsitoUTF8(char* wText)
 		memcpy(utf8RetStr, wText, tmpLen);
 	}
 	return utf8RetStr;
+}
+
+long long DEV_GetTimeTick()
+{
+	return MSG_GetTimeTick();
 }
 
 bool DEV_CreateAgentInfo(susiaccess_agent_profile_body_t const * pProfile, int status, long long tick, char* strInfo, int length)
@@ -205,23 +200,21 @@ bool DEV_CreateOSInfo(susiaccess_agent_profile_body_t* profile, long long tick, 
 		profile->osarchitect?profile->osarchitect:"",
 		profile->totalmemsize,
 		profile->maclist?profile->maclist:profile->mac,
-		profile->localip?profile->localip:"",
-		profile->devId?profile->devId:"",
-		tick);
+		profile->localip?profile->localip:"");
 	if(iRet>=0)
 		return true;
 	else
 		return false;
 }
 
-bool DEV_GetActionReqTopic_Tenant(char* tenantID, char* devID, char * topic, int length)
+bool DEV_GetActionReqTopic_Tenant(char* tenantID, char* devID, char* productTag, char * topic, int length)
 {
 	int iRet = 0;
 	if(!devID)
 		return false; 
 	
 #ifdef _WISEPAAS_02_DEF_H_
-	iRet = snprintf(topic, length, DEF_CALLBACKREQ_TOPIC, tenantID, devID);
+	iRet = snprintf(topic, length, DEF_CALLBACKREQ_TOPIC, tenantID, productTag, devID);
 #else
 	iRet = snprintf(topic, length, DEF_AGENTACT_TOPIC, devID);
 #endif
@@ -235,7 +228,6 @@ char*  DEV_CreateHandlerList(char* devID, char** handldelist, int count)
 {
 	cJSON* root = NULL;
 	cJSON* datetime = NULL;
-	long long tick = 0;
 	char *buff = NULL;
 	char *buff2 = NULL;
 	if(!devID || !handldelist)
@@ -285,7 +277,6 @@ char* DEV_CreateFullEventNotify(char* devID, int severity, char* handler, char* 
 {
 	cJSON* root = NULL;
 	cJSON* datetime = NULL;
-	long long tick = 0;
 	char* buff = NULL;
 	char* buff2 = NULL;
 	if(!subtype || !message)
@@ -318,13 +309,13 @@ char* DEV_CreateFullEventNotify(char* devID, int severity, char* handler, char* 
 	return buff;
 }
 
-bool DEV_GetEventNotifyTopic_Tenant(char* tenantID, char* devID, char * topic, int length)
+bool DEV_GetEventNotifyTopic_Tenant(char* tenantID, char* devID, char* productTag, char * topic, int length)
 {
 	int iRet = 0;
 	if(!devID || !topic)
 		return false; 
 #ifdef _WISEPAAS_02_DEF_H_
-		iRet = snprintf(topic, length, DEF_EVENTNOTIFY_TOPIC, tenantID, devID);
+		iRet = snprintf(topic, length, DEF_EVENTNOTIFY_TOPIC, tenantID, productTag, devID);
 #else
 		iRet = snprintf(topic, length, DEF_EVENTNOTIFY_TOPIC, devID);
 #endif
@@ -367,11 +358,7 @@ char* DEV_CreateFullMessage(char* devID, char* handler, int cmdId, char* msg)
 	if(cJSON_GetObjectItem(root, TAG_SUSICOMM_SENDTS) == NULL)
 	{
 		cJSON* datetime = NULL;
-		long long tick = 0;
-		struct timespec time;
-		struct timeval tv;
-		gettimeofday(&tv, NULL);
-		tick = (long long)tv.tv_sec*1000 + (long long)tv.tv_usec/1000;
+		long long tick = DEV_GetTimeTick();
 		datetime = cJSON_CreateObject();
 		cJSON_AddItemToObject(root, TAG_SUSICOMM_SENDTS, datetime);
 		cJSON_AddNumberToObject(datetime, TAG_SUSICOMM_TIMESTAMP, tick);

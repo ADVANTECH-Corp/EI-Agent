@@ -2,12 +2,13 @@
 #define _DEVICE_MESSAGE_GENERATE_H_
 #include "MsgGenerator.h"
 #include <stdbool.h>
-#include "wisepaas_02_def.h"
 #include "susiaccess_def.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+	long long DEV_GetTimeTick();
 
 	bool DEV_CreateAgentInfo(susiaccess_agent_profile_body_t const * pProfile, int status, long long tick, char* strInfo, int length);
 
@@ -29,17 +30,17 @@ extern "C" {
 	bool DEV_GetWillMessageTopic_Tenant(char* tenantID, char* devID, char * topic, int length);
 #define DEV_GetWillMessageTopic(devID, topic, length) DEV_GetWillMessageTopic_Tenant("general", devID, topic, length)
 
-	bool DEV_GetActionReqTopic_Tenant(char* tenantID, char* devID, char * topic, int length);
-#define DEV_GetActionReqTopic(devID, topic, length) DEV_GetActionReqTopic_Tenant("general", devID, topic, length)
+	bool DEV_GetActionReqTopic_Tenant(char* tenantID, char* devID, char* productTag, char * topic, int length);
+#define DEV_GetActionReqTopic(devID, productTag, topic, length) DEV_GetActionReqTopic_Tenant("general", devID, productTag, topic, length)
 
-	bool DEV_GetEventNotifyTopic_Tenant(char* tenantID, char* devID, char * topic, int length);
-#define DEV_GetEventNotifyTopic(devID, topic, length) DEV_GetEventNotifyTopic_Tenant("general", devID, topic, length)
+	bool DEV_GetEventNotifyTopic_Tenant(char* tenantID, char* devID, char* productTag, char * topic, int length);
+#define DEV_GetEventNotifyTopic(devID, productTag, topic, length) DEV_GetEventNotifyTopic_Tenant("general", devID, productTag, topic, length)
 
-#define DEV_GetOSInfoTopic_Tenant(tenantID, devID, topic, length) DEV_GetActionReqTopic_Tenant(tenantID, devID, topic, length)
-#define DEV_GetOSInfoTopic(devID, topic, length) DEV_GetActionReqTopic(devID, topic, length)
+#define DEV_GetOSInfoTopic_Tenant(tenantID, devID, productTag, topic, length) DEV_GetActionReqTopic_Tenant(tenantID, devID, productTag, topic, length)
+#define DEV_GetOSInfoTopic(devID, productTag, topic, length) DEV_GetActionReqTopic(devID, productTag, topic, length)
 
-#define DEV_GetHandlerListTopic_Tenant(tenantID, devID, topic, length) DEV_GetActionReqTopic_Tenant(tenantID, devID, topic, length)
-#define DEV_GetHandlerListTopic(devID, topic, length) DEV_GetActionReqTopic(devID, topic, length)
+#define DEV_GetHandlerListTopic_Tenant(tenantID, devID, productTag, topic, length) DEV_GetActionReqTopic_Tenant(tenantID, devID, productTag, topic, length)
+#define DEV_GetHandlerListTopic(devID, productTag, topic, length) DEV_GetActionReqTopic(devID, productTag, topic, length)
 
 	void DEV_ReleaseBuffer(char* buff);
 
