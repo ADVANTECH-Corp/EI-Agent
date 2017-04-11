@@ -10,7 +10,6 @@
 #define _WISE_CORE_EX_H_
 
 #include <stdbool.h>
-
 #ifdef RMM3X
 	#include "wisepaas_01_def.h"
 #else
@@ -117,54 +116,6 @@ WISECORE_API bool core_ex_tag_set(WiCore_t core, char* strTag);
  * 	boolean value for success or not.	
  */
 WISECORE_API bool core_ex_product_info_set(WiCore_t core, char* strSerialNum, char* strParentID, char* strVersion, char* strType, char* strProduct, char* strManufacture);
-
-/* 
- * Function: core_ex_os_info_set
- *
- * assign the OS information let server to identify the target device.
- *
- * Parameters:
- *  core -				pointer of WISE Core Object.
- * 	strOSName -			OS name.
- * 	strOSArch -			OS architecture.
- * 	iTotalPhysMemKB -	total physical memory (Kilobyte ).
- * 	strMACs -			MAC address list.
- *
- * Returns:
- * 	boolean value for success or not.
- */
-WISECORE_API bool core_ex_os_info_set(WiCore_t core, char* strOSName, char* strOSArch, int iTotalPhysMemKB, char* strMACs);
-
-/* 
- * Function: core_ex_platform_info_set
- *
- * assign the platform information let server to identify the target device.
- *
- * Parameters:
- *  core -					pointer of WISE Core Object.
- * 	strBIOSVersion -		device BIOS version.
- * 	strPlatformName -		board name.
- * 	strProcessorName -		processor name.
- *
- * Returns:
- * 	boolean value for success or not.
- */
-WISECORE_API bool core_ex_platform_info_set(WiCore_t core, char* strBIOSVersion, char* strPlatformName, char* strProcessorName);
-
-/* 
- * Function: core_ex_local_ip_set
- *
- * assign local ip for remote control. User can set local ip directory or remain NULL 
- * to retrieve the local ip while connected automatically (depends on WISECarrier Library).
- *
- * Parameters:
- *  core -					pointer of WISE Core Object.
- * 	strLocalIP -			local ip address.
- *
- * Returns:
- * 	boolean value for success or not.	
- */
-WISECORE_API bool core_ex_local_ip_set(WiCore_t core, char* strLocalIP);
 
 /* 
  * Function: core_ex_account_bind
@@ -413,19 +364,6 @@ WISECORE_API void core_ex_disconnect(WiCore_t core, bool bForce);
  * 	boolean value for success or not.	
  */
 WISECORE_API bool core_ex_device_register(WiCore_t core);
-
-/* 
- * Function: core_ex_platform_register
- *
- * Send platform information, wrapped in JSON format, to register device platform.
- *
- * Parameters:
- *  core -		pointer of WISE Core Object.
- *
- * Returns:
- * 	boolean value for success or not.	
- */
-WISECORE_API bool core_ex_platform_register(WiCore_t core);
 
 /* 
  * Function: core_ex_heartbeat_send

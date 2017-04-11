@@ -9,35 +9,16 @@
 #ifndef _SUSIACCESS_DEF_H_
 #define _SUSIACCESS_DEF_H_
 
-#define DEF_FILENAME_LENGTH			32
-#define DEF_DEVID_LENGTH			37
-#define DEF_FW_DESCRIPTION_LENGTH	128
-#define DEF_PROCESSOR_NAME_LEN		64
-
-#define DEF_MARK_LENGTH				8
-#define DEF_ACCOUNT_LENGTH			32
-#define DEF_TYPE_LENGTH				32
-#define DEF_HOSTNAME_LENGTH			42
-#define DEF_SN_LENGTH				32
-#define DEF_MAC_LENGTH				32
-#define DEF_LAL_LENGTH				20
-#define DEF_VERSION_LENGTH			32
-#define DEF_MAX_STRING_LENGTH		128
-#define DEF_RUN_MODE_LENGTH			32
-#define DEF_ENABLE_LENGTH			8
-#define DEF_USER_PASS_LENGTH		128
-#define DEF_PORT_LENGTH				8
-#define DEF_KVM_MODE_LENGTH			16
-#define MAX_TOPIC_LEN               32
-#define DEF_OSVERSION_LEN			64
-#define DEF_MAX_PATH				260
-#define DEF_MAX_CIPHER				4095
-
-#define AGENT_STATUS_OFFLINE		0  /**< Agent offline flag */
-#define AGENT_STATUS_ONLINE			1  /**< Agent online  flag: Server responsed */
-#define AGENT_STATUS_CONNECTION_FAILED	2  /**< Agent connect failed flag */
+#ifdef RMM3X
+	#include "wisepaas_01_def.h"
+#else
+	#include "wisepaas_02_def.h"
+#endif
 
 #define DEF_SERVER_IP_LIST_FILE   "server_IP_List.txt"
+#define DEF_PRODUCT_NAME "RMM"
+#define DEF_OSINFO_JSON "{\"cagentVersion\":\"%s\",\"cagentType\":\"%s\",\"osVersion\":\"%s\",\"biosVersion\":\"%s\",\"platformName\":\"%s\",\"processorName\":\"%s\",\"osArch\":\"%s\",\"totalPhysMemKB\":%d,\"macs\":\"%s\",\"IP\":\"%s\"}"
+
 
 typedef enum{
 	tls_type_unknown = -1,
@@ -108,6 +89,7 @@ typedef struct {
 
 typedef enum{
 	pkt_type_susiaccess = 0,
+	pkt_type_wisepaas,
 	pkt_type_custom,
 }packet_type;
 /** Packet Structure*/

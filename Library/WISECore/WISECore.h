@@ -90,50 +90,6 @@ WISECORE_API bool core_tag_set(char* strTag);
  */
 WISECORE_API bool core_product_info_set(char* strSerialNum, char* strParentID, char* strVersion, char* strType, char* strProduct, char* strManufacture);
 
-/* 
- * Function: lite_os_info_set
- *
- * assign the OS information let server to identify the target device.
- *
- * Parameters:
- * 	strOSName -			OS name.
- * 	strOSArch -			OS architecture.
- * 	iTotalPhysMemKB -	total physical memory (Kilobyte ).
- * 	strMACs -			MAC address list.
- *
- * Returns:
- * 	boolean value for success or not.
- */
-WISECORE_API bool core_os_info_set(char* strOSName, char* strOSArch, int iTotalPhysMemKB, char* strMACs);
-
-/* 
- * Function: core_platform_info_set
- *
- * assign the platform information let server to identify the target device.
- *
- * Parameters:
- * 	strBIOSVersion -		device BIOS version.
- * 	strPlatformName -		board name.
- * 	strProcessorName -		processor name.
- *
- * Returns:
- * 	boolean value for success or not.
- */
-WISECORE_API bool core_platform_info_set(char* strBIOSVersion, char* strPlatformName, char* strProcessorName);
-
-/* 
- * Function: core_local_ip_set
- *
- * assign local ip for remote control. User can set local ip directory or remain NULL 
- * to retrieve the local ip while connected automatically (depends on WISECarrier Library).
- *
- * Parameters:
- * 	strLocalIP -			local ip address.
- *
- * Returns:
- * 	boolean value for success or not.	
- */
-WISECORE_API bool core_local_ip_set(char* strLocalIP);
 
 /* 
  * Function: core_account_bind
@@ -369,19 +325,6 @@ WISECORE_API void core_disconnect(bool bForce);
  * 	boolean value for success or not.	
  */
 WISECORE_API bool core_device_register();
-
-/* 
- * Function: core_platform_register
- *
- * Send platform information, wrapped in JSON format, to register device platform.
- *
- * Parameters:
- * 	none
- *
- * Returns:
- * 	boolean value for success or not.	
- */
-WISECORE_API bool core_platform_register();
 
 /* 
  * Function: core_heartbeat_send

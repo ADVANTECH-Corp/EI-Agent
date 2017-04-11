@@ -13,8 +13,6 @@
 #include "liteparse.h"
 #include "version.h"
 #include "WISEConnector.h"
-#include "wisepaas_02_def.h"
-#include "susiaccess_def.h"
 
 #ifdef WIN32
 	#define snprintf(dst,size,format,...) _snprintf(dst,size,format,##__VA_ARGS__)
@@ -156,8 +154,8 @@ bool _get_agentinfo_string(core_contex_t* pHandle, lite_conn_status iStatus, cha
 												 pHandle->strLoginID?pHandle->strLoginID:"anonymous",
 												 pHandle->strLoginPW?pHandle->strLoginPW:"",
 												 iStatus,
-												 pHandle->strClientID,
 												 pHandle->strTag?pHandle->strTag:"",
+												 pHandle->strClientID,
 												 tick);
 #else
 	iRet = snprintf(strInfo, iLength, DEF_AGENTINFO_JSON, pHandle->strClientID?pHandle->strClientID:"",
@@ -243,54 +241,6 @@ bool _send_agent_disconnect(core_contex_t* pHandle)
 	}
 }
 
-bool _send_os_info(core_contex_t* pHandle)
-{
-	long long tick = 0;
-	if(pHandle->iStatus != core_online)
-	{
-		g_iErrorCode = core_no_connnect;
-		return false;
-	}
-
-	if(g_on_get_timetick)
-		tick = g_on_get_timetick(pHandle->userdata);
-	else
-	{
-		//tick = (long long) time((time_t *) NULL);
-		tick = g_tick;
-		g_tick++;
-	}
-
-	snprintf(strPayloadBuff, sizeof(strPayloadBuff), DEF_OSINFO_JSON, pHandle->strVersion?pHandle->strVersion:"",
-												 pHandle->strType?pHandle->strType:"IPC",
-												 pHandle->strOSName?pHandle->strOSName:"",
-												 pHandle->strBIOSVersion?pHandle->strBIOSVersion:"",
-												 pHandle->strPlatformName?pHandle->strPlatformName:"",
-												 pHandle->strProcessorName?pHandle->strProcessorName:"",
-												 pHandle->strOSArch?pHandle->strOSArch:"",
-												 pHandle->iTotalPhysMemKB,
-												 pHandle->strMACs?pHandle->strMACs:pHandle->strMAC,
-												 pHandle->strLocalIP?pHandle->strLocalIP:"",
-												 pHandle->strClientID,
-												 tick);
-#ifdef _WISEPAAS_02_DEF_H_
-	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, pHandle->strTenantID, pHandle->strClientID);
-#else
-	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, pHandle->strClientID);
-#endif
-	
-	if(wc_publish((char *)strTopicBuff, strPayloadBuff, strlen(strPayloadBuff), false, 0))
-	{
-		g_iErrorCode = core_success;
-		return true;
-	}
-	else
-	{
-		g_iErrorCode = core_internal_error;
-		return false;
-	}
-}
-
 void _on_connect_cb(void *pUserData)
 {
 	core_contex_t* pHandle = (core_contex_t*)pUserData;
@@ -299,15 +249,6 @@ void _on_connect_cb(void *pUserData)
 	{
 		pHandle->pSocketfd = 0;
 		pHandle->iStatus = core_online;
-
-		if(strlen(pHandle->strLocalIP)<=0)
-		{
-			char strLocalIP[16] = {0};
-			if(wc_address_get(strLocalIP))
-			{
-				strncpy(pHandle->strLocalIP, strLocalIP, sizeof(pHandle->strLocalIP));
-			}
-		}
 	}
 
 	if(g_on_connect_cb)
@@ -647,65 +588,6 @@ WISECORE_API bool core_product_info_set(char* strSerialNum, char* strParentID, c
 	return true;
 }
 
-WISECORE_API bool core_os_info_set(char* strOSName, char* strOSArch, int iTotalPhysMemKB, char* strMACs)
-{
-	if(!g_bInited)
-	{
-		g_iErrorCode = core_no_init;
-		return false;
-	}
-
-	if(strOSName)
-		strncpy(g_tHandleCtx.strOSName, strOSName, sizeof(g_tHandleCtx.strOSName));
-
-	if(strOSArch)
-		strncpy(g_tHandleCtx.strOSArch, strOSArch, sizeof(g_tHandleCtx.strOSArch));
-
-	if(strMACs)
-		strncpy(g_tHandleCtx.strMACs, strMACs, sizeof(g_tHandleCtx.strMACs));
-	
-	g_tHandleCtx.iTotalPhysMemKB = iTotalPhysMemKB;
-
-	g_iErrorCode = core_success;
-	return true;
-}
-
-WISECORE_API bool core_platform_info_set(char* strBIOSVersion, char* strPlatformName, char* strProcessorName)
-{
-	if(!g_bInited)
-	{
-		g_iErrorCode = core_no_init;
-		return false;
-	}
-
-	if(strBIOSVersion)
-		strncpy(g_tHandleCtx.strBIOSVersion, strBIOSVersion, sizeof(g_tHandleCtx.strBIOSVersion));
-
-	if(strPlatformName)
-		strncpy(g_tHandleCtx.strPlatformName, strPlatformName, sizeof(g_tHandleCtx.strPlatformName));
-
-	if(strProcessorName)
-		strncpy(g_tHandleCtx.strProcessorName, strProcessorName, sizeof(g_tHandleCtx.strProcessorName));
-
-	g_iErrorCode = core_success;
-	return true;
-}
-
-WISECORE_API bool core_local_ip_set(char* strLocalIP)
-{
-	if(!g_bInited)
-	{
-		g_iErrorCode = core_no_init;
-		return false;
-	}
-
-	if(strLocalIP)
-		strncpy(g_tHandleCtx.strLocalIP, strLocalIP, sizeof(g_tHandleCtx.strLocalIP));
-
-	g_iErrorCode = core_success;
-	return true;
-}
-
 WISECORE_API bool core_account_bind(char* strLoginID, char* strLoginPW)
 {
 	if(!g_bInited)
@@ -888,11 +770,11 @@ WISECORE_API bool core_action_response(const int cmdid, const char * sessoinid, 
 	}
 
 	if(sessoinid)
-		snprintf(strPayloadBuff, sizeof(strPayloadBuff), DEF_ACTION_RESPONSE_SESSION_JSON, cmdid, success?"SUCCESS":"FALSE", sessoinid, tick);
+		snprintf(strPayloadBuff, sizeof(strPayloadBuff), DEF_ACTION_RESULT_SESSION_JSON, cmdid, success?"SUCCESS":"FALSE", sessoinid, tick);
 	else
-		snprintf(strPayloadBuff, sizeof(strPayloadBuff), DEF_ACTION_RESPONSE_JSON, cmdid, success?"SUCCESS":"FALSE", tick);
+		snprintf(strPayloadBuff, sizeof(strPayloadBuff), DEF_ACTION_RESULT_JSON, cmdid, success?"SUCCESS":"FALSE", tick);
 #ifdef _WISEPAAS_02_DEF_H_
-	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, tenantid?tenantid:g_tHandleCtx.strTenantID, devid?devid:g_tHandleCtx.strClientID);
+	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, tenantid?tenantid:g_tHandleCtx.strTenantID, DEF_PRESERVE_PRODUCT_NAME, devid?devid:g_tHandleCtx.strClientID);
 #else
 	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, devid?devid:g_tHandleCtx.strClientID);
 #endif
@@ -992,7 +874,7 @@ WISECORE_API bool core_heartbeatratequery_response(const int heartbeatrate, cons
 
 	sprintf(strPayloadBuff, DEF_HEARTBEATRATE_RESPONSE_SESSION_JSON, wise_heartbeatrate_query_rep, heartbeatrate, sessoinid, tick);
 #ifdef _WISEPAAS_02_DEF_H_
-	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, tenantid, devid);
+	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, tenantid, DEF_PRESERVE_PRODUCT_NAME, devid);
 #else
 	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, devid);
 #endif
@@ -1060,7 +942,7 @@ WISECORE_API bool core_device_register()
 		return false;
 	}
 #ifdef _WISEPAAS_02_DEF_H_
-	sprintf(strTopicBuff, DEF_CALLBACKREQ_TOPIC, g_tHandleCtx.strTenantID, g_tHandleCtx.strClientID);
+	sprintf(strTopicBuff, DEF_CALLBACKREQ_TOPIC, g_tHandleCtx.strTenantID, DEF_PRESERVE_PRODUCT_NAME, g_tHandleCtx.strClientID);
 #else
 	sprintf(strTopicBuff, DEF_CALLBACKREQ_TOPIC, g_tHandleCtx.strClientID);
 #endif
@@ -1072,23 +954,6 @@ WISECORE_API bool core_device_register()
 	wc_subscribe(DEF_AGENTCONTROL_TOPIC, 0);
 
 	return _send_agent_connect(&g_tHandleCtx);
-}
-
-WISECORE_API bool core_platform_register()
-{
-	if(!g_bInited)
-	{
-		g_iErrorCode = core_no_init;
-		return false;
-	}
-
-	if(g_tHandleCtx.iStatus != core_online)
-	{
-		g_iErrorCode = core_no_connnect;
-		return false;
-	}
-
-	return _send_os_info(&g_tHandleCtx);
 }
 
 WISECORE_API bool core_heartbeat_send()

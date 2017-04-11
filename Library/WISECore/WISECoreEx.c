@@ -13,7 +13,6 @@
 #include "liteparse.h"
 #include "version.h"
 #include "WISEConnectorEx.h"
-#include "susiaccess_def.h"
 
 #ifdef WIN32
 	#define snprintf(dst,size,format,...) _snprintf(dst,size,format,##__VA_ARGS__)
@@ -35,18 +34,6 @@ typedef struct{
 	char strTag[DEF_MAX_STRING_LENGTH];
 	char strParentID[DEF_DEVID_LENGTH];
 	
-	/*os info*/
-	char strOSName[DEF_OSVERSION_LEN];
-	char strOSArch[DEF_FILENAME_LENGTH];
-	int iTotalPhysMemKB;
-	char strMACs[DEF_MAC_LENGTH*16];
-	char strLocalIP[DEF_MAX_STRING_LENGTH];
-
-	/*platform info*/
-	char strBIOSVersion[DEF_VERSION_LENGTH];
-	char strPlatformName[DEF_FILENAME_LENGTH];
-	char strProcessorName[DEF_PROCESSOR_NAME_LEN];
-
 	/*account bind*/
 	char strLoginID[DEF_USER_PASS_LENGTH];
 	char strLoginPW[DEF_USER_PASS_LENGTH];
@@ -243,57 +230,6 @@ bool _ex_send_agent_disconnect(core_contex_t* pHandle)
 	}
 }
 
-bool _ex_send_os_info(core_contex_t* pHandle)
-{
-	long long tick = 0;
-	if(!pHandle)
-		return false;
-
-	if(pHandle->iStatus != core_online)
-	{
-		pHandle->iErrorCode = core_no_connnect;
-		return false;
-	}
-
-	if(pHandle->on_get_timetick)
-		tick = pHandle->on_get_timetick(pHandle->userdata);
-	else
-	{
-		//tick = (long long) time((time_t *) NULL);
-		tick = pHandle->tick;
-		pHandle->tick++;
-	}
-
-	snprintf(pHandle->strPayloadBuff, sizeof(pHandle->strPayloadBuff), DEF_OSINFO_JSON, pHandle->strVersion?pHandle->strVersion:"",
-												 pHandle->strType?pHandle->strType:"IPC",
-												 pHandle->strOSName?pHandle->strOSName:"",
-												 pHandle->strBIOSVersion?pHandle->strBIOSVersion:"",
-												 pHandle->strPlatformName?pHandle->strPlatformName:"",
-												 pHandle->strProcessorName?pHandle->strProcessorName:"",
-												 pHandle->strOSArch?pHandle->strOSArch:"",
-												 pHandle->iTotalPhysMemKB,
-												 pHandle->strMACs?pHandle->strMACs:pHandle->strMAC,
-												 pHandle->strLocalIP?pHandle->strLocalIP:"",
-												 pHandle->strClientID,
-												 tick);
-#ifdef _WISEPAAS_02_DEF_H_
-	sprintf(pHandle->strTopicBuff, DEF_AGENTACT_TOPIC, pHandle->strTenantID, pHandle->strClientID);
-#else
-	sprintf(pHandle->strTopicBuff, DEF_AGENTACT_TOPIC, pHandle->strClientID);
-#endif
-	
-	if(wc_ex_publish(pHandle->conn, (char *)pHandle->strTopicBuff, pHandle->strPayloadBuff, strlen(pHandle->strPayloadBuff), false, 0))
-	{
-		pHandle->iErrorCode = core_success;
-		return true;
-	}
-	else
-	{
-		pHandle->iErrorCode = core_internal_error;
-		return false;
-	}
-}
-
 void _ex_on_connect_cb(void *pUserData)
 {
 	core_contex_t* pHandle = NULL;
@@ -305,15 +241,6 @@ void _ex_on_connect_cb(void *pUserData)
 	{
 		pHandle->pSocketfd = 0;
 		pHandle->iStatus = core_online;
-
-		if(strlen(pHandle->strLocalIP)<=0)
-		{
-			char strLocalIP[16] = {0};
-			if(wc_ex_address_get(pHandle->conn, strLocalIP))
-			{
-				strncpy(pHandle->strLocalIP, strLocalIP, sizeof(pHandle->strLocalIP));
-			}
-		}
 	}
 
 	if(pHandle->on_connect_cb)
@@ -695,80 +622,6 @@ WISECORE_API bool core_ex_product_info_set(WiCore_t core, char* strSerialNum, ch
 	return true;
 }
 
-WISECORE_API bool core_ex_os_info_set(WiCore_t core, char* strOSName, char* strOSArch, int iTotalPhysMemKB, char* strMACs)
-{
-	core_contex_t* tHandleCtx = NULL;
-	if(core == NULL)
-		return false;
-	tHandleCtx = (core_contex_t*) core;
-
-	if(!tHandleCtx->bInited)
-	{
-		tHandleCtx->iErrorCode = core_no_init;
-		return false;
-	}
-
-	if(strOSName)
-		strncpy(tHandleCtx->strOSName, strOSName, sizeof(tHandleCtx->strOSName));
-
-	if(strOSArch)
-		strncpy(tHandleCtx->strOSArch, strOSArch, sizeof(tHandleCtx->strOSArch));
-
-	if(strMACs)
-		strncpy(tHandleCtx->strMACs, strMACs, sizeof(tHandleCtx->strMACs));
-	
-	tHandleCtx->iTotalPhysMemKB = iTotalPhysMemKB;
-
-	tHandleCtx->iErrorCode = core_success;
-	return true;
-}
-
-WISECORE_API bool core_ex_platform_info_set(WiCore_t core, char* strBIOSVersion, char* strPlatformName, char* strProcessorName)
-{
-	core_contex_t* tHandleCtx = NULL;
-	if(core == NULL)
-		return false;
-	tHandleCtx = (core_contex_t*) core;
-
-	if(!tHandleCtx->bInited)
-	{
-		tHandleCtx->iErrorCode = core_no_init;
-		return false;
-	}
-
-	if(strBIOSVersion)
-		strncpy(tHandleCtx->strBIOSVersion, strBIOSVersion, sizeof(tHandleCtx->strBIOSVersion));
-
-	if(strPlatformName)
-		strncpy(tHandleCtx->strPlatformName, strPlatformName, sizeof(tHandleCtx->strPlatformName));
-
-	if(strProcessorName)
-		strncpy(tHandleCtx->strProcessorName, strProcessorName, sizeof(tHandleCtx->strProcessorName));
-
-	tHandleCtx->iErrorCode = core_success;
-	return true;
-}
-
-WISECORE_API bool core_ex_local_ip_set(WiCore_t core, char* strLocalIP)
-{
-	core_contex_t* tHandleCtx = NULL;
-	if(core == NULL)
-		return false;
-	tHandleCtx = (core_contex_t*) core;
-
-	if(!tHandleCtx->bInited)
-	{
-		tHandleCtx->iErrorCode = core_no_init;
-		return false;
-	}
-
-	if(strLocalIP)
-		strncpy(tHandleCtx->strLocalIP, strLocalIP, sizeof(tHandleCtx->strLocalIP));
-
-	tHandleCtx->iErrorCode = core_success;
-	return true;
-}
-
 WISECORE_API bool core_ex_account_bind(WiCore_t core, char* strLoginID, char* strLoginPW)
 {
 	core_contex_t* tHandleCtx = NULL;
@@ -991,11 +844,11 @@ WISECORE_API bool core_ex_action_response(WiCore_t core, const int cmdid, const 
 	}
 
 	if(sessoinid)
-		snprintf(tHandleCtx->strPayloadBuff, sizeof(tHandleCtx->strPayloadBuff), DEF_ACTION_RESPONSE_SESSION_JSON, cmdid, success?"SUCCESS":"FALSE", sessoinid, tick);
+		snprintf(tHandleCtx->strPayloadBuff, sizeof(tHandleCtx->strPayloadBuff), DEF_ACTION_RESULT_SESSION_JSON, cmdid, success?"SUCCESS":"FALSE", sessoinid, tick);
 	else
-		snprintf(tHandleCtx->strPayloadBuff, sizeof(tHandleCtx->strPayloadBuff), DEF_ACTION_RESPONSE_JSON, cmdid, success?"SUCCESS":"FALSE", tick);
+		snprintf(tHandleCtx->strPayloadBuff, sizeof(tHandleCtx->strPayloadBuff), DEF_ACTION_RESULT_JSON, cmdid, success?"SUCCESS":"FALSE", tick);
 #ifdef _WISEPAAS_02_DEF_H_
-	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, tenantid?tenantid:tHandleCtx->strTenantID, devid?devid:tHandleCtx->strClientID);
+	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, tenantid?tenantid:tHandleCtx->strTenantID, DEF_PRESERVE_PRODUCT_NAME, devid?devid:tHandleCtx->strClientID);
 #else
 	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, devid?devid:tHandleCtx->strClientID);
 #endif
@@ -1120,7 +973,7 @@ WISECORE_API bool core_ex_heartbeatratequery_response(WiCore_t core, const int h
 
 	sprintf(tHandleCtx->strPayloadBuff, DEF_HEARTBEATRATE_RESPONSE_SESSION_JSON, wise_heartbeatrate_query_rep, heartbeatrate, sessoinid, tick);
 #ifdef _WISEPAAS_02_DEF_H_
-	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, tenantid, devid);
+	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, tenantid, DEF_PRESERVE_PRODUCT_NAME, devid);
 #else
 	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, devid);
 #endif
@@ -1198,7 +1051,7 @@ WISECORE_API bool core_ex_device_register(WiCore_t core)
 		return false;
 	}
 #ifdef _WISEPAAS_02_DEF_H_
-	sprintf(tHandleCtx->strTopicBuff, DEF_CALLBACKREQ_TOPIC, tHandleCtx->strTenantID, tHandleCtx->strClientID);
+	sprintf(tHandleCtx->strTopicBuff, DEF_CALLBACKREQ_TOPIC, tHandleCtx->strTenantID, DEF_PRESERVE_PRODUCT_NAME, tHandleCtx->strClientID);
 #else
 	sprintf(tHandleCtx->strTopicBuff, DEF_CALLBACKREQ_TOPIC, tHandleCtx->strClientID);
 #endif
@@ -1210,28 +1063,6 @@ WISECORE_API bool core_ex_device_register(WiCore_t core)
 	wc_ex_subscribe(tHandleCtx->conn, DEF_AGENTCONTROL_TOPIC, 0);
 
 	return _ex_send_agent_connect(tHandleCtx);
-}
-
-WISECORE_API bool core_ex_platform_register(WiCore_t core)
-{
-	core_contex_t* tHandleCtx = NULL;
-	if(core == NULL)
-		return false;
-	tHandleCtx = (core_contex_t*) core;
-
-	if(!tHandleCtx->bInited)
-	{
-		tHandleCtx->iErrorCode = core_no_init;
-		return false;
-	}
-
-	if(tHandleCtx->iStatus != core_online)
-	{
-		tHandleCtx->iErrorCode = core_no_connnect;
-		return false;
-	}
-
-	return _ex_send_os_info(tHandleCtx);
 }
 
 WISECORE_API bool core_ex_heartbeat_send(WiCore_t core)

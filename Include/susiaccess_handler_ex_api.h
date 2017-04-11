@@ -6,8 +6,7 @@
 typedef AGENT_SEND_STATUS (*HandlerConnectServerCbf)(char const * ip, int port, char const * mqttauth, tls_type tlstype, char const * psk);
 typedef AGENT_SEND_STATUS (*HandlerDisconnectCbf)();
 typedef AGENT_SEND_STATUS (*HandlerRenameCbf)(char const * name);
-typedef AGENT_SEND_STATUS (*HandlerSendOSInfoCbf)();
-typedef AGENT_SEND_STATUS (*HandlerAddVirtualHandlerCbf)(char *,char *);
+typedef void (*HandlerAddVirtualHandlerCbf)(char *,char *);
 
 
 typedef struct HANDLER_INFO_EX
@@ -33,7 +32,6 @@ typedef struct HANDLER_INFO_EX
 	HandlerConnectServerCbf connectservercbf;				// connect to specific server callback function
 	HandlerDisconnectCbf disconnectcbf;						// disconnect callback function
 	HandlerRenameCbf renamecbf;								// rename callback function
-	HandlerSendOSInfoCbf sendosinfocbf;						// send os info callback function
 	HandlerAddVirtualHandlerCbf addvirtualhandlercbf;
 	HandlerAutoReportCbf internelreportcbf;	
 

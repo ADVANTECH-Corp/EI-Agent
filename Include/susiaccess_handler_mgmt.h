@@ -58,7 +58,6 @@ typedef struct Callback_Functions_t{
 	HandlerConnectServerCbf connectservercbf;
 	HandlerDisconnectCbf disconnectcbf;
 	HandlerRenameCbf renamecbf;
-	HandlerSendOSInfoCbf sendosinfocbf;
 	HandlerAddVirtualHandlerCbf addvirtualhandlercbf;
 	HandlerAutoReportCbf internelreportcbf;	
 }Callback_Functions_t;
