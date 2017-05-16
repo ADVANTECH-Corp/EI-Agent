@@ -1,17 +1,17 @@
-# WISE-PaaS-2.0-WISEAgent
-WISEAgent framework for WISE-PaaS 2.0 server.
+# WISE-PaaS-2.0 EI-Agent
+EI-Agent framework for WISE-PaaS 2.0.
 
 ## DESCRIPTION
 ----
 
-WISE Agnet – a software development framework to communicate between device and WISE-PaaS 2.0 Server.
-Advantech provides a software development framework to communicate and exchange information between a device and WISE-PaaS 2.0 Server, called a WISE Agent framework.
-The WISE Agent framework provides a rich set of user-friendly, intelligent and integrated interfaces, which speeds development, enhances security and makes agent application easier and simpler to communicate with WISE-PaaS 2.0 Server.
+EI-Agnet – a software development framework to communicate between device and WISE-PaaS 2.0 Server.
+Advantech provides a software development framework to communicate and exchange information between a device and WISE-PaaS 2.0 Server, called a EI-Agent framework.
+The EI-Agent framework provides a rich set of user-friendly, intelligent and integrated interfaces, which speeds development, enhances security and makes agent application easier and simpler to communicate with WISE-PaaS 2.0 Server.
 The framework has three benefits:
 
 Standardization - The communication protocol is based on the MQTT protocol to communicate and exchange data with WISE-PaaS 2.0 Server. The IoT sensor data report format is following the IPSO Spec. in JSON format.
 Portability - Whole framework is written in C language and follow the ANSI C Standard, that C compilers are available for most systems and are often the first compiler provided for a new system.
-Scalability - The WISE Agent Framework is functional partitioning into discrete scalable, reusable modules, and plug & playable.
+Scalability - The EI-Agent Framework is functional partitioning into discrete scalable, reusable modules, and plug & playable.
 
 For scalability, Advantech implements several Software Modules to access sensor data or control target device, we called Plugins (or Handlers we called before).
 
@@ -21,12 +21,12 @@ Sensor Plugin: the plugin access sensor data through Sensor driver or 3rd party 
 Remote Control Plugin:  the plugin execute remote command on target device.
 Based on those Plugins, Advantech also defined a set of APIs, called Plugin (Handler) APIs, to support custom plugins implementation.
 
-User can implement their own Handler with these Plugin (Handler) APIs to access their sensor data or control their devices and plugged by WISE Agent to communicate with WISE-PaaS 2.0 Server.
+User can implement their own Handler with these Plugin (Handler) APIs to access their sensor data or control their devices and plugged by EI-Agent to communicate with WISE-PaaS 2.0 Server.
 
 ## OVERVIEW
 ----
 
- The WISE Agent includes:
+ The EI-Agent includes:
  
  Library:
   * libWISECore.so
