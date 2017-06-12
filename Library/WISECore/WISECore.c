@@ -283,7 +283,7 @@ void _on_disconnect_cb(void *pUserData)
 		g_on_disconnect_cb(pHandle->userdata);
 }
 
-void _on_rename(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strDevID)
+void _on_rename(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strClientID)
 {
 	// {"commCmd":113,"catalogID":4,"handlerName":"general","sessionID":"0BD843BFB2A34E60A56C3B686BB41C90", "devName":"TestClient_123"}
 	char strName[DEF_HOSTNAME_LENGTH] = {0};
@@ -294,10 +294,10 @@ void _on_rename(core_contex_t* pHandle, char* cmd, const char* strTenantID, cons
 	strncpy(pHandle->strHostName, strName, sizeof(pHandle->strHostName));
 
 	if(g_on_rename_cb)
-		g_on_rename_cb(strName, wise_cagent_rename_rep, strSessionID, strTenantID, strDevID, pHandle->userdata);
+		g_on_rename_cb(strName, wise_cagent_rename_rep, strSessionID, strTenantID, strClientID, pHandle->userdata);
 }
 
-void _on_update(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strDevID)
+void _on_update(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strClientID)
 {
 	/*{"commCmd":111,"catalogID":4,"requestID":16,"params":{"userName":"sa30Read","pwd":"sa30Read","port":2121,"path":"/upgrade/SA30Agent_V3.0.15.exe","md5":"758C9D0A8654A93D09F375D33E262507"}}*/
 	char strUserName[DEF_USER_PASS_LENGTH] = {0};
@@ -318,20 +318,20 @@ void _on_update(core_contex_t* pHandle, char* cmd, const char* strTenantID, cons
 	}
 
 	if(g_on_update_cb)
-		g_on_update_cb(strUserName, strPwd, iPort, strPath, strMD5, wise_update_cagent_rep, strSessionID, strTenantID, strDevID, pHandle->userdata);
+		g_on_update_cb(strUserName, strPwd, iPort, strPath, strMD5, wise_update_cagent_rep, strSessionID, strTenantID, strClientID, pHandle->userdata);
 }
 
-void _on_heartbeatrate_query(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strDevID)
+void _on_heartbeatrate_query(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strClientID)
 {
 	// {"commCmd":127,"catalogID":4,"handlerName":"general","sessionID":"0BD843BFB2A34E60A56C3B686BB41C90"}
 	char strSessionID[33] = {0};
 	lp_value_get(cmd, "sessionID", strSessionID, sizeof(strSessionID));
 
 	if(g_on_query_heartbeatrate)
-		g_on_query_heartbeatrate(strSessionID, strTenantID, strDevID, pHandle->userdata);
+		g_on_query_heartbeatrate(strSessionID, strTenantID, strClientID, pHandle->userdata);
 }
 
-void _on_heartbeatrate_update(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strDevID)
+void _on_heartbeatrate_update(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strClientID)
 {
 	// {"commCmd":129,"catalogID":4,"handlerName":"general","sessionID":"0BD843BFB2A34E60A56C3B686BB41C90", "heartbeatrate":60}
 	char strRate[33] = {0};
@@ -341,13 +341,13 @@ void _on_heartbeatrate_update(core_contex_t* pHandle, char* cmd, const char* str
 	lp_value_get(cmd, "heartbeatrate", strRate, sizeof(strRate));
 	iRate = atoi(strRate);
 	if(g_on_update_heartbeatrate)
-		g_on_update_heartbeatrate(iRate, strSessionID, strTenantID, strDevID, pHandle->userdata);
+		g_on_update_heartbeatrate(iRate, strSessionID, strTenantID, strClientID, pHandle->userdata);
 }
 
-void _on_server_reconnect(core_contex_t* pHandle, const char* strTenantID, const char* strDevID)
+void _on_server_reconnect(core_contex_t* pHandle, const char* strTenantID, const char* strClientID)
 {
 	if(g_on_server_reconnect)
-		g_on_server_reconnect(strTenantID, strDevID, pHandle->userdata);
+		g_on_server_reconnect(strTenantID, strClientID, pHandle->userdata);
 }
 
 void _get_devid(const char* topic, char* devid)
@@ -745,7 +745,7 @@ WISECORE_API bool core_action_callback_set(CORE_RENAME_CALLBACK on_rename, CORE_
 	return true;
 }
 
-WISECORE_API bool core_action_response(const int cmdid, const char * sessoinid, bool success, const char* tenantid, const char* devid)
+WISECORE_API bool core_action_response(const int cmdid, const char * sessoinid, bool success, const char* tenantid, const char* clientid)
 {
 	long long tick = 0;
 	if(!g_bInited)
@@ -774,9 +774,9 @@ WISECORE_API bool core_action_response(const int cmdid, const char * sessoinid, 
 	else
 		snprintf(strPayloadBuff, sizeof(strPayloadBuff), DEF_ACTION_RESULT_JSON, cmdid, success?"SUCCESS":"FALSE", tick);
 #ifdef _WISEPAAS_02_DEF_H_
-	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, tenantid?tenantid:g_tHandleCtx.strTenantID, DEF_PRESERVE_PRODUCT_NAME, devid?devid:g_tHandleCtx.strClientID);
+	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, tenantid?tenantid:g_tHandleCtx.strTenantID, DEF_PRESERVE_PRODUCT_NAME, clientid?clientid:g_tHandleCtx.strClientID);
 #else
-	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, devid?devid:g_tHandleCtx.strClientID);
+	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, clientid?clientid:g_tHandleCtx.strClientID);
 #endif
 	if(wc_publish(strTopicBuff, strPayloadBuff, strlen(strPayloadBuff), false, 0))
 	{
@@ -848,7 +848,7 @@ WISECORE_API bool core_heartbeat_callback_set(CORE_QUERY_HEARTBEATRATE_CALLBACK 
 	return true;
 }
 
-WISECORE_API bool core_heartbeatratequery_response(const int heartbeatrate, const char * sessoinid, const char* tenantid, const char* devid)
+WISECORE_API bool core_heartbeatratequery_response(const int heartbeatrate, const char * sessoinid, const char* tenantid, const char* clientid)
 {
 	long long tick = 0;
 	if(!g_bInited)
@@ -874,9 +874,9 @@ WISECORE_API bool core_heartbeatratequery_response(const int heartbeatrate, cons
 
 	sprintf(strPayloadBuff, DEF_HEARTBEATRATE_RESPONSE_SESSION_JSON, wise_heartbeatrate_query_rep, heartbeatrate, sessoinid, tick);
 #ifdef _WISEPAAS_02_DEF_H_
-	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, tenantid, DEF_PRESERVE_PRODUCT_NAME, devid);
+	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, tenantid, DEF_PRESERVE_PRODUCT_NAME, clientid);
 #else
-	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, devid);
+	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, clientid);
 #endif
 	if(wc_publish((char *)strTopicBuff, strPayloadBuff, strlen(strPayloadBuff), false, 0))
 	{

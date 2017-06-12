@@ -20,8 +20,6 @@
 #include "IoTMessageGenerate.h"
 #include "WISEPlatform.h"
 
-#define DEF_OSINFO_JSON "{\"content\":{\"cagentVersion\":\"%s\",\"cagentType\":\"%s\",\"osVersion\":\"%s\",\"biosVersion\":\"%s\",\"platformName\":\"%s\",\"processorName\":\"%s\",\"osArch\":\"%s\",\"totalPhysMemKB\":%d,\"macs\":\"%s\",\"IP\":\"%s\"},\"commCmd\":116,\"agentID\":\"%s\",\"handlerName\":\"general\",\"sendTS\":{\"$date\":%lld}}"
-
 char g_strClientID[37] = "00000001-0000-0000-0000-305A3A77B1CC";
 char g_strTenantID[37] = "general";
 char g_strHostName[11] = "TestClient";
@@ -490,6 +488,7 @@ void CreateAgentInfo(cagent_agent_info_body_t* agentinfo)
 		strcpy(agentinfo->hostname, g_strHostName);
 		strcpy(agentinfo->devId, g_strClientID);
 		strcpy(agentinfo->tenantId, g_strTenantID);
+		strcpy(agentinfo->productId, g_strProductTag);
 		strcpy(agentinfo->sn, "305A3A77B1CC");
 		strcpy(agentinfo->mac, "305A3A77B1CC");
 		strcpy(agentinfo->version, "4.0.0");

@@ -108,6 +108,8 @@ int main(int argc, char *argv[])
 	snprintf(profile.version, DEF_VERSION_LENGTH, "%d.%d.%d.%d", 4, 0, 0, 0);  //version indicate the version fo the application.
 	strcpy(profile.hostname,"SAClientSample"); //hostname indicate the name of target device ro agent.
 	strcpy(profile.devId,"00000001-0000-0000-0000-14DAE996BE04"); //devId is the Unique ID of the defice or agent.
+	strcpy(profile.tenantId,"general"); //tenant Id is the Unique ID for multi-tenant support.
+	strcpy(profile.productId,"RMM"); //product Id to identify the WISE-PaaS service.
 	strcpy(profile.sn,"14DAE996BE04"); //sn indicate the device serial number.
 	strcpy(profile.mac,"14DAE996BE04"); //mac indicate the MAC Address of first ethernet or wireless card.
 	strcpy(profile.type,"IPC"); //type indicate the agent type, defualt is IPC. User can define their own type for customization.

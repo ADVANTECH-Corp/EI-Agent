@@ -10,15 +10,15 @@ SUBDIRS = Library/Log \
 	  Library/SAConfig \
 	  Library/FtpHelper \
 	  Library/MD5 \
+	  Library/MessageGenerator \
 	  Library/SAManager \
 	  Library/SAGeneralHandler \
 	  Library/SAHandlerLoader \
-	  Library/MessageGenerator \
 	  Library/ReadINI \
 	  Library/HandlerKernel \
 	  Sample/SampleAgent \
 	  Sample/HandlerSample \
-	  Sample/Modbus_Handler \
+	  Sample/ModbusSample \
 	  Sample/WISECoreSample
 	 
 	  

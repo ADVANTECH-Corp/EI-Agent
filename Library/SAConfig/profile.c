@@ -22,7 +22,7 @@
 #define USER_PASSWORD_KEY		"UserPassword"
 
 #define USER_TENANT_KEY			"Tenent"
-#define DEV_TAG_KEY				"Tag"
+#define DEV_SOFTWAREPRODUCT_KEY	"SWProduct"
 
 int profile_first_mac_get(char* mac)
 {
@@ -106,6 +106,18 @@ bool SACONFIG_API profile_load(char const * configFile, susiaccess_agent_profile
 		bModify = true;
 	}
 
+	if(!xml_GetItemValue(doc, DEV_SOFTWAREPRODUCT_KEY, profile->productId, sizeof(profile->productId)))
+	{
+		memset(profile->productId, 0, sizeof(profile->productId));
+	}
+	if(strlen(profile->productId)<=0)
+	{
+		strncpy(profile->productId, DEF_PRODUCT_NAME, strlen(DEF_PRODUCT_NAME)+1);
+		xml_SetItemValue(doc,DEV_SOFTWAREPRODUCT_KEY, profile->productId);
+		bModify = true;
+	}
+
+
 	if(!xml_GetItemValue(doc, DEV_SN_KEY, profile->sn, sizeof(profile->sn)))
 	{
 		memset(profile->sn, 0, sizeof(profile->sn));
@@ -129,11 +141,6 @@ bool SACONFIG_API profile_load(char const * configFile, susiaccess_agent_profile
 		strncpy(profile->type, "IPC", strlen("IPC")+1);
 		xml_SetItemValue(doc, DEV_TYPE_KEY, profile->type);
 		bModify = true;
-	}
-
-	if(!xml_GetItemValue(doc, DEV_TAG_KEY, profile->tag, sizeof(profile->tag)))
-	{
-		memset(profile->tag, 0, sizeof(profile->tag));
 	}
 
 	if(!xml_GetItemValue(doc, DEV_PRODUCT_KEY, profile->product, sizeof(profile->product)))
@@ -214,13 +221,13 @@ bool SACONFIG_API profile_save(char const * configFile, susiaccess_agent_profile
 	if(!xml_SetItemValue(doc,USER_TENANT_KEY, profile->tenantId))
 		goto SAVE_EXIT;
 
+	if(!xml_SetItemValue(doc, DEV_SOFTWAREPRODUCT_KEY, profile->productId))
+		goto SAVE_EXIT;
+
 	if(!xml_SetItemValue(doc,DEV_SN_KEY, profile->sn))
 		goto SAVE_EXIT;
 
 	if(!xml_SetItemValue(doc, DEV_TYPE_KEY, profile->type))
-		goto SAVE_EXIT;
-
-	if(!xml_SetItemValue(doc, DEV_TAG_KEY, profile->tag))
 		goto SAVE_EXIT;
 		
 	if(!xml_SetItemValue(doc, DEV_PRODUCT_KEY, profile->product))
@@ -289,15 +296,15 @@ bool SACONFIG_API profile_create(char const * configFile, susiaccess_agent_profi
 		if(!xml_SetItemValue(doc, USER_TENANT_KEY, profile->tenantId))
 			goto CREATE_EXIT;
 
+		strncpy(profile->productId, DEF_PRODUCT_NAME, strlen(DEF_PRODUCT_NAME)+1);
+		if(!xml_SetItemValue(doc, DEV_SOFTWAREPRODUCT_KEY, profile->productId))
+			goto CREATE_EXIT;
+
 		if(!xml_SetItemValue(doc,DEV_SN_KEY, profile->sn))
 			goto CREATE_EXIT;
 
 		strncpy(profile->type, "IPC", strlen("IPC")+1);
 		if(!xml_SetItemValue(doc, DEV_TYPE_KEY, profile->type))
-			goto CREATE_EXIT;
-
-		memset(profile->tag, 0, sizeof(profile->tag));
-		if(!xml_SetItemValue(doc, DEV_TAG_KEY, profile->tag))
 			goto CREATE_EXIT;
 		
 		memset(profile->product, 0, sizeof(profile->product));

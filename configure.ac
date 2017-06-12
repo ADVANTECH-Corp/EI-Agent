@@ -136,15 +136,15 @@ AC_CONFIG_FILES([Makefile
 		 Library/SAConfig/Makefile
 		 Library/FtpHelper/Makefile
 		 Library/MD5/Makefile
+		 Library/MessageGenerator/Makefile
 		 Library/SAManager/Makefile
 		 Library/SAGeneralHandler/Makefile
 		 Library/SAHandlerLoader/Makefile
-		 Library/MessageGenerator/Makefile
 	  	 Library/ReadINI/Makefile
 		 Library/HandlerKernel/Makefile
 		 Sample/SampleAgent/Makefile
 		 Sample/HandlerSample/Makefile
-		 Sample/Modbus_Handler/Makefile
+		 Sample/ModbusSample/Makefile
 		 Sample/WISECoreSample/Makefile
 		])
 

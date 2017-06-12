@@ -110,7 +110,8 @@ typedef AGENT_SEND_STATUS  (*HandlerSendEventCbf) ( HANDLE const handler, HANDLE
 typedef struct {
 	char hostname[DEF_HOSTNAME_LENGTH];		/**< Agent host name */
 	char devId[DEF_DEVID_LENGTH];			/**< Agent device id */   
-	char tenantId[DEF_DEVID_LENGTH];		/**< Agent device id */  
+	char tenantId[DEF_DEVID_LENGTH];		/**< Agent tentant id */
+	char productId[DEF_DEVID_LENGTH];		/**< Agent product id */  
 	char sn[DEF_SN_LENGTH];					/**< Agent mac */
 	char mac[DEF_MAC_LENGTH];				/**< Agent sn */
 	char version[DEF_VERSION_LENGTH];		/**< Agent version   */

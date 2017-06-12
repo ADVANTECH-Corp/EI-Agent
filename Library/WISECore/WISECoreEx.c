@@ -283,7 +283,7 @@ void _ex_on_disconnect_cb(void *pUserData)
 		pHandle->on_disconnect_cb(pHandle->userdata);
 }
 
-void _ex_on_rename(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strDevID)
+void _ex_on_rename(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strClientID)
 {
 	// {"commCmd":113,"catalogID":4,"handlerName":"general","sessionID":"0BD843BFB2A34E60A56C3B686BB41C90", "devName":"TestClient_123"}
 	char strName[DEF_HOSTNAME_LENGTH] = {0};
@@ -298,10 +298,10 @@ void _ex_on_rename(core_contex_t* pHandle, char* cmd, const char* strTenantID, c
 	strncpy(pHandle->strHostName, strName, sizeof(pHandle->strHostName));
 
 	if(pHandle->on_rename_cb)
-		pHandle->on_rename_cb(strName, wise_cagent_rename_rep, strSessionID, strTenantID, strDevID, pHandle->userdata);
+		pHandle->on_rename_cb(strName, wise_cagent_rename_rep, strSessionID, strTenantID, strClientID, pHandle->userdata);
 }
 
-void _ex_on_update(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strDevID)
+void _ex_on_update(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strClientID)
 {
 	/*{"commCmd":111,"catalogID":4,"requestID":16,"params":{"userName":"sa30Read","pwd":"sa30Read","port":2121,"path":"/upgrade/SA30Agent_V3.0.15.exe","md5":"758C9D0A8654A93D09F375D33E262507"}}*/
 	char strUserName[DEF_USER_PASS_LENGTH] = {0};
@@ -326,10 +326,10 @@ void _ex_on_update(core_contex_t* pHandle, char* cmd, const char* strTenantID, c
 	}
 
 	if(pHandle->on_update_cb)
-		pHandle->on_update_cb(strUserName, strPwd, iPort, strPath, strMD5, wise_update_cagent_rep, strSessionID, strTenantID, strDevID, pHandle->userdata);
+		pHandle->on_update_cb(strUserName, strPwd, iPort, strPath, strMD5, wise_update_cagent_rep, strSessionID, strTenantID, strClientID, pHandle->userdata);
 }
 
-void _ex_on_heartbeatrate_query(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strDevID)
+void _ex_on_heartbeatrate_query(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strClientID)
 {
 	// {"commCmd":127,"catalogID":4,"handlerName":"general","sessionID":"0BD843BFB2A34E60A56C3B686BB41C90"}
 	char strSessionID[33] = {0};
@@ -339,10 +339,10 @@ void _ex_on_heartbeatrate_query(core_contex_t* pHandle, char* cmd, const char* s
 	lp_value_get(cmd, "sessionID", strSessionID, sizeof(strSessionID));
 
 	if(pHandle->on_query_heartbeatrate)
-		pHandle->on_query_heartbeatrate(strSessionID, strTenantID, strDevID, pHandle->userdata);
+		pHandle->on_query_heartbeatrate(strSessionID, strTenantID, strClientID, pHandle->userdata);
 }
 
-void _ex_on_heartbeatrate_update(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strDevID)
+void _ex_on_heartbeatrate_update(core_contex_t* pHandle, char* cmd, const char* strTenantID, const char* strClientID)
 {
 	// {"commCmd":129,"catalogID":4,"handlerName":"general","sessionID":"0BD843BFB2A34E60A56C3B686BB41C90", "heartbeatrate":60}
 	char strRate[33] = {0};
@@ -354,15 +354,15 @@ void _ex_on_heartbeatrate_update(core_contex_t* pHandle, char* cmd, const char* 
 	lp_value_get(cmd, "heartbeatrate", strRate, sizeof(strRate));
 	iRate = atoi(strRate);
 	if(pHandle->on_update_heartbeatrate)
-		pHandle->on_update_heartbeatrate(iRate, strSessionID, strTenantID, strDevID, pHandle->userdata);
+		pHandle->on_update_heartbeatrate(iRate, strSessionID, strTenantID, strClientID, pHandle->userdata);
 }
 
-void _ex_on_server_reconnect(core_contex_t* pHandle, const char* strTenantID, const char* strDevID)
+void _ex_on_server_reconnect(core_contex_t* pHandle, const char* strTenantID, const char* strClientID)
 {
 	if(!pHandle)
 		return;
 	if(pHandle->on_server_reconnect)
-		pHandle->on_server_reconnect(strTenantID, strDevID, pHandle->userdata);
+		pHandle->on_server_reconnect(strTenantID, strClientID, pHandle->userdata);
 }
 
 void _ex_get_devid(const char* topic, char* devid)
@@ -814,7 +814,7 @@ WISECORE_API bool core_ex_action_callback_set(WiCore_t core, CORE_RENAME_CALLBAC
 	return true;
 }
 
-WISECORE_API bool core_ex_action_response(WiCore_t core, const int cmdid, const char * sessoinid, bool success, const char* tenantid, const char* devid)
+WISECORE_API bool core_ex_action_response(WiCore_t core, const int cmdid, const char * sessoinid, bool success, const char* tenantid, const char* clientid)
 {
 	core_contex_t* tHandleCtx = NULL;
 	long long tick = 0;
@@ -848,9 +848,9 @@ WISECORE_API bool core_ex_action_response(WiCore_t core, const int cmdid, const 
 	else
 		snprintf(tHandleCtx->strPayloadBuff, sizeof(tHandleCtx->strPayloadBuff), DEF_ACTION_RESULT_JSON, cmdid, success?"SUCCESS":"FALSE", tick);
 #ifdef _WISEPAAS_02_DEF_H_
-	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, tenantid?tenantid:tHandleCtx->strTenantID, DEF_PRESERVE_PRODUCT_NAME, devid?devid:tHandleCtx->strClientID);
+	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, tenantid?tenantid:tHandleCtx->strTenantID, DEF_PRESERVE_PRODUCT_NAME, clientid?clientid:tHandleCtx->strClientID);
 #else
-	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, devid?devid:tHandleCtx->strClientID);
+	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, clientid?clientid:tHandleCtx->strClientID);
 #endif
 	if(wc_ex_publish(tHandleCtx->conn, tHandleCtx->strTopicBuff, tHandleCtx->strPayloadBuff, strlen(tHandleCtx->strPayloadBuff), false, 0))
 	{
@@ -942,7 +942,7 @@ WISECORE_API bool core_ex_heartbeat_callback_set(WiCore_t core, CORE_QUERY_HEART
 	return true;
 }
 
-WISECORE_API bool core_ex_heartbeatratequery_response(WiCore_t core, const int heartbeatrate, const char * sessoinid, const char* tenantid, const char* devid)
+WISECORE_API bool core_ex_heartbeatratequery_response(WiCore_t core, const int heartbeatrate, const char * sessoinid, const char* tenantid, const char* clientid)
 {
 	core_contex_t* tHandleCtx = NULL;
 	long long tick = 0;
@@ -973,9 +973,9 @@ WISECORE_API bool core_ex_heartbeatratequery_response(WiCore_t core, const int h
 
 	sprintf(tHandleCtx->strPayloadBuff, DEF_HEARTBEATRATE_RESPONSE_SESSION_JSON, wise_heartbeatrate_query_rep, heartbeatrate, sessoinid, tick);
 #ifdef _WISEPAAS_02_DEF_H_
-	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, tenantid, DEF_PRESERVE_PRODUCT_NAME, devid);
+	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, tenantid, DEF_PRESERVE_PRODUCT_NAME, clientid);
 #else
-	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, devid);
+	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, clientid);
 #endif
 	if(wc_ex_publish(tHandleCtx->conn, (char *)tHandleCtx->strTopicBuff, tHandleCtx->strPayloadBuff, strlen(tHandleCtx->strPayloadBuff), false, 0))
 	{

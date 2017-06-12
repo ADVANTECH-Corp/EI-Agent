@@ -62,7 +62,7 @@ WISECORE_API void core_uninitialize();
 /* 
  * Function: core_tag_set
  *
- * assign the production tag let server to identify the target device supported functions.
+ * assign the application production tag let server to identify the target device supported functions.
  *
  * Parameters:
  * 	strTag -			supported tag list format:  "AAA,BBB".
@@ -82,8 +82,8 @@ WISECORE_API bool core_tag_set(char* strTag);
  *  strParentID -		parent ID.
  * 	strVersion -		agent version.
  * 	strType -			device type.
- * 	strProduct -		product name.
- * 	strManufacture -	manufacture name.
+ * 	strProduct -		target  device product name.
+ * 	strManufacture -	target  device manufacture name.
  *
  * Returns:
  * 	boolean value for success or not.	
@@ -146,12 +146,12 @@ WISECORE_API bool core_action_callback_set(CORE_RENAME_CALLBACK on_rename, CORE_
  * 	sessionid -		session ID of request action.
  *  success -		result of request action.
  *  tenantid -		tenant ID of request device.
- *  devid -			device ID of request device.
+ *  clientid -		client ID of request device.
  *
  * Returns:
  *  boolean value for success or not.	
  */
-WISECORE_API bool core_action_response(const int cmdid, const char * sessoinid, bool success, const char* tenantid, const char* devid);
+WISECORE_API bool core_action_response(const int cmdid, const char * sessoinid, bool success, const char* tenantid, const char* clientid);
 
 /* 
  * Function: core_server_reconnect_callback_set
@@ -217,12 +217,12 @@ WISECORE_API bool core_heartbeat_callback_set(CORE_QUERY_HEARTBEATRATE_CALLBACK 
  *  heartbeatrate - current heartbeat rate.
  * 	sessionid -		session ID of request action.
  *  tenantid -		tenant ID of request device.
- *  devid -			device ID of request device.
+ *  clientid -		client ID of request device.
  *
  * Returns:
  *  boolean value for success or not.	
  */
-WISECORE_API bool core_heartbeatratequery_response(const int heartbeatrate, const char * sessoinid, const char* tenantid, const char* devid);
+WISECORE_API bool core_heartbeatratequery_response(const int heartbeatrate, const char * sessoinid, const char* tenantid, const char* clientid);
 
 /*
  * Function: lite_tls_set

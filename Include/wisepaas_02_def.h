@@ -25,7 +25,7 @@
 #define DEF_MAX_STRING_LENGTH		128
 #define DEF_RUN_MODE_LENGTH			32
 #define DEF_ENABLE_LENGTH			8
-#define DEF_USER_PASS_LENGTH		128
+#define DEF_USER_PASS_LENGTH		256
 #define DEF_PORT_LENGTH				8
 #define DEF_KVM_MODE_LENGTH			16
 #define MAX_TOPIC_LEN               32

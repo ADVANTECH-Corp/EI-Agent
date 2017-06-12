@@ -15,6 +15,7 @@
 #include <time.h>
 #include "WISEPlatform.h"  //for strdup and strcasecmp wrapping
 #include "msgqueue.h"
+#include <sys/time.h>
 
 #define DEF_DES_KEY					"29B4B9C5"
 #define DEF_DES_IV					"42b19631"
@@ -284,15 +285,36 @@ int saclient_priv_connect()
 
 	if(DES_BASE64Decode(g_config->serverAuth, &desSrc))
 	{
-		loginID = strtok(desSrc, ":");
-		loginPwd =  strtok(NULL, ":");
+		if(strstr(desSrc, ";")>0)
+		{
+			loginID = strtok(desSrc, ";");
+			loginPwd =  strtok(NULL, ";");
+		}
+		else
+		{
+			loginID = strtok(desSrc, ":");
+			loginPwd =  strtok(NULL, ":");
+		}
+	}
+	else
+	{
+		if(strstr(desSrc, ";")>0)
+		{
+			loginID = strtok(desSrc, ";");
+			loginPwd =  strtok(NULL, ";");
+		}
+		else
+		{
+			loginID = strtok(desSrc, ":");
+			loginPwd =  strtok(NULL, ":");
+		}
 	}
 
 	SAClientLog(g_coreloghandle, Normal, "Connecting to broker: %s", g_config->serverIP);
 	serverport = atoi(g_config->serverPort);
 	
 	bRet = core_connect(g_config->serverIP, serverport, loginID, loginPwd);
-	
+
 	if(desSrc)
 	{
 		free(desSrc);
@@ -428,7 +450,7 @@ int SACLIENT_API saclient_initialize(susiaccess_agent_conf_body_t * config, susi
 
 		core_heartbeat_callback_set(saclient_on_heartbeatrate_query, saclient_on_heartbeatrate_update);
 
-		core_tag_set(DEF_PRODUCT_NAME);
+		core_tag_set(profile->productId);
 
 		core_product_info_set(profile->sn, profile->parentID, profile->version, profile->type, profile->product, profile->manufacture);
 
@@ -580,7 +602,7 @@ int SACLIENT_API saclient_reinitialize(susiaccess_agent_conf_body_t * config, su
 
 		core_time_tick_callback_set(saclient_get_timetick);
 
-		core_tag_set(DEF_PRODUCT_NAME);
+		core_tag_set(profile->productId);
 
 		core_product_info_set(g_profile->sn, g_profile->parentID, g_profile->version, g_profile->type, g_profile->product, g_profile->manufacture);
 	}

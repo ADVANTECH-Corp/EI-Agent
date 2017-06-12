@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <dirent.h> 
 
 void network_init(void)
 {
@@ -309,6 +310,59 @@ int network_mac_get_ex(char * macstr)
    iRet = 0;
    close(sock_mac);
    return iRet;
+}
+
+int network_mac_get_ex2(char * macstr)
+{
+   int iRet = -1;
+   char buf[1024];
+   DIR           *d;
+   struct dirent *dir;
+   d = opendir("/sys/class/net/");
+   if (d)
+  {
+    if((dir = readdir(d)) != NULL)
+    {
+      printf("%s\n", dir->d_name);
+      iRet = getMTU(dir->d_name, macstr);
+    }
+
+    closedir(d);
+  }
+   
+   return iRet;
+}
+int getMTU(char *name, char * macstr) {
+    FILE *f;
+    char buf[128];
+    char *line = NULL;
+    ssize_t count;
+    size_t len = 0;
+    int iRet = -1;
+    int addr[6] = {0};
+
+    snprintf(buf, sizeof(buf), "/sys/class/net/%s/address", name);
+    f = fopen(buf, "r");
+    if(!f) {
+        perror("Error opening:");
+        return iRet;
+    }
+    count = getline(&line, &len, f);
+
+    if (count == -1) {
+        perror("Error opening:");
+        return iRet;
+    }
+    sscanf(line, "%02X:%02X:%02X:%02X:%02X:%02X", addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
+    fclose(f);
+    sprintf(macstr,"%02X%02X%02X%02X%02X%02X",
+              addr[0],
+              addr[1],
+              addr[2],
+              addr[3],
+              addr[4],
+              addr[5]);
+    return iRet;
 }
 
 int network_mac_list_get(char macsStr[][20], int n)

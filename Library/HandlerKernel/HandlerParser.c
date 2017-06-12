@@ -5,9 +5,11 @@
 #include "WISEPlatform.h"
 #include "cJSON.h"
 
+#define AGENTINFO_BODY_STRUCT			"susiCommData"
 #define AGENTINFO_REQID					"requestID"
 #define AGENTINFO_CMDTYPE				"commCmd"
 #define AGENTINFO_SESSIONID				"sessionID"
+#define AGENTINFO_CONTENT				"content"
 
 #define REQUEST_ITEMS					"requestItems"
 #define REQUEST_ITEMS_LIST				"e"
@@ -32,9 +34,10 @@
 
 bool HANDLERPARSER_API HandlerParser_ParseReceivedCMD(void* data, int datalen, int * cmdID, char* sessionID)
 {
-	/*{"commCmd":251,"catalogID":4,"requestID":10}*/
+	/*{"susiCommData":{"commCmd":251,"catalogID":4,"requestID":10}}*/
 
 	cJSON* root = NULL;
+	cJSON* body = NULL;
 	cJSON* target = NULL;
 
 	if(data == NULL) return false;
@@ -43,7 +46,13 @@ bool HANDLERPARSER_API HandlerParser_ParseReceivedCMD(void* data, int datalen, i
 	root = cJSON_Parse((char *)data);
 	if(!root) return false;
 
-	target = cJSON_GetObjectItem(root, AGENTINFO_CMDTYPE);
+	body = cJSON_GetObjectItem(root, AGENTINFO_BODY_STRUCT);
+	if(!body)
+	{
+		body = root;
+	}
+
+	target = cJSON_GetObjectItem(body, AGENTINFO_CMDTYPE);
 	if(target)
 	{
 		*cmdID = target->valueint;
@@ -51,7 +60,7 @@ bool HANDLERPARSER_API HandlerParser_ParseReceivedCMD(void* data, int datalen, i
 
 	if(sessionID != NULL)
 	{
-		target = cJSON_GetObjectItem(root, AGENTINFO_SESSIONID);
+		target = cJSON_GetObjectItem(body, AGENTINFO_SESSIONID);
 		if(target)
 		{
 			strcpy(sessionID, target->valuestring);
@@ -64,7 +73,7 @@ bool HANDLERPARSER_API HandlerParser_ParseReceivedCMD(void* data, int datalen, i
 
 bool HANDLERPARSER_API HandlerParser_ParseAutoReportCmd(char * cmdJsonStr, char * handlername, unsigned int * intervalTimeS, char ** reqItems, bool * reqAll)
 {
-	/*{"catalogID":4,"autoUploadIntervalSec":30,"requestID":1001,"requestItems":["HWM"],"commCmd":2053,"type":"WSN"}*/
+	/*{"susiCommData":{"catalogID":4,"autoUploadIntervalSec":30,"requestID":1001,"requestItems":["HWM"],"commCmd":2053,"type":"WSN"}}*/
 	bool bRet = false;
 	cJSON* root = NULL;
 
@@ -73,11 +82,23 @@ bool HANDLERPARSER_API HandlerParser_ParseAutoReportCmd(char * cmdJsonStr, char 
 	root = cJSON_Parse(cmdJsonStr);
 	if(root)
 	{
-		cJSON* target = cJSON_GetObjectItem(root, REPORT_INTERVAL_SEC);
+		cJSON* target;
+		cJSON*  body = cJSON_GetObjectItem(root, AGENTINFO_BODY_STRUCT);
+		if(!body)
+		{
+			body = cJSON_GetObjectItem(root, AGENTINFO_CONTENT);
+			if(!body)
+			{
+				cJSON_Delete(root);
+				return bRet;
+			}
+		}
+
+		target = cJSON_GetObjectItem(body, REPORT_INTERVAL_SEC);
 		if(target)
 		{
 			*intervalTimeS = target->valueint;
-			target = cJSON_GetObjectItem(root, REQUEST_ITEMS);
+			target = cJSON_GetObjectItem(body, REQUEST_ITEMS);
 			if(target)
 			{
 				cJSON* items;
@@ -122,15 +143,26 @@ bool HANDLERPARSER_API HandlerParser_ParseAutoUploadCmd(char * cmdJsonStr, char 
 	root = cJSON_Parse(cmdJsonStr);
 	if(root)
 	{
-		cJSON* target = cJSON_GetObjectItem(root, REPORT_INTERVAL_MS);
+		cJSON* target;
+		cJSON* body = cJSON_GetObjectItem(root, AGENTINFO_BODY_STRUCT);
+		if(!body)
+		{
+			body = cJSON_GetObjectItem(root, AGENTINFO_CONTENT);
+			if(!body)
+			{
+				cJSON_Delete(root);
+				return bRet;
+			}
+		}
+		target = cJSON_GetObjectItem(body, REPORT_INTERVAL_MS);
 		if(target)
 		{
 			*intervalTimeMs = target->valueint;
-			target = cJSON_GetObjectItem(root, REPORT_TIMEOUT_MS);
+			target = cJSON_GetObjectItem(body, REPORT_TIMEOUT_MS);
 			if(target)
 			{
 				*timeoutMs = target->valueint;
-				target = cJSON_GetObjectItem(root, REQUEST_ITEMS);
+				target = cJSON_GetObjectItem(body, REQUEST_ITEMS);
 				if(target)
 				{
 					cJSON* items;
@@ -315,8 +347,19 @@ bool HANDLERPARSER_API HandlerParser_ParseThrInfo(char * thrJsonStr, thr_item_li
 		if(root)
 		{
 			cJSON * thrItem = NULL; 
-			thrItem = root->child;  /*Ignore thread name, ex: susictrlThr or nmThr*/
-				
+			cJSON * body = cJSON_GetObjectItem(root, AGENTINFO_BODY_STRUCT);
+			if(!body)
+			{
+				body = cJSON_GetObjectItem(root, AGENTINFO_CONTENT);
+				if(!body)
+				{
+					cJSON_Delete(root);
+					return bRet;
+				}
+			}
+
+			thrItem = body->child;  /*Ignore thread name, ex: susictrlThr or nmThr*/
+			
 			while(thrItem->type != cJSON_Array)
 			{
 				thrItem = thrItem->next;
@@ -381,7 +424,19 @@ bool HANDLERPARSER_API HandlerParser_ParseSensorDataCmd(char * cmdJsonStr, char 
 	root = cJSON_Parse(cmdJsonStr);
 	if(root)
 	{
-		cJSON* target = cJSON_GetObjectItem(root, REQUEST_SENSOR_ITEMS);
+		cJSON* target;
+		cJSON* body = cJSON_GetObjectItem(root, AGENTINFO_BODY_STRUCT);
+		if(!body)
+		{
+			body = cJSON_GetObjectItem(root, AGENTINFO_CONTENT);
+			if(!body)
+			{
+				cJSON_Delete(root);
+				return bRet;
+			}
+		}
+
+		target = cJSON_GetObjectItem(body, REQUEST_SENSOR_ITEMS);
 		if(target)
 		{
 			cJSON* items = cJSON_GetObjectItem(target, REQUEST_ITEMS_LIST);
@@ -395,6 +450,7 @@ bool HANDLERPARSER_API HandlerParser_ParseSensorDataCmd(char * cmdJsonStr, char 
 				bRet = true;					
 			}
 		}
+
 		cJSON_Delete(root);
 	}
 	return bRet;

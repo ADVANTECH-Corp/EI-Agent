@@ -35,14 +35,14 @@ typedef void (*CORE_CONNECTED_CALLBACK)(void* userdata);
 typedef void (*CORE_LOSTCONNECTED_CALLBACK)(void* userdata);
 typedef void (*CORE_DISCONNECT_CALLBACK)(void* userdata);
 typedef void (*CORE_MESSAGE_RECV_CALLBACK)(const char* topic, const void *pkt, const long pktlength, void* userdata);
-typedef void (*CORE_RENAME_CALLBACK)(const char* name, const int cmdid, const char* sessionid, const char* tenantid, const char* devid, void* userdata);
-typedef void (*CORE_UPDATE_CALLBACK)(const char* loginID, const char* loginPW, const int port, const char* path, const char* md5, const int cmdid, const char* sessionid, const char* tenantid, const char* devid, void* userdata);
-typedef void (*CORE_SERVER_RECONNECT_CALLBACK)(const char* tenantid, const char* devid, void* userdata);
-typedef void (*CORE_GET_CAPABILITY_CALLBACK)(const void *pkt, const long pktlength, const char* tenantid, const char* devid, void* userdata);
-typedef void (*CORE_START_REPORT_CALLBACK)(const void *pkt, const long pktlength, const char* tenantid, const char* devid, void* userdata);
-typedef void (*CORE_STOP_REPORT_CALLBACK)(const void *pkt, const long pktlength, const char* tenantid, const char* devid, void* userdata);
-typedef void (*CORE_QUERY_HEARTBEATRATE_CALLBACK)(const char* sessionid,const char* tenantid,const char* devid, void* userdata);
-typedef void (*CORE_UPDATE_HEARTBEATRATE_CALLBACK)(const int heartbeatrate, const char* sessionid, const char* tenantid, const char* devid, void* userdata);
+typedef void (*CORE_RENAME_CALLBACK)(const char* name, const int cmdid, const char* sessionid, const char* tenantid, const char* clientid, void* userdata);
+typedef void (*CORE_UPDATE_CALLBACK)(const char* loginID, const char* loginPW, const int port, const char* path, const char* md5, const int cmdid, const char* sessionid, const char* tenantid, const char* clientid, void* userdata);
+typedef void (*CORE_SERVER_RECONNECT_CALLBACK)(const char* tenantid, const char* clientid, void* userdata);
+typedef void (*CORE_GET_CAPABILITY_CALLBACK)(const void *pkt, const long pktlength, const char* tenantid, const char* clientid, void* userdata);
+typedef void (*CORE_START_REPORT_CALLBACK)(const void *pkt, const long pktlength, const char* tenantid, const char* clientid, void* userdata);
+typedef void (*CORE_STOP_REPORT_CALLBACK)(const void *pkt, const long pktlength, const char* tenantid, const char* clientid, void* userdata);
+typedef void (*CORE_QUERY_HEARTBEATRATE_CALLBACK)(const char* sessionid,const char* tenantid,const char* clientid, void* userdata);
+typedef void (*CORE_UPDATE_HEARTBEATRATE_CALLBACK)(const int heartbeatrate, const char* sessionid, const char* tenantid, const char* clientid, void* userdata);
 typedef long long (*CORE_GET_TIME_TICK_CALLBACK)(void* userdata);
 typedef void* WiCore_t;
 
@@ -176,12 +176,12 @@ WISECORE_API bool core_ex_action_callback_set(WiCore_t core, CORE_RENAME_CALLBAC
  * 	sessionid -		session ID of request action.
  *  success -		result of request action.
  *  tenantid -		tenant ID of request device.
- *  devid -			device ID of request device.
+ *  clientid -		client ID of request device.
  *
  * Returns:
  *  boolean value for success or not.	
  */
-WISECORE_API bool core_ex_action_response(WiCore_t core, const int cmdid, const char * sessoinid, bool success, const char* tenantid, const char* devid);
+WISECORE_API bool core_ex_action_response(WiCore_t core, const int cmdid, const char * sessoinid, bool success, const char* tenantid, const char* clientid);
 
 /* 
  * Function: core_ex_server_reconnect_callback_set
@@ -252,12 +252,12 @@ WISECORE_API bool core_ex_heartbeat_callback_set(WiCore_t core, CORE_QUERY_HEART
  *  heartbeatrate - current heartbeat rate.
  * 	sessionid -		session ID of request action.
  *  tenantid -		tenant ID of request device.
- *  devid -			device ID of request device.
+ *  clientid -		client ID of request device.
  *
  * Returns:
  *  boolean value for success or not.	
  */
-WISECORE_API bool core_ex_heartbeatratequery_response(WiCore_t core, const int heartbeatrate, const char * sessoinid, const char* tenantid, const char* devid);
+WISECORE_API bool core_ex_heartbeatratequery_response(WiCore_t core, const int heartbeatrate, const char * sessoinid, const char* tenantid, const char* clientid);
 
 /*
  * Function: core_ex_tls_set

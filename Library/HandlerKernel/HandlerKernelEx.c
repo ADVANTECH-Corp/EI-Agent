@@ -40,6 +40,7 @@ typedef struct{
    bool enable;
    int replyID;
    bool bModified;
+   bool bFlat;
    long long nextTime;
    long long timeout;
 }handler_context_t;
@@ -137,10 +138,21 @@ void* HandlerKernelEx_MonitorThread(void *args)
 			{
 				char* buff = NULL;
 				pthread_mutex_lock(&pHandlerKernel->CapabilityMux);
+
 				if(pHandlerKernel->AutoReportContex.reqAll)
-					buff = IoT_PrintFlatData(pHandlerKernel->pCapability, false);
+				{
+					if(pHandlerKernel->AutoReportContex.bFlat)
+						buff = IoT_PrintFlatData(pHandlerKernel->pCapability, false);
+					else
+						buff = IoT_PrintDataEx(pHandlerKernel->pCapability, false);
+				}
 				else
-					buff = IoT_PrintSelectedFlatData(pHandlerKernel->pCapability, pHandlerKernel->AutoReportContex.reqItems, false);
+				{
+					if(pHandlerKernel->AutoReportContex.bFlat)
+						buff = IoT_PrintSelectedFlatData(pHandlerKernel->pCapability, pHandlerKernel->AutoReportContex.reqItems, false);
+					else
+						buff = IoT_PrintSelectedDataEx(pHandlerKernel->pCapability, pHandlerKernel->AutoReportContex.reqItems, false);
+				}
 				pthread_mutex_unlock(&pHandlerKernel->CapabilityMux);
 				if(pHandlerKernel->HandlerInfo.sendreportcbf && buff)
 					pHandlerKernel->HandlerInfo.sendreportcbf(/*Handler Info*/&pHandlerKernel->HandlerInfo, /*message data*/buff, /*message length*/strlen(buff), /*preserved*/NULL, /*preserved*/NULL);
@@ -183,9 +195,19 @@ void* HandlerKernelEx_MonitorThread(void *args)
 				char* buff = NULL;
 				pthread_mutex_lock(&pHandlerKernel->CapabilityMux);
 				if(pHandlerKernel->LiveReportContex.reqAll)
-					buff = IoT_PrintFlatData(pHandlerKernel->pCapability, false);
+				{
+					if(pHandlerKernel->LiveReportContex.bFlat)
+						buff = IoT_PrintFlatData(pHandlerKernel->pCapability, false);
+					else
+						buff = IoT_PrintDataEx(pHandlerKernel->pCapability, false);
+				}
 				else
-					buff = IoT_PrintSelectedFlatData(pHandlerKernel->pCapability, pHandlerKernel->LiveReportContex.reqItems, false);
+				{
+					if(pHandlerKernel->LiveReportContex.bFlat)
+						buff = IoT_PrintSelectedFlatData(pHandlerKernel->pCapability, pHandlerKernel->LiveReportContex.reqItems, false);
+					else
+						buff = IoT_PrintSelectedDataEx(pHandlerKernel->pCapability, pHandlerKernel->LiveReportContex.reqItems, false);
+				}
 				pthread_mutex_unlock(&pHandlerKernel->CapabilityMux);
 				if(pHandlerKernel->HandlerInfo.sendcbf  && buff)
 					pHandlerKernel->HandlerInfo.sendcbf(/*Handler Info*/&pHandlerKernel->HandlerInfo, pHandlerKernel->LiveReportContex.replyID, /*message data*/buff, /*message length*/strlen(buff), /*preserved*/NULL, /*preserved*/NULL);
@@ -215,7 +237,10 @@ void* HandlerKernelEx_MonitorThread(void *args)
 			{
 				char* buff = NULL;
 				pthread_mutex_lock(&pHandlerKernel->CapabilityMux);
-				buff = IoT_PrintFlatData(pHandlerKernel->pCapability, false);
+				if(pHandlerKernel->InternelReportContex.bFlat)
+					buff = IoT_PrintFlatData(pHandlerKernel->pCapability, false);
+				else
+					buff = IoT_PrintDataEx(pHandlerKernel->pCapability, false);
 				pthread_mutex_unlock(&pHandlerKernel->CapabilityMux);
 				if(pHandlerKernel->HandlerInfo.internelreportcbf  && buff)
 					pHandlerKernel->HandlerInfo.internelreportcbf(/*Handler Info*/&pHandlerKernel->HandlerInfo, /*message data*/buff, /*message length*/strlen(buff), /*preserved*/NULL, /*preserved*/NULL);

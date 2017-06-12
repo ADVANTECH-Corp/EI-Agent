@@ -144,7 +144,7 @@ bool SendOSInfo()
 
 	if(g_sendcbf)
 		g_sendcbf(&g_PluginInfo, 116/*OS Info CMD ID*/, strPayloadBuff, strlen(strPayloadBuff), NULL,NULL);
-
+	return true;
 }
 
 static void* thread_agent_get_capability(void *args)
@@ -415,12 +415,14 @@ void SAGENERAL_API General_HandleRecv( char * const topic, void* const data, con
 				if(pthread_create(&getCapabilityThreadHandle, NULL, thread_agent_get_capability, g_pPL_List)==0)
 					pthread_detach(getCapabilityThreadHandle);
 
+				/* no need to send reply message.
 				if(strlen(cSessionID)>0)
 					snprintf(cResponse, sizeof(cResponse), "{\"result\":\"%s\",\"sessionID\":\"%s\"}", "SUCCESS", cSessionID);
 				else
 					snprintf(cResponse, sizeof(cResponse), "{\"result\":\"%s\"}", "SUCCESS");
-
+				
 				respID = general_info_spec_rep;
+				*/
 			}
 		}
 		break;

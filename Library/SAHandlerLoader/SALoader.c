@@ -125,6 +125,7 @@ void HANDLERLOADER_API Loader_Initialize(char const * workdir, susiaccess_agent_
 		strcpy(pageinfo.type, profile->type);
 		strcpy(pageinfo.version, profile->version);
 		strcpy(pageinfo.tenantId, profile->tenantId);
+		strcpy(pageinfo.productId, profile->productId);
 		pageinfo.status = AGENT_STATUS_OFFLINE;
 		Loader_SetAgentInfo(&pageinfo);
 	}
@@ -616,17 +617,15 @@ static void* HandlerReleaseThread(void*  args)
 
 	if(pInterfaceCur)
 	{
-		if(pInterfaceCur->type==virtual_handler)
+		/*if(pInterfaceCur->type!=virtual_handler)
+			Handler_StopHandler( pInterfaceCur );*/
+
+		if(pInterfaceCur->Workable)
 		{
-			SALoaderLog(Debug, " Stop Handler: %s!", pInterfaceCur->Name);	
-			Handler_StopHandler( pInterfaceCur );
-			if(pInterfaceCur->Workable)
-			{
-				if(pInterfaceCur->Handler)
-					Handler_ReleaseHandler( pInterfaceCur );
-			}
-			SALoaderLog(Debug, " Handler %s stopped!", pInterfaceCur->Name);
+			if(pInterfaceCur->Handler)
+				Handler_ReleaseHandler( pInterfaceCur );
 		}
+		
 		if(pInterfaceCur->pHandlerInfo)
 		{
 			if(pInterfaceCur->pHandlerInfo->agentInfo)
@@ -639,8 +638,7 @@ static void* HandlerReleaseThread(void*  args)
 		}
 		pInterfaceCur->pHandlerInfo = NULL;
 		free(pInterfaceCur);
-		pInterfaceCur = NULL;
-		
+		pInterfaceCur = NULL;		
 	}
 	pthread_exit(0);
 	return 0;

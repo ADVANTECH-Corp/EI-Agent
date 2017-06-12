@@ -3,6 +3,21 @@
 #include <unistd.h>
 #include <time.h>
 
+void TrimStr(char * str)
+{
+	char *p, *stPos, *edPos;
+	if(NULL == str) return;
+
+	for (p = str; (*p == ' ' || *p == '\t') && *p != '\0'; p++);
+	edPos = stPos = p;
+	for (; *p != '\0'; p++)
+	{
+		if(*p != ' ' && *p != '\t') edPos = p;   
+	}
+	memmove(str, stPos, edPos - stPos + 1);
+	*(str + (edPos - stPos + 1)) = '\0' ;
+}
+
 wchar_t * ANSIToUnicode(const char * str)
 {
 	int textLen = 0;

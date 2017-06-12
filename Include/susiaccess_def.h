@@ -62,6 +62,7 @@ typedef struct {
 	char hostname[DEF_HOSTNAME_LENGTH];
 	char devId[DEF_DEVID_LENGTH];
 	char tenantId[DEF_DEVID_LENGTH];
+	char productId[DEF_DEVID_LENGTH];
 	char sn[DEF_SN_LENGTH];					/**< Agent sn */
 	char mac[DEF_MAC_LENGTH];				/*connected MAC address*/
 	char lal[DEF_LAL_LENGTH];
@@ -74,8 +75,6 @@ typedef struct {
 	char type[DEF_MAX_STRING_LENGTH];
 	char product[DEF_MAX_STRING_LENGTH];
 	char manufacture[DEF_MAX_STRING_LENGTH];
-	char tag[DEF_MAX_STRING_LENGTH];
-
 	/*OS Info*/
 	char osversion[DEF_OSVERSION_LEN];
 	char biosversion[DEF_VERSION_LENGTH];

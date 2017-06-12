@@ -15,7 +15,6 @@
 #include "util_string.h"
 #include "reloader.h"
 #include "SADataSync.h"
-#include "wisepaas_02_def.h"
 #include "sys/time.h"
 
 #define general_info_spec_rep			2052
@@ -204,7 +203,7 @@ AGENT_SEND_STATUS SAManager_SendMessage( HANDLE const handle, int enum_act,
 		SAManagerLog(g_samanagerlogger, Warning, "Request Packet is empty!");
 		return result;
 	}
-	sprintf(topicStr, DEF_AGENTACT_TOPIC, plugin->agentInfo->tenantId, DEF_PRODUCT_NAME, plugin->agentInfo->devId);
+	sprintf(topicStr, DEF_AGENTACT_TOPIC, plugin->agentInfo->tenantId, plugin->agentInfo->productId, plugin->agentInfo->devId);
 	if(g_publishCB)
 	{
 		if(g_publishCB(topicStr, 0, 0, packet) == 0)
@@ -315,7 +314,7 @@ susiaccess_packet_body_t * SAManager_WrapAutoReportPacket(Handler_info const * p
 		{
 			if(root->child)
 			{
-				cJSON_AddItemToObject(root->child,"opTS", cJSON_Duplicate(oproot, 1));
+				cJSON_AddItemToObject(root,"opTS", cJSON_Duplicate(oproot, 1));
 			}
 		}	
 	}
@@ -456,7 +455,7 @@ susiaccess_packet_body_t * SAManager_WrapCapabilityPacket(Handler_info const * p
 	if(root)
 	{
 		if(root->child)
-			cJSON_AddItemToObject(root->child,"opTS",oproot);
+			cJSON_AddItemToObject(root,"opTS",oproot);
 	}
 	buff = cJSON_PrintUnformatted(root);
 	cJSON_Delete(root);
@@ -506,7 +505,7 @@ AGENT_SEND_STATUS SAManager_SendCapability( HANDLE const handle,
 		SAManagerLog(g_samanagerlogger, Warning, "Request Packet is empty!");
 		return result;
 	}
-	sprintf(topicStr, DEF_AGENTACT_TOPIC, plugin->agentInfo->tenantId, DEF_PRODUCT_NAME, plugin->agentInfo->devId);
+	sprintf(topicStr, DEF_AGENTACT_TOPIC, plugin->agentInfo->tenantId, plugin->agentInfo->productId, plugin->agentInfo->devId);
 
 	if(g_publishCB)
 	{
@@ -618,7 +617,7 @@ AGENT_SEND_STATUS SAManager_SendEventNotify( HANDLE const handle, HANDLER_NOTIFY
 		SAManagerLog(g_samanagerlogger, Warning, "Request Packet is empty!");
 		return result;
 	}
-	sprintf(topicStr, DEF_EVENTNOTIFY_TOPIC, plugin->agentInfo->tenantId, DEF_PRODUCT_NAME, plugin->agentInfo->devId);
+	sprintf(topicStr, DEF_EVENTNOTIFY_TOPIC, plugin->agentInfo->tenantId, plugin->agentInfo->productId, plugin->agentInfo->devId);
 	if(g_publishCB)
 	{
 		if(g_publishCB(topicStr, 0, 0, packet) == true)
@@ -951,7 +950,7 @@ void SAMANAGER_API SAManager_InternalSubscribe()
 	char topicStr[128] = {0};
 	if(!g_pProfile)
 		return;
-	sprintf(topicStr, DEF_CALLBACKREQ_TOPIC, g_pProfile->tenantId, DEF_PRODUCT_NAME, g_pProfile->devId);
+	sprintf(topicStr, DEF_CALLBACKREQ_TOPIC, g_pProfile->tenantId,g_pProfile->productId, g_pProfile->devId);
 	if(g_subscribeCB)
 		g_subscribeCB(topicStr, 0, SAManager_RecvInternalCommandReq);
 

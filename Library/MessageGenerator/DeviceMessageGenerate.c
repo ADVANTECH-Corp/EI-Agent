@@ -121,7 +121,7 @@ bool DEV_CreateAgentInfo(susiaccess_agent_profile_body_t const * pProfile, int s
 		pProfile->account?pProfile->account:"anonymous",
 		pProfile->passwd?pProfile->passwd:"",
 		status,
-		pProfile->tag?pProfile->tag:"",
+		pProfile->productId?pProfile->productId:"",
 		pProfile->devId?pProfile->devId:"",
 		tick);
 #else
