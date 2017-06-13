@@ -6,8 +6,8 @@
 /*                and report to server.										*/	
 /* Reference    : None														*/
 /****************************************************************************/
-#include <unistd.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <string.h>
 #include <pthread.h>
 #include "WISEPlatform.h"
@@ -16,15 +16,17 @@
 #include "IoTMessageGenerate.h"
 #include "FlatToIPSO.h"
 #include <cJSON.h>
+#include "HandlerKernel.h"
+#include "util_path.h"
+#include <time.h>
 
 //-----------------------------------------------------------------------------
 // Types and defines:
 //-----------------------------------------------------------------------------
-#define cagent_request_custom 2002
-#define cagent_custom_action 30002
-const char strPluginName[MAX_TOPIC_LEN] = {"HandlerSample"}; /*declare the handler name*/
-const int iRequestID = cagent_request_custom; /*define the request ID for V3.0, not used on V3.1 or later*/
-const int iActionID = cagent_custom_action;  /*define the action ID for V3.0, not used on V3.1 or later*/
+#define cagent_request_custom 2102 /*define the request ID for V3.0, not used on V3.1 or later*/
+#define cagent_custom_action 31002 /*define the action ID for V3.0, not used on V3.1 or later*/
+
+const char strHandlerName[MAX_TOPIC_LEN] = {"HandlerSample"}; /*declare the handler name*/
 
 MSG_CLASSIFY_T *g_Capability = NULL; /*the global message structure to describe the sensor data as the handelr capability*/
 //-----------------------------------------------------------------------------
@@ -32,25 +34,18 @@ MSG_CLASSIFY_T *g_Capability = NULL; /*the global message structure to describe 
 //-----------------------------------------------------------------------------
 //
 typedef struct{
-   void* threadHandler; // thread handle
-   int interval; // time interval for file read
-   bool isThreadRunning; //thread running flag
+   pthread_t threadHandler; // thread handle
+   int interval;		// time interval for file read
+   bool isThreadRunning;//thread running flag
 }handler_context_t;
 
 //-----------------------------------------------------------------------------
 // Variables
 //-----------------------------------------------------------------------------
-static Handler_info  g_PluginInfo; //global Handler info structure
+static Handler_info  g_HandlerInfo; //global Handler info structure
 static handler_context_t g_HandlerContex;
 static HANDLER_THREAD_STATUS g_status = handler_status_no_init; // global status flag.
-static bool m_bAutoReprot = false;
-static time_t g_monitortime;
 static HandlerSendCbf  g_sendcbf = NULL;						// Client Send information (in JSON format) to Cloud Server	
-static HandlerSendCustCbf  g_sendcustcbf = NULL;			    // Client Send information (in JSON format) to Cloud Server with custom topic	
-static HandlerSubscribeCustCbf g_subscribecustcbf = NULL;       // Client subscribe message (in JSON format) send from Cloud Server with custom topic	
-static HandlerAutoReportCbf g_sendreportcbf = NULL;				// Client Send report (in JSON format) to Cloud Server with AutoReport topic
-static HandlerSendCapabilityCbf g_sendcapabilitycbf = NULL;		// Client Send capability (in JSON format) to Cloud Server
-static HandlerSendEventCbf g_sendeventcbf = NULL;				// Client Send event notify (in JSON format) to Cloud Server with eventnotify topic
 //-----------------------------------------------------------------------------
 // Function:
 //-----------------------------------------------------------------------------
@@ -61,7 +56,6 @@ BOOL WINAPI DllMain(HINSTANCE module_handle, DWORD reason_for_call, LPVOID reser
 {
 	if (reason_for_call == DLL_PROCESS_ATTACH) // Self-explanatory
 	{
-		printf("DllInitializer\r\n");
 		DisableThreadLibraryCalls(module_handle); // Disable DllMain calls for DLL_THREAD_*
 		if (reserved == NULL) // Dynamic load
 		{
@@ -77,7 +71,6 @@ BOOL WINAPI DllMain(HINSTANCE module_handle, DWORD reason_for_call, LPVOID reser
 
 	if (reason_for_call == DLL_PROCESS_DETACH) // Self-explanatory
 	{
-		printf("DllFinalizer\r\n");
 		if (reserved == NULL) // Either loading the DLL has failed or FreeLibrary was called
 		{
 			// Cleanup
@@ -113,23 +106,37 @@ static void Finalizer()
 }
 #endif
 
-static char buff[1024]={0};
+#define SIMULATOR 1
+static char buff[4096]={0};
+static char g_strWorkDir[256]={0};
+int g_iTempCpu = 75;
+int g_iTempSys = 55;
+/*Open text file*/
 const char* FileRead()
 {
-	/*read string form file: test.txt*/
-	FILE *fpSrc = fopen("c:/test.txt", "r");
+#ifndef SIMULATOR
+	char filePath[256] = {0};
+	FILE *fpSrc = NULL;
+	util_path_combine(filePath, g_strWorkDir, "smart.txt");
+	fpSrc = fopen(filePath, "r");
 	if(fpSrc)
 	{
-		fgets(buff, 1024, fpSrc);
+		fgets(buff, 4096, fpSrc);
 		fclose(fpSrc);
 	}
+	else
+		printf(" %s> Failed to open file: %s", g_HandlerInfo.Name, filePath);
 	fpSrc = NULL;
+#else
+	g_iTempCpu += (rand() % 3) -1;
+	g_iTempSys += (rand() % 3) -1;
+	sprintf(buff, "{\"temperature\":{\"cpu\":%d,\"sys\":%d}}", g_iTempCpu, g_iTempSys);
+#endif
 	return buff;
 }
 
 bool ParseReceivedData(MSG_CLASSIFY_T *pGroup)
 {
-	/*Parse the JSON string to Message Structure*/
 	/*Data String: {"<tag>":<Number>, "<tag>":true, "<tag>":false, "<tag>":null, "<tag>":"<string>"}*/
 	char* data = (char *)FileRead();
 	if(!data) return false;
@@ -137,48 +144,112 @@ bool ParseReceivedData(MSG_CLASSIFY_T *pGroup)
 	return transfer_parse_json(data, pGroup);
 }
 
-
+/*Create Capability Message Structure to describe sensor data*/
 MSG_CLASSIFY_T * CreateCapability()
 {
-	/*Generate the Handler Capability to describe the sensor data*/
-	MSG_CLASSIFY_T* myCapability = IoT_CreateRoot((char*)strPluginName);
-	MSG_CLASSIFY_T* myGroup = IoT_AddGroup(myCapability, strPluginName);
-
-	ParseReceivedData(myGroup);
-
+	MSG_CLASSIFY_T* myCapability = IoT_CreateRoot((char*)strHandlerName);
+	/*Open text file and parse the JSON string into Message Structure*/
+	HandlerKernel_LockCapability();
+	ParseReceivedData(myCapability);
+	HandlerKernel_UnlockCapability();
 	return myCapability;
 }
 
 void* SampleHandlerReportThread(void *args)
 {
-	/*thread to read file and update sensor data repeatedly.*/
-
+	/*thread to read text file repeatedly.*/
 	handler_context_t *pHandlerContex = (handler_context_t *)args;
 	int mInterval = pHandlerContex->interval * 1000;
 
 	if(!g_Capability)
+	{
 		g_Capability = CreateCapability();
+		HandlerKernel_SetCapability(g_Capability, true);
+	}
 
 	while(pHandlerContex->isThreadRunning)
 	{
-
+	
 		if(g_Capability)
 		{
-			char* message = NULL;
-			MSG_CLASSIFY_T *myGroup = IoT_FindGroup(g_Capability, strPluginName);
-			if(myGroup)
-				ParseReceivedData(myGroup);
-			message = IoT_PrintData(g_Capability);
-
-			if(g_sendreportcbf)
-				g_sendreportcbf(/*Handler Info*/&g_PluginInfo, /*message data*/message, /*message length*/strlen(message), /*preserved*/NULL, /*preserved*/NULL);
-
-			free(message);
+			HandlerKernel_LockCapability();
+			ParseReceivedData(g_Capability);
+			HandlerKernel_UnlockCapability();
 		}
 		usleep(mInterval*1000);
 	}
 	pthread_exit(0);
-	return 0;
+    return 0;
+}
+
+/*callback function to handle threshold rule check event*/
+void on_threshold_triggered(threshold_event_type type, char* sensorname, double value, MSG_ATTRIBUTE_T* attr, void *pRev)
+{
+	printf(" %s> threshold triggered:[%d, %s, %f]", g_HandlerInfo.Name, type, sensorname, value);
+}
+
+/*callback function to handle get sensor data event*/
+bool on_get_sensor(get_data_t* objlist, void *pRev)
+{
+	get_data_t *current = objlist;
+	if(objlist == NULL) return false;
+
+	while(current)
+	{
+		current->errcode = STATUSCODE_SUCCESS;
+		strcpy(current->errstring, STATUS_SUCCESS);
+
+		switch(current->attr->type)
+		{
+		case attr_type_numeric:
+			printf(" %s> get: %s value:%d", g_HandlerInfo.Name, current->sensorname, current->attr->v);
+		 break;
+		case attr_type_boolean:
+			printf(" %s> get: %s value:%s", g_HandlerInfo.Name, current->sensorname, current->attr->bv?"true":"false");
+		 break;
+		case attr_type_string:
+			printf(" %s> get: %s value:%s", g_HandlerInfo.Name, current->sensorname, current->attr->sv);
+		 break;
+		case attr_type_date:
+			printf(" %s> get: %s value:Date:%s", g_HandlerInfo.Name, current->sensorname, current->attr->sv);
+		 break;
+		case attr_type_timestamp:
+		 printf(" %s> get: %s value:Timestamp:%d", g_HandlerInfo.Name, current->sensorname, current->attr->v);
+		 break;
+		}
+
+		current = current->next;
+	}
+	return true;
+}
+
+/*callback function to handle set sensor data event*/
+bool on_set_sensor(set_data_t* objlist, void *pRev)
+{
+	set_data_t *current = objlist;
+	if(objlist == NULL) return false;
+	while(current)
+	{
+		current->errcode = STATUSCODE_SUCCESS;
+		strcpy(current->errstring, STATUS_SUCCESS);
+
+		switch(current->newtype)
+		{
+		case attr_type_numeric:
+			printf(" %s> set: %s value:%d", g_HandlerInfo.Name, current->sensorname, current->v);
+		 break;
+		case attr_type_boolean:
+			printf(" %s> set: %s value:%s", g_HandlerInfo.Name, current->sensorname, current->bv?"true":"false");
+		 break;
+		case attr_type_string:
+			printf(" %s> set: %s value:%s", g_HandlerInfo.Name, current->sensorname, current->sv);
+		 break;
+		}
+
+		current = current->next;
+	}
+
+	return true;
 }
 
 /* **************************************************************************************
@@ -193,29 +264,25 @@ int HANDLER_API Handler_Initialize( HANDLER_INFO *pluginfo )
 {
 	if( pluginfo == NULL )
 		return handler_fail;
-
+	srand((int) time(0));
 	// 1. Topic of this handler
-	snprintf( pluginfo->Name, sizeof(pluginfo->Name), "%s", strPluginName );
-	pluginfo->RequestID = iRequestID;
-	pluginfo->ActionID = iActionID;
-	printf(" %s> Initialize", strPluginName);
+	snprintf( pluginfo->Name, sizeof(pluginfo->Name), "%s", strHandlerName );
+	pluginfo->RequestID = cagent_request_custom;
+	pluginfo->ActionID = cagent_custom_action;
+	printf(" %s> Initialize", strHandlerName);
 	// 2. Copy agent info 
-	memcpy(&g_PluginInfo, pluginfo, sizeof(HANDLER_INFO));
-	g_PluginInfo.agentInfo = pluginfo->agentInfo;
+	memcpy(&g_HandlerInfo, pluginfo, sizeof(HANDLER_INFO));
+	g_HandlerInfo.agentInfo = pluginfo->agentInfo;
 
 	// 3. Callback function -> Send JSON Data by this callback function
-	g_sendcbf = g_PluginInfo.sendcbf = pluginfo->sendcbf;
-	g_sendcustcbf = g_PluginInfo.sendcustcbf = pluginfo->sendcustcbf;
-	g_subscribecustcbf = g_PluginInfo.subscribecustcbf = pluginfo->subscribecustcbf;
-	g_sendreportcbf = g_PluginInfo.sendreportcbf = pluginfo->sendreportcbf;
-	g_sendcapabilitycbf =g_PluginInfo.sendcapabilitycbf = pluginfo->sendcapabilitycbf;
-	g_sendeventcbf = g_PluginInfo.sendeventcbf = pluginfo->sendeventcbf;
 
 	g_HandlerContex.threadHandler = NULL;
 	g_HandlerContex.isThreadRunning = false;
 	g_status = handler_status_no_init;
 
-	return handler_success;
+	strcpy(g_strWorkDir, pluginfo->WorkDir);
+	
+	return HandlerKernel_Initialize(pluginfo);
 }
 
 /* **************************************************************************************
@@ -231,15 +298,11 @@ void Handler_Uninitialize()
 	if(g_HandlerContex.threadHandler)
 	{
 		g_HandlerContex.isThreadRunning = false;
+		pthread_cancel(g_HandlerContex.threadHandler);
 		pthread_join(g_HandlerContex.threadHandler, NULL);
 		g_HandlerContex.threadHandler = NULL;
 	}
-	g_sendcbf = NULL;
-	g_sendcustcbf = NULL;
-	g_sendreportcbf = NULL;
-	g_sendcapabilitycbf = NULL;
-	g_subscribecustcbf = NULL;
-	g_sendeventcbf = NULL;
+	HandlerKernel_Uninitialize();
 	/*Release Capability Message Structure*/
 	if(g_Capability)
 	{
@@ -259,11 +322,11 @@ void Handler_Uninitialize()
 int HANDLER_API Handler_Get_Status( HANDLER_THREAD_STATUS * pOutStatus )
 {
 	int iRet = handler_fail; 
-	//printf(" %s> Get Status", strPluginName);
+	//printf(" %s> Get Status", strHandlerName);
 	if(!pOutStatus) return iRet;
 	/*user need to implement their thread status check function*/
 	*pOutStatus = g_status;
-
+	
 	iRet = handler_success;
 	return iRet;
 }
@@ -278,26 +341,17 @@ int HANDLER_API Handler_Get_Status( HANDLER_THREAD_STATUS * pOutStatus )
  * ***************************************************************************************/
 void HANDLER_API Handler_OnStatusChange( HANDLER_INFO *pluginfo )
 {
-	char message[256] = {0};
-	char* msg = NULL;
-	printf(" %s> Update Status", strPluginName);
+	printf(" %s> Update Status\n", strHandlerName);
 	if(pluginfo)
-		memcpy(&g_PluginInfo, pluginfo, sizeof(HANDLER_INFO));
+		memcpy(&g_HandlerInfo, pluginfo, sizeof(HANDLER_INFO));
 	else
 	{
-		memset(&g_PluginInfo, 0, sizeof(HANDLER_INFO));
-		snprintf( g_PluginInfo.Name, sizeof( g_PluginInfo.Name), "%s", strPluginName );
-		g_PluginInfo.RequestID = iRequestID;
-		g_PluginInfo.ActionID = iActionID;
+		memset(&g_HandlerInfo, 0, sizeof(HANDLER_INFO));
+		snprintf( g_HandlerInfo.Name, sizeof( g_HandlerInfo.Name), "%s", strHandlerName );
+		g_HandlerInfo.RequestID = cagent_request_custom;
+		g_HandlerInfo.ActionID = cagent_custom_action;
 	}
-	sprintf(message, "Handler %s on connected", strPluginName);
-	/*Sample code to generate and send event message*/
-	msg = DEV_CreateEventNotify("message", message, NULL);
-	if(g_sendeventcbf)
-		g_sendeventcbf(&g_PluginInfo, Severity_Informational, msg, strlen(msg), NULL, NULL);
-	DEV_ReleaseBuffer(msg);
 }
-
 
 /* **************************************************************************************
  *  Function Name: Handler_Start
@@ -309,8 +363,15 @@ void HANDLER_API Handler_OnStatusChange( HANDLER_INFO *pluginfo )
  * ***************************************************************************************/
 int HANDLER_API Handler_Start( void )
 {
-	printf("> %s Start", strPluginName);
-
+	printf("> %s Start", strHandlerName);
+	/*Create thread to read text file*/
+	g_HandlerContex.interval = 1;
+	g_HandlerContex.isThreadRunning = true;
+	if (pthread_create(&g_HandlerContex.threadHandler, NULL, SampleHandlerReportThread, &g_HandlerContex) != 0)
+	{
+		g_HandlerContex.isThreadRunning = false;
+		printf("start thread failed!\n");	
+	}
 	g_status = handler_status_start;
 	return handler_success;
 }
@@ -325,7 +386,15 @@ int HANDLER_API Handler_Start( void )
  * ***************************************************************************************/
 int HANDLER_API Handler_Stop( void )
 {
-	printf("> %s Stop", strPluginName);
+	printf("> %s Stop", strHandlerName);
+
+	/*Stop text file read thread*/
+	if(g_HandlerContex.threadHandler)
+	{
+		g_HandlerContex.isThreadRunning = false;
+		pthread_join(g_HandlerContex.threadHandler, NULL);
+		g_HandlerContex.threadHandler = NULL;
+	}
 
 	g_status = handler_status_stop;
 	return handler_success;
@@ -343,7 +412,61 @@ int HANDLER_API Handler_Stop( void )
  * ***************************************************************************************/
 void HANDLER_API Handler_Recv(char * const topic, void* const data, const size_t datalen, void *pRev1, void* pRev2  )
 {
-	printf(" >Recv Topic [%s] Data %s", topic, (char*) data );
+	int cmdID = 0;
+	char sessionID[33] = {0};
+	printf(" >Recv Topic [%s] Data %s\n", topic, (char*) data );
+	
+	/*Parse Received Command*/
+	if(HandlerKernel_ParseRecvCMDWithSessionID((char*)data, &cmdID, sessionID) != handler_success)
+		return;
+	switch(cmdID)
+	{
+	case hk_get_capability_req:
+		if(!g_Capability)
+			g_Capability = CreateCapability();
+		HandlerKernel_SetCapability(g_Capability, true);
+		break;
+	case hk_auto_upload_req:
+		/*start live report*/
+		HandlerKernel_LiveReportStart(hk_auto_upload_rep, (char*)data);
+		break;
+	case hk_set_thr_req:
+		/*Stop threshold check thread*/
+		HandlerKernel_StopThresholdCheck();
+		/*setup threshold rule*/
+		HandlerKernel_SetThreshold(hk_set_thr_rep,(char*) data);
+		/*register the threshold check callback function to handle trigger event*/
+		HandlerKernel_SetThresholdTrigger(on_threshold_triggered);
+		/*Restart threshold check thread*/
+		HandlerKernel_StartThresholdCheck();
+		break;
+	case hk_del_thr_req:
+		/*Stop threshold check thread*/
+		HandlerKernel_StopThresholdCheck();
+		/*clear threshold check callback function*/
+		HandlerKernel_SetThresholdTrigger(NULL);
+		/*Delete all threshold rules*/
+		HandlerKernel_DeleteAllThreshold(hk_del_thr_rep);
+		break;
+	case hk_get_sensors_data_req:
+		/*Get Sensor Data with callback function*/
+		HandlerKernel_GetSensorData(hk_get_sensors_data_rep, sessionID, (char*)data, on_get_sensor);
+		break;
+	case hk_set_sensors_data_req:
+		/*Set Sensor Data with callback function*/
+		HandlerKernel_SetSensorData(hk_set_sensors_data_rep, sessionID, (char*)data, on_set_sensor);
+		break;
+	default:
+		{
+			/* Send command not support reply message*/
+			char repMsg[32] = {0};
+			int len = 0;
+			sprintf( repMsg, "{\"errorRep\":\"Unknown cmd!\"}" );
+			len= strlen( "{\"errorRep\":\"Unknown cmd!\"}" ) ;
+			if ( g_sendcbf ) g_sendcbf( & g_HandlerInfo, hk_error_rep, repMsg, len, NULL, NULL );
+		}
+		break;
+	}
 }
 
 /* **************************************************************************************
@@ -362,15 +485,9 @@ void HANDLER_API Handler_AutoReportStart(char *pInQuery)
 	* "autoUploadIntervalSec":30 means report sensor data every 30 sec.
 	* "requestItems":["all"] defined which handler or sensor data to report. 
 	*/
-	printf("> %s Start Report", strPluginName);
+	printf("> %s Start Report", strHandlerName);
 	/*create thread to report sensor data*/
-	g_HandlerContex.interval = 1;
-	g_HandlerContex.isThreadRunning = true;
-	if (pthread_create(&g_HandlerContex.threadHandler, NULL, SampleHandlerReportThread, &g_HandlerContex) != 0)
-	{
-		g_HandlerContex.isThreadRunning = false;
-		printf("start thread failed!\n");	
-	}
+	HandlerKernel_AutoReportStart(pInQuery);
 }
 
 /* **************************************************************************************
@@ -383,14 +500,9 @@ void HANDLER_API Handler_AutoReportStart(char *pInQuery)
 void HANDLER_API Handler_AutoReportStop(char *pInQuery)
 {
 	/*TODO: Parsing received command*/
-	printf("> %s Stop Report", strPluginName);
+	printf("> %s Stop Report", strHandlerName);
 
-	if(g_HandlerContex.threadHandler)
-	{
-		g_HandlerContex.isThreadRunning = false;
-		pthread_join(g_HandlerContex.threadHandler, NULL);
-		g_HandlerContex.threadHandler = NULL;
-	}
+	HandlerKernel_AutoReportStop(pInQuery);
 }
 
 /* **************************************************************************************
@@ -406,15 +518,20 @@ int HANDLER_API Handler_Get_Capability( char ** pOutReply ) // JSON Format
 	char* result = NULL;
 	int len = 0;
 
-	printf("> %s Get Capability", strPluginName);
+	printf("> %s Get Capability", strHandlerName);
 
 	if(!pOutReply) return len;
 
+	/*Create Capability Message Structure to describe sensor data*/
 	if(!g_Capability)
+	{
 		g_Capability = CreateCapability();
-
+		HandlerKernel_SetCapability(g_Capability, false);
+	}
+	/*generate capability JSON string*/
 	result = IoT_PrintCapability(g_Capability);
 
+	/*create buffer to store the string*/
 	len = strlen(result);
 	*pOutReply = (char *)malloc(len + 1);
 	memset(*pOutReply, 0, len + 1);
@@ -432,7 +549,7 @@ int HANDLER_API Handler_Get_Capability( char ** pOutReply ) // JSON Format
  * ***************************************************************************************/
 void HANDLER_API Handler_MemoryFree(char *pInData)
 {
-	printf("> %s Free Allocated Memory", strPluginName);
+	printf("> %s Free Allocated Memory", strHandlerName);
 
 	if(pInData)
 	{
