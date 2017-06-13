@@ -298,6 +298,7 @@ int saclient_priv_connect()
 	}
 	else
 	{
+		desSrc = strdup(g_config->serverAuth);
 		if(strstr(desSrc, ";")>0)
 		{
 			loginID = strtok(desSrc, ";");
