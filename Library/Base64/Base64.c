@@ -110,7 +110,8 @@ int Base64Decode(IN const char * data, IN int dataLen, OUT char ** decData, OUT 
             bsChPos = FindPos(data[i]);
 				if(bsChPos == -1)
 				{
-					free(deRetBuf);
+					free(*decData );
+					*decData  = NULL;
 					return iRet = 4;
 				}
 				perDeBuf = (perDeBuf << 6) | bsChPos;
