@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 	strcpy(config.autoStart,"True"); //autoStart default is True. The Agent will reconnect to server automatically.
 	strcpy(config.serverIP,"wise-msghub.eastasia.cloudapp.azure.com"); //serverIP indicate the server RUL or IP Address
 	strcpy(config.serverPort,"1883"); //serverPort indocate the server (MQTT Broker) listen port, default is 1883 in WISE Agent version 3.1 or later, WISE Agent version 3.0 is 10001.
-	strcpy(config.serverAuth,"9ed64f8b-8ebf-49e1-8355-d5701d4d9a38:336075c3-51a1-4fa8-b4d0-4d8e337d42f4;2pii8jlhqqtr4929tfjc9toh51=="); //serverAuth is the server (MQTT Broker) authentication string. the string is encode from <ID>;<PASS>. It also support plain text mode.
+	strcpy(config.serverAuth,"9a583195-71c7-431a-8a33-49637a879f27:f871a5d1-ef16-4d45-a087-92a27c6c356f;6armmbun07hp1b5l7iothcsrs5"); //serverAuth is the server (MQTT Broker) authentication string. the string is encode from <ID>;<PASS>. It also support plain text mode.
 	config.tlstype = tls_type_none; //tlstype define the TLS (SSL) mode
 	switch(config.tlstype)
 	{
@@ -107,11 +107,11 @@ int main(int argc, char *argv[])
 	memset(&profile, 0 , sizeof(susiaccess_agent_profile_body_t));
 	snprintf(profile.version, DEF_VERSION_LENGTH, "%d.%d.%d.%d", 4, 0, 0, 0);  //version indicate the version fo the application.
 	strcpy(profile.hostname,"SAClientSample"); //hostname indicate the name of target device ro agent.
-	strcpy(profile.devId,"00000001-0000-0000-0000-14DAE996BE04"); //devId is the Unique ID of the device or agent.
+	strcpy(profile.devId,"00000001-0000-0000-0000-305A3A77B1DA"); //devId is the Unique ID of the device or agent.
 	strcpy(profile.tenantId,"general"); //tenant Id is the Unique ID for multi-tenant support.
 	strcpy(profile.productId,"RMM"); //product Id to identify the WISE-PaaS service.
-	strcpy(profile.sn,"14DAE996BE04"); //sn indicate the device serial number.
-	strcpy(profile.mac,"14DAE996BE04"); //mac indicate the MAC Address of first ethernet or wireless card.
+	strcpy(profile.sn,"305A3A77B1DA"); //sn indicate the device serial number.
+	strcpy(profile.mac,"305A3A77B1DA"); //mac indicate the MAC Address of first ethernet or wireless card.
 	strcpy(profile.type,"IPC"); //type indicate the agent type, defualt is IPC. User can define their own type for customization.
 	strcpy(profile.product,"Sample Agent"); //produce indicate the product name
 	strcpy(profile.manufacture,"test"); //manufacture indicate the manufacture name

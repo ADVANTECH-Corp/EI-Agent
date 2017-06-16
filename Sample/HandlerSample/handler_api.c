@@ -502,7 +502,8 @@ void HANDLER_API Handler_AutoReportStop(char *pInQuery)
 	/*TODO: Parsing received command*/
 	printf("> %s Stop Report", strHandlerName);
 
-	HandlerKernel_AutoReportStop(pInQuery);
+	//comment to keep report sensro data!!
+	//HandlerKernel_AutoReportStop(pInQuery);
 }
 
 /* **************************************************************************************
@@ -537,6 +538,10 @@ int HANDLER_API Handler_Get_Capability( char ** pOutReply ) // JSON Format
 	memset(*pOutReply, 0, len + 1);
 	strcpy(*pOutReply, result);
 	free(result);
+
+	/*Start to report sensor data*/
+	HandlerKernel_AutoReportStart("{\"susiCommData\":{\"commCmd\":2053,\"requestItems\":{\"All\":{}},\"autoUploadIntervalSec\": 10,\"handlerName\":\"general\"}}");
+
 	return len;
 }
 
