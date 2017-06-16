@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 	strcpy(config.autoStart,"True"); //autoStart default is True. The Agent will reconnect to server automatically.
 	strcpy(config.serverIP,"wise-msghub.eastasia.cloudapp.azure.com"); //serverIP indicate the server RUL or IP Address
 	strcpy(config.serverPort,"1883"); //serverPort indocate the server (MQTT Broker) listen port, default is 1883 in WISE Agent version 3.1 or later, WISE Agent version 3.0 is 10001.
-	strcpy(config.serverAuth,"9ed64f8b-8ebf-49e1-8355-d5701d4d9a38:336075c3-51a1-4fa8-b4d0-4d8e337d42f4;2pii8jlhqqtr4929tfjc9toh51=="); //serverAuth is the server (MQTT Broker) authentication string. the string is encode from  or <ID>;<PASS>. It also support plain text mode.
+	strcpy(config.serverAuth,"9ed64f8b-8ebf-49e1-8355-d5701d4d9a38:336075c3-51a1-4fa8-b4d0-4d8e337d42f4;2pii8jlhqqtr4929tfjc9toh51=="); //serverAuth is the server (MQTT Broker) authentication string. the string is encode from <ID>;<PASS>. It also support plain text mode.
 	config.tlstype = tls_type_none; //tlstype define the TLS (SSL) mode
 	switch(config.tlstype)
 	{
