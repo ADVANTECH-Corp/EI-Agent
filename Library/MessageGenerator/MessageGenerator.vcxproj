@@ -193,6 +193,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ActionMessageGenerate.c" />
     <ClCompile Include="DeviceMessageGenerate.c" />
     <ClCompile Include="FlatToIPSO.c" />
     <ClCompile Include="GPSMessageGenerate.c" />
@@ -204,6 +205,7 @@
     <ClInclude Include="..\..\Include\susiaccess_def.h" />
     <ClInclude Include="..\..\Include\susiaccess_handler_mgmt.h" />
     <ClInclude Include="..\..\Include\svnversion.h" />
+    <ClInclude Include="ActionMessageGenerate.h" />
     <ClInclude Include="DeviceMessageGenerate.h" />
     <ClInclude Include="FlatToIPSO.h" />
     <ClInclude Include="GPSMessageGenerate.h" />

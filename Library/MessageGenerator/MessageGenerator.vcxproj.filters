@@ -19,6 +19,9 @@
     <ClCompile Include="IPSOParser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ActionMessageGenerate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeviceMessageGenerate.h">
@@ -46,6 +49,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IPSOParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionMessageGenerate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
