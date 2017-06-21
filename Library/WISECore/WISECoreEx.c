@@ -844,9 +844,9 @@ WISECORE_API bool core_ex_action_response(WiCore_t core, const int cmdid, const 
 	}
 
 	if(sessoinid)
-		snprintf(tHandleCtx->strPayloadBuff, sizeof(tHandleCtx->strPayloadBuff), DEF_ACTION_RESULT_SESSION_JSON, cmdid, success?"SUCCESS":"FALSE", sessoinid, tick);
+		snprintf(tHandleCtx->strPayloadBuff, sizeof(tHandleCtx->strPayloadBuff), DEF_ACTION_RESULT_SESSION_JSON, clientid?clientid:tHandleCtx->strClientID, cmdid, success?"SUCCESS":"FALSE", sessoinid, tick);
 	else
-		snprintf(tHandleCtx->strPayloadBuff, sizeof(tHandleCtx->strPayloadBuff), DEF_ACTION_RESULT_JSON, cmdid, success?"SUCCESS":"FALSE", tick);
+		snprintf(tHandleCtx->strPayloadBuff, sizeof(tHandleCtx->strPayloadBuff), DEF_ACTION_RESULT_JSON, clientid?clientid:tHandleCtx->strClientID, cmdid, success?"SUCCESS":"FALSE", tick);
 #ifdef _WISEPAAS_02_DEF_H_
 	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, tenantid?tenantid:tHandleCtx->strTenantID, DEF_PRESERVE_PRODUCT_NAME, clientid?clientid:tHandleCtx->strClientID);
 #else
@@ -971,7 +971,7 @@ WISECORE_API bool core_ex_heartbeatratequery_response(WiCore_t core, const int h
 		tHandleCtx->tick++;
 	}
 
-	sprintf(tHandleCtx->strPayloadBuff, DEF_HEARTBEATRATE_RESPONSE_SESSION_JSON, wise_heartbeatrate_query_rep, heartbeatrate, sessoinid, tick);
+	sprintf(tHandleCtx->strPayloadBuff, DEF_HEARTBEATRATE_RESPONSE_SESSION_JSON, clientid, wise_heartbeatrate_query_rep, heartbeatrate, sessoinid, tick);
 #ifdef _WISEPAAS_02_DEF_H_
 	sprintf(tHandleCtx->strTopicBuff, DEF_AGENTACT_TOPIC, tenantid, DEF_PRESERVE_PRODUCT_NAME, clientid);
 #else

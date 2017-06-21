@@ -20,7 +20,7 @@
 #include "IoTMessageGenerate.h"
 #include "WISEPlatform.h"
 
-char g_strClientID[37] = "00000001-0000-0000-0000-305A3A77B1CC";
+char g_strClientID[37] = "00000001-0000-0000-0000-305A3A770020";
 char g_strTenantID[37] = "general";
 char g_strHostName[11] = "TestClient";
 char g_strProductTag[37] = "RMM";
@@ -340,7 +340,7 @@ AGENT_SEND_STATUS send_cbf(HANDLE const handler, int enum_act, void const * cons
 	
 	length =  strlen(DEF_ACTION_RESPONSE_JSON) + requestLen + 12 + strlen(pHandler->Name);
 	buff = calloc(1,length);
-	snprintf(buff, length, DEF_ACTION_RESPONSE_JSON, enum_act, pHandler->Name, (char*)requestData, get_timetick(NULL));
+	snprintf(buff, length, DEF_ACTION_RESPONSE_JSON, pHandler->agentInfo->devId, enum_act, pHandler->Name, (char*)requestData, get_timetick(NULL));
 
 	sprintf(topic, DEF_AGENTACT_TOPIC, pHandler->agentInfo->tenantId, g_strProductTag, pHandler->agentInfo->devId);
 
@@ -389,9 +389,9 @@ AGENT_SEND_STATUS send_autoreport_cbf( HANDLE const handler, void const * const 
 	if(handler == NULL || requestData == NULL)
 		return cagent_send_data_error;
 	pHandler = (HANDLER_INFO_EX*)handler;
-	length =  strlen(DEF_ACTION_RESPONSE_JSON) + requestLen + 12 + strlen(pHandler->Name);
+	length =  strlen(DEF_AUTOREPORT_JSON) + requestLen + 12 + strlen(pHandler->Name);
 	buff = calloc(1,length);
-	snprintf(buff, length, DEF_ACTION_RESPONSE_JSON, 2055, "general", (char*)requestData, get_timetick(NULL));
+	snprintf(buff, length, DEF_AUTOREPORT_JSON, pHandler->agentInfo->devId, (char*)requestData, get_timetick(NULL));
 	sprintf(topic, DEF_AGENTREPORT_TOPIC, pHandler->agentInfo->tenantId, pHandler->agentInfo->devId);
 
 	bResult = core_publish(topic, buff, strlen(buff), 0, 0);
@@ -415,7 +415,7 @@ AGENT_SEND_STATUS  send_event_cbf( HANDLE const handler, HANDLER_NOTIFY_SEVERITY
 	pHandler = (HANDLER_INFO_EX*)handler;
 	length =  strlen(DEF_ACTION_RESPONSE_JSON) + requestLen + 12 + strlen(pHandler->Name);
 	buff = calloc(1,length);
-	snprintf(buff, length, DEF_ACTION_RESPONSE_JSON, 2059, pHandler->Name, (char*)requestData, get_timetick(NULL));
+	snprintf(buff, length, DEF_ACTION_RESPONSE_JSON, pHandler->agentInfo->devId, 2059, pHandler->Name, (char*)requestData, get_timetick(NULL));
 	sprintf(topic, DEF_EVENTNOTIFY_TOPIC, pHandler->agentInfo->tenantId, g_strProductTag, pHandler->agentInfo->devId);
 
 	bResult = core_publish(topic, buff, strlen(buff), 0, 0);
@@ -584,8 +584,7 @@ bool SendOSInfo()
 
 int main(int argc, char *argv[])
 {
-	//char strServerIP[64] = "dev-wisepaas.eastasia.cloudapp.azure.com";
-	char strServerIP[64] = "172.22.12.29";
+	char strServerIP[64] = "wise-msghub.eastasia.cloudapp.azure.com";
 	int iPort = 1883;
 	pthread_t threaddataaccess = 0;
 	int SSLMode = 0;  //0:disable, 1:CA Mode, 2: PSK Mode.
@@ -629,7 +628,7 @@ int main(int argc, char *argv[])
 	else if(SSLMode == 2)
 		core_tls_psk_set("05155853", g_strClientID, NULL);
 
-	if(!core_connect(strServerIP, iPort, "admin", "05155853")){
+	if(!core_connect(strServerIP, iPort, "9a583195-71c7-431a-8a33-49637a879f27:f871a5d1-ef16-4d45-a087-92a27c6c356f", "6armmbun07hp1b5l7iothcsrs5")){
 		printf("Unable to connect to broker. %s\n", core_error_string_get());
 		goto EXIT;
 	} else {

@@ -56,10 +56,11 @@
 //#define DEF_ACTIONACK_TOPIC					"/wisepaas/%s/device/%s/agentactionreq"	/*Subscribe*/
 #define DEF_AGENTCONTROL_TOPIC				"/wisepaas/%s/device/+/agentctrlreq"	/*Subscribe*/
 #define DEF_HEARTBEAT_TOPIC					"/wisepaas/%s/device/%s/notifyack"	/*publish*/
-#define DEF_ACTION_RESULT_SESSION_JSON		"{\"commCmd\":%d,\"handlerName\":\"general\",\"content\":{\"result\":\"%s\"},\"sessionID\":\"%s\",\"sendTS\":{\"$date\":%lld}}"
-#define DEF_ACTION_RESULT_JSON				"{\"commCmd\":%d,\"handlerName\":\"general\",\"content\":{\"result\":\"%s\"},\"sendTS\":{\"$date\":%lld}}"
-#define DEF_ACTION_RESPONSE_JSON			"{\"commCmd\":%d,\"handlerName\":\"%s\",\"content\":\"%s\",\"sendTS\":{\"$date\":%lld}}"
+#define DEF_ACTION_RESULT_SESSION_JSON		"{\"agentID\":\"%s\",\"commCmd\":%d,\"handlerName\":\"general\",\"content\":{\"result\":\"%s\"},\"sessionID\":\"%s\",\"sendTS\":{\"$date\":%lld}}"
+#define DEF_ACTION_RESULT_JSON				"{\"agentID\":\"%s\",\"commCmd\":%d,\"handlerName\":\"general\",\"content\":{\"result\":\"%s\"},\"sendTS\":{\"$date\":%lld}}"
+#define DEF_AUTOREPORT_JSON					"{\"agentID\":\"%s\",\"commCmd\":2055,\"handlerName\":\"general\",\"content\":%s,\"sendTS\":{\"$date\":%lld}}"
+#define DEF_ACTION_RESPONSE_JSON			"{\"agentID\":\"%s\",\"commCmd\":%d,\"handlerName\":\"%s\",\"content\":%s,\"sendTS\":{\"$date\":%lld}}"
 #define DEF_HEARTBEAT_MESSAGE_JSON			"{\"hb\":{\"devID\":\"%s\"}}"
-#define DEF_HEARTBEATRATE_RESPONSE_SESSION_JSON	"{\"commCmd\":%d,\"handlerName\":\"general\",\"content\":{\"heartbeatrate\":%d},\"sessionID\":\"%s\",\"sendTS\":{\"$date\":%lld}}"
+#define DEF_HEARTBEATRATE_RESPONSE_SESSION_JSON	"{\"agentID\":\"%s\",\"commCmd\":%d,\"handlerName\":\"general\",\"content\":{\"heartbeatrate\":%d},\"sessionID\":\"%s\",\"sendTS\":{\"$date\":%lld}}"
 
 #endif
