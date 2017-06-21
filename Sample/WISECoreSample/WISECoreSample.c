@@ -628,7 +628,7 @@ int main(int argc, char *argv[])
 	else if(SSLMode == 2)
 		core_tls_psk_set("05155853", g_strClientID, NULL);
 
-	if(!core_connect(strServerIP, iPort, "9a583195-71c7-431a-8a33-49637a879f27:f871a5d1-ef16-4d45-a087-92a27c6c356f", "6armmbun07hp1b5l7iothcsrs5")){
+	if(!core_connect(strServerIP, iPort, "a4632c1e-269e-41e6-907b-da8ca302dfbd:2d128704-ea11-4195-aaa4-39273e7fb513", "gl84do41kkpnfh81e1esgvfvm7")){
 		printf("Unable to connect to broker. %s\n", core_error_string_get());
 		goto EXIT;
 	} else {

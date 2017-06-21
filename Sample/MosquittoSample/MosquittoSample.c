@@ -25,8 +25,8 @@ struct mosquitto *g_mosq = NULL;
 
 char g_strServerIP[64] = "wise-msghub.eastasia.cloudapp.azure.com";
 int g_iPort = 1883;
-char g_strConnID[256] = "9a583195-71c7-431a-8a33-49637a879f27:f871a5d1-ef16-4d45-a087-92a27c6c356f";
-char g_strConnPW[64] = "6armmbun07hp1b5l7iothcsrs5";
+char g_strConnID[256] = "a4632c1e-269e-41e6-907b-da8ca302dfbd:2d128704-ea11-4195-aaa4-39273e7fb513";
+char g_strConnPW[64] = "gl84do41kkpnfh81e1esgvfvm7";
 char g_strDeviceID[37] = "00000001-0000-0000-0000-305A3A770000";
 char g_strTenantID[37] = "general";
 char g_strHostName[11] = "TestClient";
