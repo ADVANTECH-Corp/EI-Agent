@@ -51,6 +51,8 @@ WISEPLATFORM_API HANDLE util_process_cmd_launch(char * cmdline);
 
 WISEPLATFORM_API HANDLE util_process_cmd_launch_no_wait(char * cmdline);
 
+WISEPLATFORM_API bool util_is_process_running(HANDLE hProcess);
+
 WISEPLATFORM_API void util_process_wait_handle(HANDLE hProcess);
 
 WISEPLATFORM_API void util_process_kill_handle(HANDLE hProcess);

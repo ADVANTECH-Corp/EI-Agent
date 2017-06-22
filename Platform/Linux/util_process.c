@@ -109,6 +109,17 @@ HANDLE util_process_cmd_launch_no_wait(char * cmdline)
 	return pid;
 }
 
+WISEPLATFORM_API bool util_is_process_running(HANDLE hProcess)
+{
+	if (-1 == hProcess)
+		return false;
+	else
+	{
+		int result = kill(hProcess, 0);
+		return result==0;
+	}
+}
+
 void util_process_wait_handle(HANDLE hProcess)
 {
 	if (-1 == hProcess)

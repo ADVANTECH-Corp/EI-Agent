@@ -66,6 +66,16 @@ WISEPLATFORM_API HANDLE util_process_cmd_launch_no_wait(char * cmdline)
 	}
 }
 
+WISEPLATFORM_API bool util_is_process_running(HANDLE hProcess)
+{
+	unsigned long long ret = 0;
+	if(hProcess == NULL)
+		return false;
+
+	ret = WaitForSingleObject(hProcess, 0);
+    return ret == WAIT_TIMEOUT;
+}
+
 WISEPLATFORM_API void util_process_wait_handle(HANDLE hProcess)
 {
 	if(hProcess == NULL)
