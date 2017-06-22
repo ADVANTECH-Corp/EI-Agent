@@ -142,6 +142,7 @@ AC_CONFIG_FILES([Makefile
 		 Library/SAHandlerLoader/Makefile
 	  	 Library/ReadINI/Makefile
 		 Library/HandlerKernel/Makefile
+		 Sample/MosquittoSample/Makefile
 		 Sample/SampleAgent/Makefile
 		 Sample/HandlerSample/Makefile
 		 Sample/ModbusSample/Makefile

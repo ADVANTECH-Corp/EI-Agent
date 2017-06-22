@@ -16,6 +16,7 @@ SUBDIRS = Library/Log \
 	  Library/SAHandlerLoader \
 	  Library/ReadINI \
 	  Library/HandlerKernel \
+	  Sample/MosquittoSample \
 	  Sample/SampleAgent \
 	  Sample/HandlerSample \
 	  Sample/ModbusSample \

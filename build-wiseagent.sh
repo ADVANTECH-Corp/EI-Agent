@@ -60,6 +60,8 @@ generate_release()
 	cp -f ${src_home}/Sample/HandlerSample/module_config.xml ${release_dir}/module/
 	mv -f ${release_dir}/module/lib*.so* ${release_dir}/
 	cp -f ${tmp_build_dir}/usr/local/bin/sampleagent ${release_dir}/
+	cp -f ${tmp_build_dir}/usr/local/bin/MosquittoSample ${release_dir}/
+	cp -f ${tmp_build_dir}/usr/local/bin/WISECoreSample ${release_dir}/
 }
 
 precomnpile_3rdparty
