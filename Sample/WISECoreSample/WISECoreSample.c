@@ -20,10 +20,16 @@
 #include "IoTMessageGenerate.h"
 #include "WISEPlatform.h"
 
-char g_strClientID[37] = "00000001-0000-0000-0000-305A3A770020";
+char g_strServerIP[64] = "wise-msghub.eastasia.cloudapp.azure.com";
+int g_iPort = 1883;
+char g_strConnID[256] = "a4632c1e-269e-41e6-907b-da8ca302dfbd:2d128704-ea11-4195-aaa4-39273e7fb513";
+char g_strConnPW[64] = "gl84do41kkpnfh81e1esgvfvm7";
+char g_strDeviceID[37] = "00000001-0000-0000-0000-305A3A770020";
 char g_strTenantID[37] = "general";
-char g_strHostName[11] = "TestClient";
+char g_strHostName[16] = "WISECoreSample";
 char g_strProductTag[37] = "RMM";
+char g_strTLCertSPW[37] = "05155853";
+
 
 MSG_CLASSIFY_T* g_pCapability = NULL;
 void* g_pHandler = NULL;
@@ -206,7 +212,7 @@ void on_msgrecv(const char* topic, const void *pkt, const long pktlength, void* 
 				int len = 0;
 				sprintf( repMsg, "{\"errorRep\":\"Unknown cmd!\"}" );
 				len= strlen( "{\"errorRep\":\"Unknown cmd!\"}" ) ;
-				sprintf(topic, DEF_AGENTACT_TOPIC, g_strTenantID, g_strProductTag, g_strClientID);
+				sprintf(topic, DEF_AGENTACT_TOPIC, g_strTenantID, g_strProductTag, g_strDeviceID);
 				core_publish(topic, repMsg, len, 0, 0);
 			}
 			break;
@@ -232,7 +238,7 @@ void on_update(const char* loginID, const char* loginPW, const int port, const c
 
 void on_server_reconnect(const char* tenantid, const char* devid, void* userdata)
 {
-	if(!strcmp(g_strClientID, devid))
+	if(!strcmp(g_strDeviceID, devid))
 		core_device_register();
 	/*TODO: resend whole capability*/
 }
@@ -476,7 +482,7 @@ void ReleaseSampleHandler(void* phandler)
 void SubscribeRMMTopic()
 {
 	char topic[256] = {0};
-	sprintf(topic, DEF_CALLBACKREQ_TOPIC, g_strTenantID, g_strProductTag, g_strClientID);
+	sprintf(topic, DEF_CALLBACKREQ_TOPIC, g_strTenantID, g_strProductTag, g_strDeviceID);
 
 	core_subscribe(topic, 0);
 }
@@ -486,12 +492,12 @@ void CreateAgentInfo(cagent_agent_info_body_t* agentinfo)
 	if(agentinfo!= NULL)
 	{
 		strcpy(agentinfo->hostname, g_strHostName);
-		strcpy(agentinfo->devId, g_strClientID);
+		strcpy(agentinfo->devId, g_strDeviceID);
 		strcpy(agentinfo->tenantId, g_strTenantID);
 		strcpy(agentinfo->productId, g_strProductTag);
 		strcpy(agentinfo->sn, "305A3A77B1CC");
 		strcpy(agentinfo->mac, "305A3A77B1CC");
-		strcpy(agentinfo->version, "4.0.0");
+		strcpy(agentinfo->version, "1.0.1");
 		strcpy(agentinfo->type, "IPC");
 		strcpy(agentinfo->product, "test");
 		strcpy(agentinfo->manufacture, "test");
@@ -560,7 +566,7 @@ bool SendOSInfo()
 	
 	core_address_get(localip);
 
-	snprintf(strPayloadBuff, sizeof(strPayloadBuff), DEF_OSINFO_JSON, "4.0.0",
+	snprintf(strPayloadBuff, sizeof(strPayloadBuff), DEF_OSINFO_JSON, "1.0.1",
 												 "IPC",
 												 "Windows 8",
 												 "V1.2",
@@ -570,13 +576,13 @@ bool SendOSInfo()
 												 2048,
 												 "305A3A77B1DA",
 												 localip,
-												 g_strClientID,
+												 g_strDeviceID,
 												 tick);
 
 #ifdef _WISEPAAS_02_DEF_H_
-	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, g_strTenantID, g_strProductTag, g_strClientID);
+	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, g_strTenantID, g_strProductTag, g_strDeviceID);
 #else
-	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, pHandle->strClientID);
+	sprintf(strTopicBuff, DEF_AGENTACT_TOPIC, g_strDeviceID);
 #endif
 	
 	return core_publish(strTopicBuff, strPayloadBuff, strlen(strPayloadBuff), 0, 0);
@@ -584,8 +590,6 @@ bool SendOSInfo()
 
 int main(int argc, char *argv[])
 {
-	char strServerIP[64] = "wise-msghub.eastasia.cloudapp.azure.com";
-	int iPort = 1883;
 	pthread_t threaddataaccess = 0;
 	int SSLMode = 0;  //0:disable, 1:CA Mode, 2: PSK Mode.
 	cagent_agent_info_body_t agentinfo;
@@ -600,7 +604,7 @@ int main(int argc, char *argv[])
 	
 	threaddataaccess = StartAccessData();
 
-	if(!core_initialize(g_strTenantID, g_strClientID, g_strHostName, agentinfo.mac, &agentinfo))
+	if(!core_initialize(g_strTenantID, g_strDeviceID, g_strHostName, agentinfo.mac, &agentinfo))
 	{
 		printf("Unable to initialize AgentCore.\n");
 		goto EXIT;
@@ -624,15 +628,15 @@ int main(int argc, char *argv[])
 	core_product_info_set(agentinfo.sn, NULL, agentinfo.version, agentinfo.type, agentinfo.product, agentinfo.manufacture);
 
 	if(SSLMode == 1)
-		core_tls_set( "server.crt", NULL, "ca.crt", "ca.key", "05155853");
+		core_tls_set( "server.crt", NULL, "ca.crt", "ca.key", g_strTLCertSPW);
 	else if(SSLMode == 2)
-		core_tls_psk_set("05155853", g_strClientID, NULL);
+		core_tls_psk_set(g_strTLCertSPW, g_strDeviceID, NULL);
 
-	if(!core_connect(strServerIP, iPort, "a4632c1e-269e-41e6-907b-da8ca302dfbd:2d128704-ea11-4195-aaa4-39273e7fb513", "gl84do41kkpnfh81e1esgvfvm7")){
+	if(!core_connect(g_strServerIP, g_iPort, g_strConnID, g_strConnPW)){
 		printf("Unable to connect to broker. %s\n", core_error_string_get());
 		goto EXIT;
 	} else {
-		printf("Connect to broker: %s\n", strServerIP);
+		printf("Connect to broker: %s\n", g_strServerIP);
 	}
 	
 EXIT:

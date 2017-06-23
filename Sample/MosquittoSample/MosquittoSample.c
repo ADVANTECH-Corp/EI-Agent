@@ -29,9 +29,9 @@ char g_strConnID[256] = "a4632c1e-269e-41e6-907b-da8ca302dfbd:2d128704-ea11-4195
 char g_strConnPW[64] = "gl84do41kkpnfh81e1esgvfvm7";
 char g_strDeviceID[37] = "00000001-0000-0000-0000-305A3A770000";
 char g_strTenantID[37] = "general";
-char g_strHostName[11] = "MQTTSample";
+char g_strHostName[16] = "MQTTSample";
 char g_strProductTag[37] = "RMM";
-char g_strTLCertSPW[37] = "123456";
+char g_strTLCertSPW[37] = "05155853";
 void* g_pHandler = NULL;
 int g_iSensor[3] = {0};
 bool g_bConnected = false;
@@ -291,7 +291,7 @@ int main(int argc, char *argv[])
 	}
 	else if(SSLMode == 2)
 	{
-		mosquitto_tls_psk_set(mosq, "05155853", g_strDeviceID, NULL);
+		mosquitto_tls_psk_set(mosq, g_strTLCertSPW, g_strDeviceID, NULL);
 	}
 
 	if( strlen(g_strConnID)>0 && strlen(g_strConnPW)>0)

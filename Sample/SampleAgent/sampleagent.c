@@ -23,6 +23,16 @@ _CrtMemState memStateStart, memStateEnd, memStateDiff;
 
 #define DEF_SUSIACCESSAGENT_CONFIG_NAME "agent_config.xml"
 
+char g_strServerIP[64] = "wise-msghub.eastasia.cloudapp.azure.com";
+int g_iPort = 1883;
+char g_strConnID[256] = "a4632c1e-269e-41e6-907b-da8ca302dfbd:2d128704-ea11-4195-aaa4-39273e7fb513";
+char g_strConnPW[64] = "gl84do41kkpnfh81e1esgvfvm7";
+char g_strDeviceID[37] = "00000001-0000-0000-0000-305A3A770040";
+char g_strTenantID[37] = "general";
+char g_strHostName[16] = "SampleAgent";
+char g_strProductTag[37] = "RMM";
+char g_strTLCertSPW[37] = "05155853";
+
 /*agent connected callback function*/
 void on_connect_cb()
 {
@@ -52,7 +62,7 @@ int main(int argc, char *argv[])
 {
 	int iRet = 0;
 	char moudlePath[MAX_PATH] = {0};
-	
+	char namepass[MAX_PATH] = {0};
 	/*agent configuration structure: define how does the agent connect to Server*/
 	susiaccess_agent_conf_body_t config;
 
@@ -77,9 +87,10 @@ int main(int argc, char *argv[])
 	memset(&config, 0 , sizeof(susiaccess_agent_conf_body_t));
 	strcpy(config.runMode,"remote"); //runMode default is remote. There are no other mode in WISE Agent version 3.x
 	strcpy(config.autoStart,"True"); //autoStart default is True. The Agent will reconnect to server automatically.
-	strcpy(config.serverIP,"wise-msghub.eastasia.cloudapp.azure.com"); //serverIP indicate the server RUL or IP Address
-	strcpy(config.serverPort,"1883"); //serverPort indocate the server (MQTT Broker) listen port, default is 1883 in WISE Agent version 3.1 or later, WISE Agent version 3.0 is 10001.
-	strcpy(config.serverAuth,"a4632c1e-269e-41e6-907b-da8ca302dfbd:2d128704-ea11-4195-aaa4-39273e7fb513;gl84do41kkpnfh81e1esgvfvm7"); //serverAuth is the server (MQTT Broker) authentication string. the string is encode from <ID>;<PASS>. It also support plain text mode.
+	strcpy(config.serverIP,g_strServerIP); //serverIP indicate the server RUL or IP Address
+	sprintf(config.serverPort, "%d",g_iPort); //serverPort indocate the server (MQTT Broker) listen port, default is 1883 in WISE Agent version 3.1 or later, WISE Agent version 3.0 is 10001.
+	sprintf(namepass, "%s;%s", g_strConnID, g_strConnPW);
+	strcpy(config.serverAuth,namepass); //serverAuth is the server (MQTT Broker) authentication string. the string is encode from <ID>;<PASS>. It also support plain text mode.
 	config.tlstype = tls_type_none; //tlstype define the TLS (SSL) mode
 	switch(config.tlstype)
 	{
@@ -91,12 +102,12 @@ int main(int argc, char *argv[])
 			strcpy(config.capath, "");
 			strcpy(config.certfile, "server.crt");
 			strcpy(config.keyfile, "server.key");
-			strcpy(config.cerpasswd, "123456");
+			strcpy(config.cerpasswd, g_strTLCertSPW);
 		}
 		break;
 	case tls_type_psk: //setup TLS with pre share key.
 		{
-			strcpy(config.psk, "");
+			strcpy(config.psk, g_strTLCertSPW);
 			strcpy(config.identity, "SAClientSample");
 			strcpy(config.ciphers, "");
 		}
@@ -105,11 +116,11 @@ int main(int argc, char *argv[])
 
 	// Pre-set Agent Profile struct
 	memset(&profile, 0 , sizeof(susiaccess_agent_profile_body_t));
-	snprintf(profile.version, DEF_VERSION_LENGTH, "%d.%d.%d.%d", 4, 0, 0, 0);  //version indicate the version fo the application.
-	strcpy(profile.hostname,"SAClientSample"); //hostname indicate the name of target device ro agent.
-	strcpy(profile.devId,"00000001-0000-0000-0000-305A3A770040"); //devId is the Unique ID of the device or agent.
-	strcpy(profile.tenantId,"general"); //tenant Id is the Unique ID for multi-tenant support.
-	strcpy(profile.productId,"RMM"); //product Id to identify the WISE-PaaS service.
+	snprintf(profile.version, DEF_VERSION_LENGTH, "%d.%d.%d.%d", 1, 0, 1, 0);  //version indicate the version fo the application.
+	strcpy(profile.hostname, g_strHostName); //hostname indicate the name of target device ro agent.
+	strcpy(profile.devId, g_strDeviceID); //devId is the Unique ID of the device or agent.
+	strcpy(profile.tenantId,g_strTenantID); //tenant Id is the Unique ID for multi-tenant support.
+	strcpy(profile.productId,g_strProductTag); //product Id to identify the WISE-PaaS service.
 	strcpy(profile.sn,"305A3A77B1DA"); //sn indicate the device serial number.
 	strcpy(profile.mac,"305A3A77B1DA"); //mac indicate the MAC Address of first ethernet or wireless card.
 	strcpy(profile.type,"IPC"); //type indicate the agent type, defualt is IPC. User can define their own type for customization.
