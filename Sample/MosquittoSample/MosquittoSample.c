@@ -29,7 +29,7 @@ char g_strConnID[256] = "a4632c1e-269e-41e6-907b-da8ca302dfbd:2d128704-ea11-4195
 char g_strConnPW[64] = "gl84do41kkpnfh81e1esgvfvm7";
 char g_strDeviceID[37] = "00000001-0000-0000-0000-305A3A770000";
 char g_strTenantID[37] = "general";
-char g_strHostName[11] = "TestClient";
+char g_strHostName[11] = "MQTTSample";
 char g_strProductTag[37] = "RMM";
 char g_strTLCertSPW[37] = "123456";
 void* g_pHandler = NULL;
@@ -44,6 +44,28 @@ long long GetTimeTick()
 	gettimeofday(&tv, NULL);
 	tick = (long long)tv.tv_sec*1000 + (long long)tv.tv_usec/1000;
 	return tick;
+}
+
+void GenerateAgentInfo(char* strBuffer, int status)
+{
+	if(strBuffer == NULL)
+		return;
+
+	sprintf(strBuffer, DEF_AGENTINFO_JSON, 
+			"", //Parent ID, keep empty if no parent
+			g_strHostName, //target device name
+			"305A3A77B1DA", //serial number
+			"305A3A77B1DA", // MAC address
+			"2.0.1.0", // software version
+			"IPC", //agent type
+			"MyTest", //Hardware product name
+			"Advantech", //Hardware manufacture
+			"anonymous", //binding account name
+			"",//binding account password
+			status,//connection status, 0:disconnect, 1: connect
+			g_strProductTag, //supported WISE-PaaS products
+			g_strDeviceID, //device ID
+			GetTimeTick()); //time tick
 }
 
 void* threadaccessdata(void* args)
@@ -96,21 +118,7 @@ void* threadconnect(void* args)
 	mosq = (struct mosquitto *) args;
 	/*Send Connect Info*/
 	sprintf(strTopic, DEF_INFOACK_TOPIC, g_strTenantID, g_strDeviceID);
-	sprintf(strBuffer, DEF_AGENTINFO_JSON, 
-			"", //Parent ID, keep empty if no parent
-			"MQTTSample", //target device name
-			"305A3A77B1DA", //serial number
-			"305A3A77B1DA", // MAC address
-			"2.0.1.0", // software version
-			"IPC", //agent type
-			"MyTest", //Hardware product name
-			"Advantech", //Hardware manufacture
-			"anonymous", //binding account name
-			"",//binding account password
-			1,//connection status, 0:disconnect, 1: connect
-			g_strProductTag, //supported WISE-PaaS products
-			g_strDeviceID, //device ID
-			GetTimeTick()); //time tick
+	GenerateAgentInfo(strBuffer, 1);
 	mosquitto_publish(mosq, NULL, strTopic, strlen(strBuffer), strBuffer, 0, false);
 
 	printf("CB_Connected \n");
@@ -293,22 +301,7 @@ int main(int argc, char *argv[])
 	mosquitto_will_clear(mosq);
 
 	sprintf(strWillTopic, DEF_WILLMSG_TOPIC, g_strTenantID, g_strDeviceID);
-	sprintf(strWillPayload, DEF_AGENTINFO_JSON, 
-			"", //Parent ID, keep empty if no parent
-			"MQTTSample", //target device name
-			"305A3A77B1DA", //serial number
-			"305A3A77B1DA", // MAC address
-			"2.0.1.0", // software version
-			"IPC", //agent type
-			"MyTest", //Hardware product name
-			"Advantech", //Hardware manufacture
-			"anonymous", //binding account name
-			"",//binding account password
-			0,//connection status, 0:disconnect, 1: connect
-			g_strProductTag, //supported WISE-PaaS products
-			"00000001-0000-0000-0000-305A3A77B1DA", //device ID
-			GetTimeTick()); //time tick
-
+	GenerateAgentInfo(strWillPayload, 0);
 	mosquitto_will_set(mosq, strWillTopic ,strlen(strWillPayload) ,strWillPayload, 0, false);
 		
 	/*start mosquitto thread to handle messages*/
@@ -330,6 +323,11 @@ EXIT:
 
 	if(mosq)
 	{
+		char strTopic[260] = {0};
+		/*Send Disconnect Info*/
+		sprintf(strTopic, DEF_INFOACK_TOPIC, g_strTenantID, g_strDeviceID);
+		mosquitto_publish(mosq, NULL, strTopic, strlen(strWillPayload), strWillPayload, 0, false);
+
 		/*flush message queue*/
 		mosquitto_loop(mosq, 0, 1);	
 		/*send mqtt disconnect message for broker*/
