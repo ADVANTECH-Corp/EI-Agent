@@ -79,7 +79,7 @@ Decuments:
  * Windows - Visual Studio 2008 
    1. Open "WISEAgent.sln"
    2. In Solution Explore, Set "WISECoreSample" project as Startup Project
-   3. Rebuild all soltion by click build->Rebuild Solution
+   3. Rebuild all solution by click build->Rebuild Solution
    4. The executable binary file will be generated in Release folder. 
    
  * Linux - CentOS
