@@ -257,7 +257,7 @@ int network_mac_get(char * macstr)
    close(sock_mac);
    return iRet;
 }
-
+int network_mac_get_ex2(char * macstr);
 int network_mac_get_ex(char * macstr)
 {
    int iRet = -1;
@@ -265,6 +265,10 @@ int network_mac_get_ex(char * macstr)
    struct ifreq ifr_mac;
    struct ifconf ifc;
    char buf[1024];
+
+   iRet = network_mac_get_ex2(macstr);
+   if(iRet == 0)
+	return iRet;
    
    if(!macstr) return iRet;
    sock_mac = socket( AF_INET, SOCK_STREAM, 0 );
@@ -311,60 +315,76 @@ int network_mac_get_ex(char * macstr)
    close(sock_mac);
    return iRet;
 }
-
+int getMAC(char *name, char * macstr, bool filter);
 int network_mac_get_ex2(char * macstr)
 {
    int iRet = -1;
-   char buf[1024];
-   DIR           *d;
-   struct dirent *dir;
-   d = opendir("/sys/class/net/");
-   if (d)
-  {
-    if((dir = readdir(d)) != NULL)
-    {
-      printf("%s\n", dir->d_name);
-      iRet = getMTU(dir->d_name, macstr);
-    }
-
-    closedir(d);
-  }
-   
+   DIR *dir;
+   struct dirent *ptr;
+   dir = opendir("/sys/class/net/");
+   while((ptr = readdir(dir)) != NULL)
+   {
+      if(strlen(ptr->d_name)<=2)
+        continue;
+      if(getMAC(ptr->d_name, macstr, true)!=0)
+        continue;
+      printf("%s MAC: %s\n", ptr->d_name, macstr);
+      if(strcmp(macstr, "000000000000") == 0)
+        continue;
+      iRet = 0;
+      break;
+   }
+   closedir(dir);
    return iRet;
 }
-int getMTU(char *name, char * macstr) {
-    FILE *f;
-    char buf[128];
-    char *line = NULL;
-    ssize_t count;
-    size_t len = 0;
-    int iRet = -1;
-    int addr[6] = {0};
 
-    snprintf(buf, sizeof(buf), "/sys/class/net/%s/address", name);
-    f = fopen(buf, "r");
-    if(!f) {
-        perror("Error opening:");
-        return iRet;
-    }
-    count = getline(&line, &len, f);
-
-    if (count == -1) {
-        perror("Error opening:");
-        return iRet;
-    }
-    sscanf(line, "%02X:%02X:%02X:%02X:%02X:%02X", addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
-    fclose(f);
-    sprintf(macstr,"%02X%02X%02X%02X%02X%02X",
-              addr[0],
-              addr[1],
-              addr[2],
-              addr[3],
-              addr[4],
-              addr[5]);
-    return iRet;
+int getMAC(char *name, char * macstr, bool filter) {
+	FILE *f;
+	char buf[128];
+	char *line = NULL;
+	ssize_t count;
+	size_t len = 0;
+	int iRet = -1;
+	unsigned int addr[6] = {0};
+	snprintf(buf, sizeof(buf), "/sys/class/net/%s/address", name);
+	f = fopen(buf, "r");
+	if(!f) {
+		printf("Error opening:%s\n", buf);
+		return iRet;
+	}
+	count = getline(&line, &len, f);
+    	fclose(f);
+	if (count == -1) {
+		printf("Error opening:%s\n", buf);
+		return iRet;
+	}
+	sscanf(line, "%02X:%02X:%02X:%02X:%02X:%02X\n", &addr[0],&addr[1],&addr[2],&addr[3],&addr[4],&addr[5]);
+    	if(filter)
+    	{
+		sprintf(macstr,"%02X%02X%02X%02X%02X%02X",
+			addr[0],
+			addr[1],
+			addr[2],
+			addr[3],
+			addr[4],
+			addr[5]);
+    	}
+    	else
+    	{
+		sprintf(macstr,"%02X:%02X:%02X:%02X:%02X:%02X",
+			addr[0],
+			addr[1],
+			addr[2],
+			addr[3],
+			addr[4],
+			addr[5]);
+    	}
+	
+	
+	iRet = 0;
+	return iRet;
 }
-
+int network_mac_list_get_ex2(char macsStr[][20], int n);
 int network_mac_list_get(char macsStr[][20], int n)
 {
    int sock_mac;
@@ -374,6 +394,11 @@ int network_mac_list_get(char macsStr[][20], int n)
    int cnt = 0;
    
    if(!macsStr) return cnt;
+
+   cnt = network_mac_list_get_ex2(macsStr, n);
+   if(cnt > 0)
+	return cnt;
+
    sock_mac = socket( AF_INET, SOCK_STREAM, 0 );
    if( sock_mac == -1) return cnt;
    
@@ -409,6 +434,30 @@ int network_mac_list_get(char macsStr[][20], int n)
         }
    }
    close(sock_mac);
+   return cnt;
+}
+
+int network_mac_list_get_ex2(char macsStr[][20], int n)
+{
+   int cnt = 0;
+   DIR *dir;
+   struct dirent *ptr;
+   dir = opendir("/sys/class/net/");
+   while((ptr = readdir(dir)) != NULL)
+   {
+      char macStr[18] = {0};
+      if(strlen(ptr->d_name)<=2)
+	    continue;
+      if(getMAC(ptr->d_name, macStr, false) !=0)
+        continue;
+      printf("%s MAC: %s\n", ptr->d_name, macStr);
+      if(strcmp(macStr, "00:00:00:00:00:00") == 0)
+        continue;
+      strcpy(macsStr[cnt], macStr);
+      cnt++;
+      if(cnt >= n) break;
+   }
+   closedir(dir);
    return cnt;
 }
 
