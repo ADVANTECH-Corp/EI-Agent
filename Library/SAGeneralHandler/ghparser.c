@@ -11,6 +11,7 @@
 #define AGENTINFO_REPORTDATALEN	"reportDataLength"
 #define AGENTINFO_REPORTDATA	"reportData"
 #define AGENTINFO_SESSION_ID	"sessionID"
+#define AGENTINFO_CONTENT		"content"
 
 #define GBL_UPDATE_PARMAS                "params"
 #define GBL_UPDATE_USERNAME              "userName"
@@ -110,11 +111,25 @@ bool ParseReceivedCMD(void* data, int datalen, int * cmdID, char* pSessionID)
 		*cmdID = target->valueint;
 	}
 
-	target = cJSON_GetObjectItem(body, AGENTINFO_SESSION_ID);
-	if(target)
+	if(pSessionID != NULL)
 	{
-		if(pSessionID)
+		target = cJSON_GetObjectItem(body, AGENTINFO_SESSION_ID);
+		if(target)
+		{
 			strcpy(pSessionID, target->valuestring);
+		}
+		else
+		{
+			target = cJSON_GetObjectItem(body, AGENTINFO_CONTENT);
+			if(target)
+			{
+				target = cJSON_GetObjectItem(target, AGENTINFO_SESSION_ID);
+				if(target)
+				{
+					strcpy(pSessionID, target->valuestring);
+				}
+			}
+		}		
 	}
 
 	cJSON_Delete(root);
