@@ -65,6 +65,18 @@ bool HANDLERPARSER_API HandlerParser_ParseReceivedCMD(void* data, int datalen, i
 		{
 			strcpy(sessionID, target->valuestring);
 		}
+		else
+		{
+			target = cJSON_GetObjectItem(body, AGENTINFO_CONTENT);
+			if(target)
+			{
+				target = cJSON_GetObjectItem(target, AGENTINFO_SESSIONID);
+				if(target)
+				{
+					strcpy(sessionID, target->valuestring);
+				}
+			}
+		}		
 	}
 
 	cJSON_Delete(root);

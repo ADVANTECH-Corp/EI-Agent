@@ -66,7 +66,7 @@ typedef struct{
 
 typedef struct{
    char* reqItems;
-   char sessionID[32];
+   char sessionID[64];
    int replyID;
    void *pRev;
    bool (*on_sensor_cmd)(void* objlist, void *pRev);
