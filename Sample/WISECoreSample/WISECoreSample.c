@@ -27,7 +27,7 @@ char g_strConnPW[64] = "gl84do41kkpnfh81e1esgvfvm7";
 char g_strDeviceID[37] = "00000001-0000-0000-0000-305A3A770020";
 char g_strTenantID[37] = "general";
 char g_strHostName[16] = "WISECoreSample";
-char g_strProductTag[37] = "RMM";
+char g_strProductTag[37] = "device";
 char g_strTLCertSPW[37] = "05155853";
 
 
@@ -150,7 +150,7 @@ bool on_set_sensor(set_data_t* objlist, void *pRev)
 void on_msgrecv(const char* topic, const void *pkt, const long pktlength, void* userdata)
 {
 	int cmdID = 0;
-	char sessionID[32] = {0};
+	char sessionID[64] = {0};
 
 	printf("Packet received:\n [%s],\n %s\n", topic, pkt);
 	/* All messages received from subscribed topics will trigger this callback function.
@@ -344,7 +344,7 @@ AGENT_SEND_STATUS send_cbf(HANDLE const handler, int enum_act, void const * cons
 		return cagent_send_data_error;
 	pHandler = (HANDLER_INFO_EX*)handler;
 	
-	length =  strlen(DEF_ACTION_RESPONSE_JSON) + requestLen + 12 + strlen(pHandler->Name);
+	length =  strlen(DEF_ACTION_RESPONSE_JSON) + requestLen + 64 + strlen(pHandler->Name);
 	buff = calloc(1,length);
 	snprintf(buff, length, DEF_ACTION_RESPONSE_JSON, pHandler->agentInfo->devId, enum_act, pHandler->Name, (char*)requestData, get_timetick(NULL));
 
