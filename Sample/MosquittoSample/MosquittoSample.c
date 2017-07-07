@@ -23,8 +23,7 @@ _CrtMemState memStateStart, memStateEnd, memStateDiff;
 
 struct mosquitto *g_mosq = NULL;
 
-//char g_strServerIP[64] = "wise-msghub.eastasia.cloudapp.azure.com";
-char g_strServerIP[64] = "172.22.12.16";
+char g_strServerIP[64] = "wise-msghub.eastasia.cloudapp.azure.com";
 int g_iPort = 1883;
 char g_strConnID[256] = "a4632c1e-269e-41e6-907b-da8ca302dfbd:2d128704-ea11-4195-aaa4-39273e7fb513";
 char g_strConnPW[64] = "gl84do41kkpnfh81e1esgvfvm7";
