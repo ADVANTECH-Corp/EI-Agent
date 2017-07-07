@@ -471,7 +471,7 @@ bool HANDLERPARSER_API HandlerParser_ParseSensorDataCmd(char * cmdJsonStr, char 
 bool HANDLERPARSER_API HandlerParser_PackSensorCMDRep(char * repStr, char * sessionID , char ** outputStr)
 {
 	cJSON* pReqRoot = NULL;
-	cJSON *pReqItemRoot;
+	cJSON *pReqItemRoot, *pSensorRoot;
 	char * out = NULL;
 	int outLen = 0;
 
@@ -479,8 +479,10 @@ bool HANDLERPARSER_API HandlerParser_PackSensorCMDRep(char * repStr, char * sess
 	pReqItemRoot = cJSON_Parse(repStr);
 	if(pReqItemRoot == NULL) return false;
 	pReqRoot = cJSON_CreateObject();
+	pSensorRoot = cJSON_CreateObject();
 	cJSON_AddStringToObject(pReqRoot, AGENTINFO_SESSIONID, sessionID);
-	cJSON_AddItemToObject(pReqRoot, REQUEST_SENSOR_ITEMS, pReqItemRoot);
+	cJSON_AddItemToObject(pReqRoot, REQUEST_SENSOR_ITEMS, pSensorRoot);
+	cJSON_AddItemToObject(pSensorRoot, REQUEST_ITEMS_LIST, pReqItemRoot);
 
 	out = cJSON_PrintUnformatted(pReqRoot);
 	outLen = strlen(out) + 1;
