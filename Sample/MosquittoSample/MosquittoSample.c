@@ -23,14 +23,15 @@ _CrtMemState memStateStart, memStateEnd, memStateDiff;
 
 struct mosquitto *g_mosq = NULL;
 
-char g_strServerIP[64] = "wise-msghub.eastasia.cloudapp.azure.com";
+//char g_strServerIP[64] = "wise-msghub.eastasia.cloudapp.azure.com";
+char g_strServerIP[64] = "172.22.12.16";
 int g_iPort = 1883;
 char g_strConnID[256] = "a4632c1e-269e-41e6-907b-da8ca302dfbd:2d128704-ea11-4195-aaa4-39273e7fb513";
 char g_strConnPW[64] = "gl84do41kkpnfh81e1esgvfvm7";
 char g_strDeviceID[37] = "00000001-0000-0000-0000-305A3A770000";
 char g_strTenantID[37] = "general";
 char g_strHostName[16] = "MQTTSample";
-char g_strProductTag[37] = "RMM";
+char g_strProductTag[37] = "device";
 char g_strTLCertSPW[37] = "05155853";
 void* g_pHandler = NULL;
 int g_iSensor[3] = {0};
@@ -120,6 +121,10 @@ void* threadconnect(void* args)
 	sprintf(strTopic, DEF_INFOACK_TOPIC, g_strTenantID, g_strDeviceID);
 	GenerateAgentInfo(strBuffer, 1);
 	mosquitto_publish(mosq, NULL, strTopic, strlen(strBuffer), strBuffer, 0, false);
+
+	/*Subscribe Command Topic*/
+	sprintf(strTopic, DEF_CALLBACKREQ_TOPIC, g_strTenantID, g_strProductTag, g_strDeviceID);
+	mosquitto_subscribe(mosq, NULL, strTopic, 0);
 
 	printf("CB_Connected \n");
 
@@ -227,6 +232,16 @@ void on_disconnect_callback(struct mosquitto *mosq, void *userdata, int rc)
 void on_message_recv_callback(struct mosquitto *mosq, void *userdata, const struct mosquitto_message *msg)
 {	
 	printf("Received topic: %s\n message: %s\n", msg->topic, (char*)msg->payload);
+	if(strstr((char*)msg->payload, "\"commCmd\":523")!=0)
+	{
+		/*TODO: Get Sensor Data*/
+		printf("Get Sensor Data\n");
+	}
+	else if(strstr((char*)msg->payload, "\"commCmd\":525")!=0)
+	{
+		/*TODO: Set Sensor Data*/
+		printf(" Set Sensor Data\n");
+	}
 }
 
 int on_password_check(char *buf, int size, int rwflag, void *userdata)
