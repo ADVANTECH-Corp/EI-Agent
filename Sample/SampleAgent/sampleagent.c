@@ -25,8 +25,8 @@ _CrtMemState memStateStart, memStateEnd, memStateDiff;
 
 char g_strServerIP[64] = "wise-msghub.eastasia.cloudapp.azure.com";
 int g_iPort = 1883;
-char g_strConnID[256] = "a4632c1e-269e-41e6-907b-da8ca302dfbd:2d128704-ea11-4195-aaa4-39273e7fb513";
-char g_strConnPW[64] = "gl84do41kkpnfh81e1esgvfvm7";
+char g_strConnID[256] = "0e95b665-3748-46ce-80c5-bdd423d7a8a5:9699db0b-1cb5-4ada-8c0a-b59c4b08680d";
+char g_strConnPW[64] = "nvuuo1u2r6h5809hpeg7jo4poi";
 char g_strDeviceID[37] = "00000001-0000-0000-0000-305A3A770040";
 char g_strTenantID[37] = "general";
 char g_strHostName[16] = "SampleAgent";
