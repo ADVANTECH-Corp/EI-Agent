@@ -1,4 +1,0 @@
-﻿MQTTConnector.obj : warning LNK4075: 忽略 '/EDITANDCONTINUE'，由於 '/SAFESEH' 規格
-     正在建立程式庫 D:\Workspace\GitHub\EI-Agent_Modify\Debug\MQTTConnector.lib 和物件 D:\Workspace\GitHub\EI-Agent_Modify\Debug\MQTTConnector.exp
-  MQTTConnector.vcxproj -> D:\Workspace\GitHub\EI-Agent_Modify\Debug\MQTTConnector.dll
-  MQTTConnector.vcxproj -> D:\Workspace\GitHub\EI-Agent_Modify\Debug\MQTTConnector.pdb (Full PDB)
