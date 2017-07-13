@@ -1,0 +1,4 @@
+﻿liteparse.obj : warning LNK4075: 忽略 '/EDITANDCONTINUE'，由於 '/SAFESEH' 規格
+     正在建立程式庫 D:\Workspace\GitHub\EI-Agent_Modify\Debug\WISECore.lib 和物件 D:\Workspace\GitHub\EI-Agent_Modify\Debug\WISECore.exp
+  WISECore.vcxproj -> D:\Workspace\GitHub\EI-Agent_Modify\Debug\WISECore.dll
+  WISECore.vcxproj -> D:\Workspace\GitHub\EI-Agent_Modify\Debug\WISECore.pdb (Full PDB)
