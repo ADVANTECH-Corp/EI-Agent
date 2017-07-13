@@ -1,4 +1,0 @@
-﻿MosquittoCarrier.obj : warning LNK4075: 忽略 '/EDITANDCONTINUE'，由於 '/SAFESEH' 規格
-     正在建立程式庫 D:\Workspace\GitHub\EI-Agent_Modify\Debug\MosquittoCarrier.lib 和物件 D:\Workspace\GitHub\EI-Agent_Modify\Debug\MosquittoCarrier.exp
-  MosquittoCarrier.vcxproj -> D:\Workspace\GitHub\EI-Agent_Modify\Debug\MosquittoCarrier.dll
-  MosquittoCarrier.vcxproj -> D:\Workspace\GitHub\EI-Agent_Modify\Debug\MosquittoCarrier.pdb (Full PDB)
