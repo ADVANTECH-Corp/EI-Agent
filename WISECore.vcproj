@@ -228,6 +228,10 @@
 				RelativePath="..\..\Include\wisepaas_02_def.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\Include\wisepase_base_def.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

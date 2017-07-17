@@ -10,6 +10,7 @@
 #define _WISE_CORE_EX_H_
 
 #include <stdbool.h>
+
 #ifdef RMM3X
 	#include "wisepaas_01_def.h"
 #else
