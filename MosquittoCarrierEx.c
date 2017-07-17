@@ -10,12 +10,12 @@
 #include <string.h>
 #include <unistd.h>
 #include "mosquitto.h"
-#include "wisepaas_02_def.h"
 #include "WiseCarrierEx_MQTT.h"
 #include "topic.h"
 #include <pthread.h>
 #include <sys/time.h>
 #include <math.h>
+#include "wisepase_base_def.h"
 
 static char g_version[32] = {0};
 

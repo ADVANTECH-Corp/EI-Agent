@@ -224,6 +224,10 @@
 				RelativePath="..\..\Include\WiseCarrierEx_MQTT.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\Include\wisepase_base_def.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
