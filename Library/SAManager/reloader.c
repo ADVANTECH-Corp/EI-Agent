@@ -73,6 +73,11 @@ char* reloader_get_error()
 	return error;
 }
 
+void reloader_free_error(char *error)
+{
+	util_dlfree_error(error);
+}
+
 RuleEngine_Interface* reloader_initialize(char const * pWorkdir, Handler_Loader_Interface* pHandlerInfo, void* pLogHandle)
 {
 	RuleEngine_Interface * pRELoader = NULL;
@@ -124,7 +129,7 @@ RuleEngine_Interface* reloader_initialize(char const * pWorkdir, Handler_Loader_
 		{
 			char *err = reloader_get_error();
 			SAManagerLog(pLogHandle, Warning, "Load Rule Engine failed!\r\n  %s!!", err);
-			free(err);
+			reloader_free_error(err);
 			free(pRELoader);
 			pRELoader = NULL;
 		}
@@ -133,7 +138,7 @@ RuleEngine_Interface* reloader_initialize(char const * pWorkdir, Handler_Loader_
 	{
 		char *err = reloader_get_error();
 		SAManagerLog(pLogHandle, Warning, "Cannot find Rule Engine!\r\n  %s!!", err);
-		free(err);
+		reloader_free_error(err);
 	}
 
 	return pRELoader;

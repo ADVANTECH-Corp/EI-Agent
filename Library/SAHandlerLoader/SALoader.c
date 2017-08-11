@@ -693,7 +693,7 @@ int Handler_LoadHandler(Handler_Loader_Interface *pLoader, char const *handlerpa
 	{
 		char* err = util_dlerror();
 		SALoaderLog(Error, "Failed to load %s: %s\n", handlerpath, err);
-		free(err);
+		util_dlfree_error(err);
 		return false;
 	}
 	if(pLoader->pHandlerInfo)

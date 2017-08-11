@@ -80,6 +80,11 @@ char* hlloader_get_error()
 	return error;
 }
 
+void hlloader_free_error(char* error)
+{
+	util_dlfree_error(error);
+}
+
 SALoader_Interface* hlloader_initialize(char const * pWorkdir, susiaccess_agent_conf_body_t const * pConfig, susiaccess_agent_profile_body_t const * pProfile, void* pLogHandle)
 {
 	SALoader_Interface* pSALoader = NULL;
@@ -108,7 +113,7 @@ SALoader_Interface* hlloader_initialize(char const * pWorkdir, susiaccess_agent_
 		{
 			char *err = hlloader_get_error();
 			SAManagerLog(pLogHandle, Warning, "Load HandlerLoader failed!\r\n  %s!!", err);
-			free(err);
+			hlloader_free_error(err);
 			free(pSALoader);
 			pSALoader = NULL;
 		}
@@ -117,7 +122,7 @@ SALoader_Interface* hlloader_initialize(char const * pWorkdir, susiaccess_agent_
 	{
 		char *err = hlloader_get_error();
 		SAManagerLog(pLogHandle, Warning, "Cannot find HandlerLoader!\r\n  %s!!", err);
-		free(err);
+		hlloader_free_error(err);
 	}
 	return pSALoader;
 }

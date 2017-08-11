@@ -91,7 +91,7 @@ bool hlloader_load(const char* path, SALoader_Interface * SALoader);
 bool hlloader_release(SALoader_Interface * SALoader);
 
 char* hlloader_get_error();
-
+void hlloader_free_error(char* error);
 SALoader_Interface* hlloader_initialize(char const * pWorkdir, susiaccess_agent_conf_body_t const * pConfig, susiaccess_agent_profile_body_t const * pProfile, void* pLogHandle);
 void hlloader_uninitialize(SALoader_Interface* pSALoader);
 void hlloader_handler_recv(SALoader_Interface* pSALoader, Handler_List_t *pHandlerList, char* topic, susiaccess_packet_body_t *pkt, void *pRev1, void* pRev2);

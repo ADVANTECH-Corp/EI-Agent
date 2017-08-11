@@ -130,7 +130,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\Log;$(SolutionDir)Include;$(SolutionDir)Library\Base64;$(SolutionDir)Library\DES;$(SolutionDir)Library\MQTTHelper;$(SolutionDir)Library\WISECore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\Log;$(SolutionDir)Include;$(SolutionDir)Library\Base64;$(SolutionDir)Library\DES;$(SolutionDir)Library\MQTTHelper;$(SolutionDir)Library\WISECore;$(SolutionDir)Library3rdParty\EI-Connect\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;WIN_IOT;EXPORT_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -141,21 +141,21 @@
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Microsoft Visual Studio 14.0\VC\lib;$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Microsoft Visual Studio 14.0\VC\lib;$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName);$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>export.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib;WISECore.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>XCOPY /Y/F  $(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)\*.dll $(OutDir)\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-IoTCore|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\Log;$(SolutionDir)Include;$(SolutionDir)Library\Base64;$(SolutionDir)Library\DES;$(SolutionDir)Library\MQTTHelper;$(SolutionDir)Library\WISECore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\Log;$(SolutionDir)Include;$(SolutionDir)Library\Base64;$(SolutionDir)Library\DES;$(SolutionDir)Library\MQTTHelper;$(SolutionDir)Library\WISECore;$(SolutionDir)Library3rdParty\EI-Connect\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;WIN_IOT;_WINDOWS;EXPORT_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -168,22 +168,22 @@
       <AdditionalOptions>/D "WIN_IOT" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Microsoft Visual Studio 14.0\VC\lib;$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName);C:\Program Files %28x86%29\Microsoft Visual Studio 14.0\VC\lib;$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>export.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib;WISECore.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>XCOPY /Y/F  $(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)\*.dll $(OutDir)\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\Log;$(SolutionDir)Include;$(SolutionDir)Library\Base64;$(SolutionDir)Library\DES;$(SolutionDir)Library\MQTTHelper;$(SolutionDir)Library\WISECore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\Log;$(SolutionDir)Include;$(SolutionDir)Library\Base64;$(SolutionDir)Library\DES;$(SolutionDir)Library\MQTTHelper;$(SolutionDir)Library\WISECore;$(SolutionDir)Library3rdParty\EI-Connect\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;WIN_IOT;EXPORT_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -193,24 +193,24 @@
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName);$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>export.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib;WISECore.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>XCOPY /Y/F  $(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)\*.dll $(OutDir)\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-IoTCore|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\Log;$(SolutionDir)Include;$(SolutionDir)Library\Base64;$(SolutionDir)Library\DES;$(SolutionDir)Library\MQTTHelper;$(SolutionDir)Library\WISECore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\Log;$(SolutionDir)Include;$(SolutionDir)Library\Base64;$(SolutionDir)Library\DES;$(SolutionDir)Library\MQTTHelper;$(SolutionDir)Library\WISECore;$(SolutionDir)Library3rdParty\EI-Connect\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;WIN_IOT;_WINDOWS;EXPORT_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -221,23 +221,23 @@
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName);$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>export.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib;WISECore.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>XCOPY /Y/F  $(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)\*.dll $(OutDir)\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-XP|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\Log;$(SolutionDir)Include;$(SolutionDir)Library\Base64;$(SolutionDir)Library\DES;$(SolutionDir)Library\MQTTHelper;$(SolutionDir)Library\WISECore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\Log;$(SolutionDir)Include;$(SolutionDir)Library\Base64;$(SolutionDir)Library\DES;$(SolutionDir)Library\MQTTHelper;$(SolutionDir)Library\WISECore;$(SolutionDir)Library3rdParty\EI-Connect\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;EXPORT_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -248,23 +248,22 @@
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>mosquitto.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib;WISECore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName);$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>export.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>XCOPY /Y/F  $(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)\*.dll $(OutDir)\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-XP|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\Log;$(SolutionDir)Include;$(SolutionDir)Library\Base64;$(SolutionDir)Library\DES;$(SolutionDir)Library\MQTTHelper;$(SolutionDir)Library\WISECore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\Log;$(SolutionDir)Include;$(SolutionDir)Library\Base64;$(SolutionDir)Library\DES;$(SolutionDir)Library\MQTTHelper;$(SolutionDir)Library\WISECore;$(SolutionDir)Library3rdParty\EI-Connect\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;EXPORT_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -274,8 +273,8 @@
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>mosquitto.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib;WISECore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName);$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>export.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -284,17 +283,10 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>XCOPY /Y/F  $(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)\*.dll $(OutDir)\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Platform\WISEPlatform.vcxproj">
-      <Project>{c28b0ed4-d61c-4a16-9a2e-8b65ea726069}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Platform\WISEUtil.vcxproj">
-      <Project>{b03503d0-8410-4fc4-a7e4-a318de24cb4c}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Base64\Base64.vcxproj">
       <Project>{489a403e-10e5-49b2-8a45-6db64866448b}</Project>
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
@@ -315,12 +307,8 @@
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\WISECore\WISECore.vcxproj">
-      <Project>{ba2b04d2-cbf7-42f5-a1e8-982fdc93e35d}</Project>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Platform\basequeue.c" />
     <ClCompile Include="eventqueue.c" />
     <ClCompile Include="msgqueue.c" />
     <ClCompile Include="SAClient.c" />

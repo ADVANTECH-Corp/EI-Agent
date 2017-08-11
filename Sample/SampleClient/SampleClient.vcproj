@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library\SAClient&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Library\Log&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library\SAClient&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Library\Log&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,7 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="WISEPlatform.lib WISEUtil.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -115,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library\SAClient&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Library\Log&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library\SAClient&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Library\Log&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -134,7 +136,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="WISEPlatform.lib WISEUtil.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -172,14 +176,6 @@
 		<ProjectReference
 			ReferencedProjectIdentifier="{33738C18-71E6-44FF-A35E-B00BC49E8ACE}"
 			RelativePathToProject=".\Library\SAClient\SAClient.vcproj"
-		/>
-		<ProjectReference
-			ReferencedProjectIdentifier="{C28B0ED4-D61C-4A16-9A2E-8B65EA726069}"
-			RelativePathToProject=".\Platform\WISEPlatform.vcproj"
-		/>
-		<ProjectReference
-			ReferencedProjectIdentifier="{B03503D0-8410-4FC4-A7E4-A318DE24CB4C}"
-			RelativePathToProject=".\Platform\WISEUtil.vcproj"
 		/>
 	</References>
 	<Files>

@@ -68,7 +68,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\HandlerKernel;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\HandlerKernel;$(SolutionDir)Library3rdParty\EI-Connect\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -81,11 +81,12 @@
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)module\$(ProjectName).dll</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>export.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY /Y $(InputDir)module_config.xml $(OutDir)\module\</Command>
@@ -95,7 +96,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\HandlerKernel;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\HandlerKernel;$(SolutionDir)Library3rdParty\EI-Connect\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -107,13 +108,14 @@
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)module\$(ProjectName).dll</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>export.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY /Y $(InputDir)module_config.xml $(OutDir)\module\</Command>
@@ -121,11 +123,15 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\HandlerKernel;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\HandlerKernel;$(SolutionDir)Library3rdParty\EI-Connect\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
       <Command>XCOPY /Y $(InputDir)module_config.xml $(OutDir)\module\</Command>
     </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="export.def" />
@@ -145,9 +151,6 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Library\MessageGenerator\MessageGenerator.vcxproj">
       <Project>{d2993f27-f4c3-4261-8362-ca96297446d0}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Platform\WISEPlatform.vcxproj">
-      <Project>{c28b0ed4-d61c-4a16-9a2e-8b65ea726069}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

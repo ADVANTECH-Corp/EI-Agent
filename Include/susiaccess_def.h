@@ -18,14 +18,10 @@
 #define DEF_SERVER_IP_LIST_FILE   "server_IP_List.txt"
 #define DEF_PRODUCT_NAME "RMM"
 #define DEF_OSINFO_JSON "{\"cagentVersion\":\"%s\",\"cagentType\":\"%s\",\"osVersion\":\"%s\",\"biosVersion\":\"%s\",\"platformName\":\"%s\",\"processorName\":\"%s\",\"osArch\":\"%s\",\"totalPhysMemKB\":%d,\"macs\":\"%s\",\"IP\":\"%s\"}"
+#define AGENT_STATUS_OFFLINE			0  /**< Agent offline flag */
+#define AGENT_STATUS_ONLINE				1  /**< Agent online  flag: Server responsed */
+#define AGENT_STATUS_CONNECTION_FAILED	2  /**< Agent connect failed flag */
 
-
-typedef enum{
-	tls_type_unknown = -1,
-	tls_type_none = 0,
-	tls_type_tls,
-	tls_type_psk,
-}tls_type;
 
 /** Agent configuration struct define*/
 typedef struct {

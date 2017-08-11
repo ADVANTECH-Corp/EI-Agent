@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,6 +61,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="WISEPlatform.lib WISEUtil.lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -105,7 +107,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -124,6 +126,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="WISEPlatform.lib WISEUtil.lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -166,7 +170,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -187,6 +191,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="WISEPlatform.lib WISEUtil.lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -231,7 +237,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -250,6 +256,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="WISEPlatform.lib WISEUtil.lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"

@@ -69,7 +69,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>"$(SolutionDir)Platform";"$(SolutionDir)Platform\Windows";"$(SolutionDir)Library\Log";"$(SolutionDir)Library\cJSON";"$(SolutionDir)Library\MessageGenerator";"$(SolutionDir)Include"</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\Log;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Include;$(SolutionDir)Library3rdParty\EI-Connect\Include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;HANDLERKERNEL_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -78,12 +78,16 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
+    <Lib>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)"</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>"$(SolutionDir)Platform";"$(SolutionDir)Platform\Windows";"$(SolutionDir)Library\Log";"$(SolutionDir)Library\cJSON";"$(SolutionDir)Library\MessageGenerator";"$(SolutionDir)Include"</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\Log;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Include;$(SolutionDir)Library3rdParty\EI-Connect\Include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;HANDLERKERNEL_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -92,11 +96,19 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
+    <Lib>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)"</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>"$(SolutionDir)Platform";"$(SolutionDir)Platform\Windows";"$(SolutionDir)Library\Log";"$(SolutionDir)Library\cJSON";"$(SolutionDir)Library\MessageGenerator";"$(SolutionDir)Include"</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\Log;$(SolutionDir)Library\cJSON;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Include;$(SolutionDir)Library3rdParty\EI-Connect\Include</AdditionalIncludeDirectories>
     </ClCompile>
+    <Lib>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)"</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="HandlerKernel.c" />
@@ -124,12 +136,6 @@
     <ResourceCompile Include="HandlerKernel.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Platform\WISEPlatform.vcxproj">
-      <Project>{c28b0ed4-d61c-4a16-9a2e-8b65ea726069}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Platform\WISEUtil.vcxproj">
-      <Project>{b03503d0-8410-4fc4-a7e4-a318de24cb4c}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\cJSON\cJSON.vcxproj">
       <Project>{c15929aa-2406-4764-842f-839e6b3f17fc}</Project>
     </ProjectReference>

@@ -111,7 +111,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Library\Log;$(SolutionDir)Library\ReadINI;$(SolutionDir)Include;$(SolutionDir)Library\HandlerKernel;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\cJSON;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library3rdParty\libmodbus-3.1.2\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Library\Log;$(SolutionDir)Library\ReadINI;$(SolutionDir)Include;$(SolutionDir)Library\HandlerKernel;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\cJSON;$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library3rdParty\libmodbus-3.1.2\src;$(SolutionDir)Library3rdParty\EI-Connect\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_WINDOWS;_DEBUG;_CONSOLE;MEM_LEAK_CHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -122,13 +122,13 @@
       <AdditionalOptions>/D "WIN_IOT" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)module\$(ProjectName).dll</OutputFile>
       <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\winsysstub.winiotcore\VC2015\bin;%(AdditionalLibraryDirectories)$(SolutionDir)Library\cJSON</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName);$(SolutionDir)Library3rdParty\winsysstub.winiotcore\VC2015\bin;%(AdditionalLibraryDirectories)$(SolutionDir)Library\cJSON</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>COPY /Y $(InputDir)ModbusSample.ini $(OutDir)\</Command>
@@ -137,7 +137,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-IoTCore|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Library\Log;$(SolutionDir)Library\ReadINI;$(SolutionDir)Include;$(SolutionDir)Library\HandlerKernel;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\cJSON;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library3rdParty\libmodbus-3.1.2\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Library\Log;$(SolutionDir)Library\ReadINI;$(SolutionDir)Include;$(SolutionDir)Library\HandlerKernel;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\cJSON;$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library3rdParty\libmodbus-3.1.2\src;$(SolutionDir)Library3rdParty\EI-Connect\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;WIN_IOT;_WINDOWS;_DEBUG;_CONSOLE;MEM_LEAK_CHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -149,13 +149,13 @@
       <AdditionalOptions>/D "WIN_IOT" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>onecoreuap.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib;onecoreuap.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)module\$(ProjectName).dll</OutputFile>
       <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\winsysstub.winiotcore\VC2015\bin;%(AdditionalLibraryDirectories)$(SolutionDir)Library\cJSON</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName);$(SolutionDir)Library3rdParty\winsysstub.winiotcore\VC2015\bin;%(AdditionalLibraryDirectories)$(SolutionDir)Library\cJSON</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>COPY /Y $(InputDir)ModbusSample.ini $(OutDir)\</Command>
@@ -165,7 +165,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Library\Log;$(SolutionDir)Library\ReadINI;$(SolutionDir)Include;$(SolutionDir)Library\HandlerKernel;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\cJSON;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library3rdParty\libmodbus-3.1.2\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Library\Log;$(SolutionDir)Library\ReadINI;$(SolutionDir)Include;$(SolutionDir)Library\HandlerKernel;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\cJSON;$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library3rdParty\libmodbus-3.1.2\src;$(SolutionDir)Library3rdParty\EI-Connect\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;WIN_IOT;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -174,9 +174,9 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)module\$(ProjectName).dll</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\ModBus;$(SolutionDir)Library3rdParty\ModBus\win32;$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName);$(SolutionDir)Library3rdParty\ModBus;$(SolutionDir)Library3rdParty\ModBus\win32;$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -192,7 +192,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Library\Log;$(SolutionDir)Library\ReadINI;$(SolutionDir)Include;$(SolutionDir)Library\HandlerKernel;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\cJSON;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library3rdParty\libmodbus-3.1.2\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Library\Log;$(SolutionDir)Library\ReadINI;$(SolutionDir)Include;$(SolutionDir)Library\HandlerKernel;$(SolutionDir)Library\MessageGenerator;$(SolutionDir)Library\cJSON;$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library3rdParty\libmodbus-3.1.2\src;$(SolutionDir)Library3rdParty\EI-Connect\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;WIN_IOT;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -202,9 +202,9 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>onecoreuap.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WISEPlatform.lib;WISEUtil.lib;onecoreuap.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)module\$(ProjectName).dll</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\ModBus;$(SolutionDir)Library3rdParty\ModBus\win32;$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName);$(SolutionDir)Library3rdParty\ModBus;$(SolutionDir)Library3rdParty\ModBus\win32;$(SolutionDir)Library\cJSON;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>

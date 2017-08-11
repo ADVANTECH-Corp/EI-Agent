@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;;&quot;$(SolutionDir)Library\cJSON&quot;;&quot;$(SolutionDir)Include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows&quot;;&quot;$(SolutionDir)Library\cJSON&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\include&quot;;&quot;$(SolutionDir)Library\Log&quot;;&quot;$(SolutionDir)Library\MD5&quot;;&quot;$(SolutionDir)Library\FtpHelper&quot;;&quot;$(SolutionDir)Library\SAConfig&quot;;&quot;$(SolutionDir)Library\MessageGenerator&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,6 +62,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="WISEPlatform.lib WISEUtil.lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -106,7 +108,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;;&quot;$(SolutionDir)Library\cJSON&quot;;&quot;$(SolutionDir)Include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows&quot;;&quot;$(SolutionDir)Library\cJSON&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\include&quot;;&quot;$(SolutionDir)Library\Log&quot;;&quot;$(SolutionDir)Library\MD5&quot;;&quot;$(SolutionDir)Library\FtpHelper&quot;;&quot;$(SolutionDir)Library\SAConfig&quot;;&quot;$(SolutionDir)Library\MessageGenerator&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -126,6 +128,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="WISEPlatform.lib WISEUtil.lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -148,10 +152,6 @@
 		<ProjectReference
 			ReferencedProjectIdentifier="{C15929AA-2406-4764-842F-839E6B3F17FC}"
 			RelativePathToProject=".\Library\cJSON\cJSON.vcproj"
-		/>
-		<ProjectReference
-			ReferencedProjectIdentifier="{C28B0ED4-D61C-4A16-9A2E-8B65EA726069}"
-			RelativePathToProject=".\Platform\WISEPlatform.vcproj"
 		/>
 	</References>
 	<Files>

@@ -145,7 +145,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\curl-7.47.1\include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\curl-7.47.1\include;$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;LOG4Z;WIN_IOT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -156,8 +156,8 @@
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Library3rdParty\curl-7.37.1\build\WinIoTCore\VC14\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);WISEPlatform.lib;WISEUtil.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Library3rdParty\curl-7.37.1\build\WinIoTCore\VC14\$(Configuration);%(AdditionalLibraryDirectories);WISEPlatform.lib;WISEUtil.lib;"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)";"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)"</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
       <Command>
@@ -167,7 +167,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-IoTCore|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\curl-7.47.1\include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\curl-7.47.1\include;$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;WIN_IOT;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;LOG4Z;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -179,8 +179,8 @@
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Library3rdParty\curl-7.37.1\build\WinIoTCore\VC14\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);WISEPlatform.lib;WISEUtil.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Library3rdParty\curl-7.37.1\build\WinIoTCore\VC14\$(Configuration);%(AdditionalLibraryDirectories);WISEPlatform.lib;WISEUtil.lib;"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)";"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)"</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
       <Command>
@@ -190,7 +190,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_IoTCore|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\curl-7.47.1\include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\curl-7.47.1\include;$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;WIN_IOT;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;LOG4Z;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -202,8 +202,8 @@
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Library3rdParty\curl-7.37.1\build\WinIoTCore\VC14\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);WISEPlatform.lib;WISEUtil.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Library3rdParty\curl-7.37.1\build\WinIoTCore\VC14\$(Configuration);%(AdditionalLibraryDirectories);WISEPlatform.lib;WISEUtil.lib;"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)";"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)"</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
       <Command>
@@ -214,7 +214,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\curl-7.47.1\include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\curl-7.47.1\include;$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;WIN_IOT;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;LOG4Z;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -224,8 +224,8 @@
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Library3rdParty\curl-7.37.1\build\WinIoTCore\VC14\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Library3rdParty\curl-7.37.1\build\WinIoTCore\VC14\$(Configuration);%(AdditionalLibraryDirectories);WISEPlatform.lib;WISEUtil.lib;"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)";"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)"</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);WISEPlatform.lib;WISEUtil.lib</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>
@@ -236,7 +236,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\curl-7.47.1\include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\curl-7.47.1\include;$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;WIN_IOT;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;LOG4Z;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -247,8 +247,8 @@
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Library3rdParty\curl-7.37.1\build\WinIoTCore\VC14\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Library3rdParty\curl-7.37.1\build\WinIoTCore\VC14\$(Configuration);%(AdditionalLibraryDirectories);WISEPlatform.lib;WISEUtil.lib;"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)";"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)"</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);WISEPlatform.lib;WISEUtil.lib</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>
@@ -258,7 +258,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-XP|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\curl-7.47.1\include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\curl-7.47.1\include;$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -269,8 +269,8 @@
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\curl-7.37.1\build\Win32\VC9\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);WISEPlatform.lib;WISEUtil.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\curl-7.37.1\build\Win32\VC9\$(Configuration);%(AdditionalLibraryDirectories);WISEPlatform.lib;WISEUtil.lib;"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)";"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)"</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
       <Command>
@@ -281,7 +281,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\curl-7.47.1\include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows;$(SolutionDir)Library\Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\curl-7.47.1\include;$(SolutionDir)Library3rdParty\EI-Connect\Platform;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows;$(SolutionDir)Library\Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -291,8 +291,8 @@
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\curl-7.37.1\build\Win32\VC9\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);WISEPlatform.lib;WISEUtil.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\curl-7.37.1\build\Win32\VC9\$(Configuration);%(AdditionalLibraryDirectories);WISEPlatform.lib;WISEUtil.lib;"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)";"$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)"</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
       <Command>
@@ -302,9 +302,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Library3rdParty\curl-7.47.1\projects\Windows\VC14\lib\libcurl.vcxproj">
       <Project>{da6f56b4-06a4-441d-ad70-ac5a7d51fadb}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Platform\WISEPlatform.vcxproj">
-      <Project>{c28b0ed4-d61c-4a16-9a2e-8b65ea726069}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Log\Log.vcxproj">
       <Project>{d807f1c9-38ad-44d1-8543-d2fb7808717e}</Project>

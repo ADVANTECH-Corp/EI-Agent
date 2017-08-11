@@ -1,0 +1,3 @@
+[submodule "Library3rdParty/EI-Connect"]
+	path = Library3rdParty/EI-Connect
+	url = https://github.com/ADVANTECH-Corp/EI-Connect.git

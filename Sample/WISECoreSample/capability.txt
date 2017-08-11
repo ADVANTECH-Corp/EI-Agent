@@ -1,1 +1,0 @@
-{"SUSIControl":{"Temperature":{"e":[{"n":"CPU","v":38,"max":100,"min":0,"asm":"r"},{"n":"Platform","v":39,"max":99,"min":0,"asm":"r"},{"n":"System","v":37,"max":99,"min":0,"asm":"r"}],"bn":"Temperature"}}}

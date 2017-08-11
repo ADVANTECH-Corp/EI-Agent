@@ -24,9 +24,6 @@
     <ClCompile Include="topic.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Platform\basequeue.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="eventqueue.c">
       <Filter>Source Files</Filter>
     </ClCompile>

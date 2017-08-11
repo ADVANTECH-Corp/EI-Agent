@@ -47,7 +47,7 @@ bool ghloader_is_exist(const char* path);
 bool ghloader_load(const char* path, SAGeneral_Interface * SAGeneral);
 bool ghloader_release(SAGeneral_Interface * SAGeneral);
 char* ghloader_get_error();
-
+void ghloader_free_error(char *error);
 SAGeneral_Interface* ghloader_initialize(char const * pWorkdir, susiaccess_agent_conf_body_t const * pConfig, susiaccess_agent_profile_body_t const * pProfile, Handler_List_t *pLoaderList, Handler_Loader_Interface* pHandlerInfo, void* pLogHandle);
 void ghloader_uninitialize(SAGeneral_Interface * pSAGeneral);
 

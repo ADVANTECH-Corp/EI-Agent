@@ -74,6 +74,11 @@ char* smloader_get_error()
 	return error;
 }
 
+void smloader_free_error(char *error)
+{
+	util_dlfree_error(error);
+}
+
 void smloader_connect_status_update_cb(int status)
 {
 	if(g_SAManager)
@@ -100,14 +105,14 @@ void smloader_init(susiaccess_agent_conf_body_t * config, susiaccess_agent_profi
 		{
 			char* err = smloader_get_error();
 			SAClientLog(loghandle, Warning, "Load SAManager failed! %s!", err);
-			free(err);
+			smloader_free_error(err);
 		}
 	}
 	else
 	{
 		char* err = smloader_get_error();
 		SAClientLog(loghandle, Warning, "Cannot find SAManager! %s!", err);
-		free(err);
+		smloader_free_error(err);
 	}
 }
 

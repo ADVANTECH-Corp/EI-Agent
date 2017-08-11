@@ -72,6 +72,11 @@ char* ghloader_get_error()
 	return error;
 }
 
+void ghloader_free_error(char *error)
+{
+	util_dlfree_error(error);
+}
+
 SAGeneral_Interface* ghloader_initialize(char const * pWorkdir, susiaccess_agent_conf_body_t const * pConfig, susiaccess_agent_profile_body_t const * pProfile, Handler_List_t *pHandlerList, Handler_Loader_Interface* pHandlerInfo, void* pLogHandle)
 {
 	SAGeneral_Interface * pSAGeneral = NULL;
@@ -131,7 +136,7 @@ SAGeneral_Interface* ghloader_initialize(char const * pWorkdir, susiaccess_agent
 		{
 			char *err = ghloader_get_error();
 			SAManagerLog(pLogHandle, Warning, "Load GeneralHandler failed!\r\n  %s!!", err);
-			free(err);
+			ghloader_free_error(err);
 			free(pSAGeneral);
 			pSAGeneral = NULL;
 		}
@@ -140,7 +145,7 @@ SAGeneral_Interface* ghloader_initialize(char const * pWorkdir, susiaccess_agent
 	{
 		char *err = ghloader_get_error();
 		SAManagerLog(pLogHandle, Warning, "Cannot find GeneralHandler!\r\n  %s!!", err);
-		free(err);
+		ghloader_free_error(err);
 	}
 
 	return pSAGeneral;

@@ -49,7 +49,7 @@ bool reloader_is_exist(const char* path);
 bool reloader_load(const char* path, RuleEngine_Interface * pRELoader);
 bool reloader_release(RuleEngine_Interface * pRELoader);
 char* reloader_get_error();
-
+void reloader_free_error(char *error);
 RuleEngine_Interface* reloader_initialize(char const * pWorkdir, Handler_Loader_Interface* pHandlerInfo, void* ruleengine);
 void reloader_uninitialize(RuleEngine_Interface * pRELoader);
 void reloader_capability_recv(RuleEngine_Interface * pRELoader, HANDLE const handler, void const * const requestData, unsigned int const requestLen);
