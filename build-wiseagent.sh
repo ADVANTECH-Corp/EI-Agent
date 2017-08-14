@@ -8,8 +8,6 @@ precomnpile_3rdparty()
 {
 	git submodule update --init --recursive
 	cd ${src_home}/Library3rdParty/EI-Connect
-	pwd
-	git pull origin master
 	./build-eiconnect.sh
 
 	cd ${src_home}/Library3rdParty/AdvLog
