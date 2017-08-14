@@ -149,6 +149,9 @@
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libmodbus"
 
+/* Define to the home page for this package. */
+#define PACKAGE_URL "http://libmodbus.org/"
+
 /* Define to the version of this package. */
 #define PACKAGE_VERSION "3.1.2"
 
@@ -183,8 +186,13 @@
 /* _ */
 #define WINVER 0x0501
 
+/* Enable large inode numbers on Mac OS X 10.5.  */
+#ifndef _DARWIN_USE_64_BIT_INODE
+# define _DARWIN_USE_64_BIT_INODE 1
+#endif
+
 /* Number of bits in a file offset, on hosts where this is settable. */
-#define _FILE_OFFSET_BITS 64
+/* #undef _FILE_OFFSET_BITS */
 
 /* Define for large files, on AIX-style hosts. */
 /* #undef _LARGE_FILES */

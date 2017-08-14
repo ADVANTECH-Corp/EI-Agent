@@ -17,7 +17,7 @@ old_library='libAdvLog.a'
 inherited_linker_flags=''
 
 # Libraries that this one depends upon.
-dependency_libs=' /home/test/Workspace/CAgentIoT20_Release/Library3rdParty/AdvLog/Tools/AdvJSON/src/libAdvJSON.la'
+dependency_libs=' /home/test/Workspace/Git/EI-Agent_Hub/Library3rdParty/AdvLog/Tools/AdvJSON/src/libAdvJSON.la'
 
 # Names of additional weak libraries provided by this library
 weak_library_names=''
@@ -39,4 +39,4 @@ dlpreopen=''
 
 # Directory that this library needs to be installed in:
 libdir='/usr/local/lib'
-relink_command="(cd /home/test/Workspace/CAgentIoT20_Release/Library3rdParty/AdvLog/Tools/AdvLog/src; /bin/bash /home/test/Workspace/CAgentIoT20_Release/Library3rdParty/AdvLog/Tools/AdvLog/libtool  --tag CXX --mode=relink g++ -I../include -I../include/internal -I../../AdvJSON/inc -fPIC -g -O2 -o libAdvLog.la -rpath /usr/local/lib AdvLog.lo configure.lo rollingfile.lo advstring.lo tool.lo ../../AdvJSON/src/libAdvJSON.la @inst_prefix_dir@)"
+relink_command="(cd /home/test/Workspace/Git/EI-Agent_Hub/Library3rdParty/AdvLog/Tools/AdvLog/src; /bin/bash /home/test/Workspace/Git/EI-Agent_Hub/Library3rdParty/AdvLog/Tools/AdvLog/libtool  --tag CXX --mode=relink g++ -I../include -I../include/internal -I../../AdvJSON/inc -fPIC -g -O2 -o libAdvLog.la -rpath /usr/local/lib AdvLog.lo configure.lo rollingfile.lo advstring.lo tool.lo ../../AdvJSON/src/libAdvJSON.la @inst_prefix_dir@)"

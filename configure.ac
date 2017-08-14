@@ -125,10 +125,6 @@ AC_CHECK_FUNCS([alarm clock_gettime dup2 fdatasync floor ftime ftruncate gethost
 
 AC_CONFIG_FILES([Makefile
 		 Library/Log/Makefile
-		 Platform/Makefile
-		 Library/MosquittoCarrier/Makefile
-		 Library/MQTTConnector/Makefile
-		 Library/WISECore/Makefile
 		 Library/cJSON/Makefile
 		 Library/DES/Makefile
 		 Library/Base64/Makefile
@@ -142,11 +138,9 @@ AC_CONFIG_FILES([Makefile
 		 Library/SAHandlerLoader/Makefile
 	  	 Library/ReadINI/Makefile
 		 Library/HandlerKernel/Makefile
-		 Sample/MosquittoSample/Makefile
 		 Sample/SampleAgent/Makefile
 		 Sample/HandlerSample/Makefile
 		 Sample/ModbusSample/Makefile
-		 Sample/WISECoreSample/Makefile
 		])
 
 AC_SUBST([PACKAGE_VERSION_MAJOR],[VERSION_MAJOR])

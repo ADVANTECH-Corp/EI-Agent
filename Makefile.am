@@ -1,8 +1,4 @@
 SUBDIRS = Library/Log \
-	  Platform \
-	  Library/MosquittoCarrier \
-	  Library/MQTTConnector \
-	  Library/WISECore \
 	  Library/cJSON \
 	  Library/DES \
 	  Library/Base64 \
@@ -16,11 +12,9 @@ SUBDIRS = Library/Log \
 	  Library/SAHandlerLoader \
 	  Library/ReadINI \
 	  Library/HandlerKernel \
-	  Sample/MosquittoSample \
 	  Sample/SampleAgent \
 	  Sample/HandlerSample \
-	  Sample/ModbusSample \
-	  Sample/WISECoreSample
+	  Sample/ModbusSample
 	 
 	  
 ACLOCAL_AMFLAGS = -I m4
