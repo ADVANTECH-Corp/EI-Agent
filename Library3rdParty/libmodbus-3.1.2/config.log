@@ -1185,7 +1185,7 @@ configure:12974: $? = 0
 configure:12974: result: yes
 configure:12974: checking for strlcpy
 configure:12974: gcc -std=gnu99 -o conftest -g -O2   conftest.c  >&5
-/tmp/ccLu6P1s.o: In function `main':
+/tmp/ccNd9WVT.o: In function `main':
 /home/test/Workspace/Git/EI-Agent_Hub/Library3rdParty/libmodbus-3.1.2/conftest.c:91: undefined reference to `strlcpy'
 collect2: error: ld returned 1 exit status
 configure:12974: $? = 1
