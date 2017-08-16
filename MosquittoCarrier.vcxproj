@@ -68,7 +68,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\mosquitto-1.4.10\lib;$(SolutionDir)Include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\mosquitto-1.4.10.win32\include;$(SolutionDir)Include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -82,13 +82,19 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\mosquitto-1.4.10.win32\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libmosquitto.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(SolutionDir)Library3rdParty\openssl-1.0.1h.win32\bin\*.dll" "$(TargetDir)"
+copy "$(SolutionDir)Library3rdParty\mosquitto-1.4.10.win32\bin\*.dll" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\mosquitto-1.4.10\lib;$(SolutionDir)Include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\mosquitto-1.4.10.win32\include;$(SolutionDir)Include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -103,12 +109,26 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\mosquitto-1.4.10.win32\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libmosquitto.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(SolutionDir)Library3rdParty\openssl-1.0.1h.win32\bin\*.dll" "$(TargetDir)"
+copy "$(SolutionDir)Library3rdParty\mosquitto-1.4.10.win32\bin\*.dll" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\mosquitto-1.4.10\lib;$(SolutionDir)Include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library3rdParty\mosquitto-1.4.10.win32\include;$(SolutionDir)Include;$(SolutionDir)Platform;$(SolutionDir)Platform\Windows</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library3rdParty\mosquitto-1.4.10.win32\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libmosquitto.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(SolutionDir)Library3rdParty\openssl-1.0.1h.win32\bin\*.dll" "$(TargetDir)"
+copy "$(SolutionDir)Library3rdParty\mosquitto-1.4.10.win32\bin\*.dll" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="MosquittoCarrier.c" />
@@ -122,9 +142,6 @@
     <ClInclude Include="topic.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Library3rdParty\mosquitto-1.4.10\build\lib\libmosquitto.vcxproj">
-      <Project>{e0fa4ebb-e781-307e-a47f-6174b87e1935}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\Platform\WISEPlatform.vcxproj">
       <Project>{c28b0ed4-d61c-4a16-9a2e-8b65ea726069}</Project>
     </ProjectReference>
