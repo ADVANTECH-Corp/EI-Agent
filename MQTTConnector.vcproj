@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;;&quot;$(SolutionDir)Library\MQTTConnector&quot;;&quot;$(SolutionDir)Include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;;&quot;$(SolutionDir)Library\MosquittoCarrier&quot;;&quot;$(SolutionDir)Include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -111,7 +111,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;;&quot;$(SolutionDir)Library\MQTTConnector&quot;;&quot;$(SolutionDir)Include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;;&quot;$(SolutionDir)Library\MosquittoCarrier&quot;;&quot;$(SolutionDir)Include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
