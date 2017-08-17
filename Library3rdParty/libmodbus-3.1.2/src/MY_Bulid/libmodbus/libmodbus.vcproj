@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library3rdParty\libmodbus-3.1.2\src&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library3rdParty\libmodbus-3.1.2\src&quot;;&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;DLLBUILD"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -116,7 +116,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library3rdParty\libmodbus-3.1.2\src&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library3rdParty\libmodbus-3.1.2\src&quot;;&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;DLLBUILD"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"

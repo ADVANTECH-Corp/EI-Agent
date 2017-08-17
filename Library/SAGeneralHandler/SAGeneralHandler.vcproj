@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows&quot;;&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\include&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Library\Log&quot;;&quot;$(SolutionDir)Library\cJSON&quot;;&quot;$(SolutionDir)Library\MD5&quot;;&quot;$(SolutionDir)Library\FtpHelper&quot;;&quot;$(SolutionDir)Library\SAConfig&quot;;&quot;$(SolutionDir)Library\MessageGenerator&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;;&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\include&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Library\Log&quot;;&quot;$(SolutionDir)Library\cJSON&quot;;&quot;$(SolutionDir)Library\MD5&quot;;&quot;$(SolutionDir)Library\FtpHelper&quot;;&quot;$(SolutionDir)Library\SAConfig&quot;;&quot;$(SolutionDir)Library\MessageGenerator&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,9 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libxml2.lib WISEPlatform.lib WISEUtil.lib "
+				AdditionalDependencies="libxml2.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\lib&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\lib&quot;"
 				ModuleDefinitionFile="exports.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -119,7 +119,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows&quot;;&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\include&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Library\Log&quot;;&quot;$(SolutionDir)Library\cJSON&quot;;&quot;$(SolutionDir)Library\MD5&quot;;&quot;$(SolutionDir)Library\FtpHelper&quot;;&quot;$(SolutionDir)Library\SAConfig&quot;;&quot;$(SolutionDir)Library\MessageGenerator&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;;&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\include&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Library\Log&quot;;&quot;$(SolutionDir)Library\cJSON&quot;;&quot;$(SolutionDir)Library\MD5&quot;;&quot;$(SolutionDir)Library\FtpHelper&quot;;&quot;$(SolutionDir)Library\SAConfig&quot;;&quot;$(SolutionDir)Library\MessageGenerator&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -138,9 +138,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libxml2.lib WISEPlatform.lib WISEUtil.lib "
+				AdditionalDependencies="libxml2.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\lib&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\lib&quot;"
 				ModuleDefinitionFile="exports.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -195,7 +195,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows&quot;;&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\include&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Library\Log&quot;;&quot;$(SolutionDir)Library\cJSON&quot;;&quot;$(SolutionDir)Library\MD5&quot;;&quot;$(SolutionDir)Library\FtpHelper&quot;;&quot;$(SolutionDir)Library\SAConfig&quot;;&quot;$(SolutionDir)Library\MessageGenerator&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;;&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\include&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Library\Log&quot;;&quot;$(SolutionDir)Library\cJSON&quot;;&quot;$(SolutionDir)Library\MD5&quot;;&quot;$(SolutionDir)Library\FtpHelper&quot;;&quot;$(SolutionDir)Library\SAConfig&quot;;&quot;$(SolutionDir)Library\MessageGenerator&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -216,9 +216,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libxml2.lib WISEPlatform.lib WISEUtil.lib "
+				AdditionalDependencies="libxml2.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\lib&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\lib&quot;"
 				ModuleDefinitionFile="exports.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -273,7 +273,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Platform\Windows&quot;;&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\include&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Library\Log&quot;;&quot;$(SolutionDir)Library\cJSON&quot;;&quot;$(SolutionDir)Library\MD5&quot;;&quot;$(SolutionDir)Library\FtpHelper&quot;;&quot;$(SolutionDir)Library\SAConfig&quot;;&quot;$(SolutionDir)Library\MessageGenerator&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\Include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Platform&quot;;&quot;$(SolutionDir)Platform\Windows&quot;;&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\include&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Library\Log&quot;;&quot;$(SolutionDir)Library\cJSON&quot;;&quot;$(SolutionDir)Library\MD5&quot;;&quot;$(SolutionDir)Library\FtpHelper&quot;;&quot;$(SolutionDir)Library\SAConfig&quot;;&quot;$(SolutionDir)Library\MessageGenerator&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -292,9 +292,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libxml2.lib WISEPlatform.lib WISEUtil.lib "
+				AdditionalDependencies="libxml2.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\lib&quot;;&quot;$(SolutionDir)Library3rdParty\EI-Connect\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Library3rdParty\libxml2-2.7.8.win32\lib&quot;"
 				ModuleDefinitionFile="exports.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -349,6 +349,14 @@
 		<ProjectReference
 			ReferencedProjectIdentifier="{D2993F27-F4C3-4261-8362-CA96297446D0}"
 			RelativePathToProject=".\Library\MessageGenerator\MessageGenerator.vcproj"
+		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{C28B0ED4-D61C-4A16-9A2E-8B65EA726069}"
+			RelativePathToProject=".\Platform\WISEPlatform.vcproj"
+		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{B03503D0-8410-4FC4-A7E4-A318DE24CB4C}"
+			RelativePathToProject=".\Platform\WISEUtil.vcproj"
 		/>
 	</References>
 	<Files>
