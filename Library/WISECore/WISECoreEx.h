@@ -12,9 +12,9 @@
 #include <stdbool.h>
 
 #ifdef RMM3X
-	#include "wisepaas_01_def.h"
+	#include "wise/wisepaas_01_def.h"
 #else
-	#include "wisepaas_02_def.h"
+	#include "wise/wisepaas_02_def.h"
 #endif
 
 typedef enum {
