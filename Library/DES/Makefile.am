@@ -1,3 +1,0 @@
-AM_CPPFLAGS = -Wall -fPIC
-lib_LIBRARIES = libDES.a
-libDES_a_SOURCES = DES.c

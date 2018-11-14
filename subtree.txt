@@ -1,4 +1,0 @@
-Library/MosquittoCarrier,https://github.com/ADVANTECH-Corp/WISECarrier-Mosquitto.git
-Library/MQTTConnector,https://github.com/ADVANTECH-Corp/WISEConnect-MQTT.git
-Library/WISECore,https://github.com/ADVANTECH-Corp/WISECore.git
-Platform,https://github.com/ADVANTECH-Corp/EI-Platform.git
